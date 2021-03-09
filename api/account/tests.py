@@ -60,3 +60,30 @@ class LoginTest(APITestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual('Invalid credentials.', response.data['non_field_errors'][0])
+
+
+class LogoutTest(APITestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username=USER['username'], password=USER['password'])
+
+    def setUp(self):
+        response = self.client.post('/api/auth/login/', data=USER)
+        token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+
+    def test_logout(self):
+        response = self.client.post('/api/auth/logout/')
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(AuthToken.objects.all()), 0)
+
+    def test_logout_all(self):
+        AuthToken.objects.create(user=self.user)
+        AuthToken.objects.create(user=self.user)
+
+        response = self.client.post('/api/auth/logout-all/')
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(AuthToken.objects.all()), 0)
