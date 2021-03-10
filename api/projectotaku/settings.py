@@ -45,6 +45,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'account',
+    'watchlist',
 ]
 
 THIRD_PARTY_APPS = [
