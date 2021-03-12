@@ -1,0 +1,14 @@
+.Form-header {
+
+
+    text-align: center;
+}
+
+@media only screen and (min-width: 769px) {
+    .Form-header {
+        position: absolute;
+        top: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

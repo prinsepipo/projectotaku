@@ -1,7 +1,11 @@
+import Home from './home/Home';
+
+
 function App() {
   return (
-    <div className='App'>Project Otaku</div>
+    <Home />
   );
 }
+
 
 export default App;

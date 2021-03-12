@@ -1,0 +1,11 @@
+.Form-error-list {
+    margin: 1rem 0;
+
+    list-style: none;
+}
+
+.Form-error-listitem {
+    color: #f54c4c;
+
+    font-size: 0.8rem;
+}

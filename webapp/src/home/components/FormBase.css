@@ -1,0 +1,31 @@
+.Form-base {
+    min-width: 360px;
+    width: 360px;
+
+    position: relative;
+
+    padding: 2rem;
+
+    text-align: center;
+}
+
+
+@media only screen and (min-width: 769px) {
+    .Form-base {
+        height: 480px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        background: #ffffff;
+
+        border-radius: 4px;
+
+        box-shadow: 2px 2px 2px #e2e2e2;
+    }
+
+    .Form-base > :not(h2) {
+        margin: 0.5rem 0;
+    }
+}

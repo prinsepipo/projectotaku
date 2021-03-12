@@ -1,0 +1,35 @@
+.Form-button {
+    display: block;
+
+    width: 100%;
+
+    color: #f4f4f4;
+    background: #4f4f4f;
+
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+
+    font-weight: bold;
+    text-transform: uppercase;
+
+    border: 0;
+    border-radius: 24px;
+
+    cursor: pointer;
+}
+
+.Form-button--primary {
+    background: #19a7e9;
+}
+
+.Form-button--primary:active {
+    background: #0e8fca;
+}
+
+.Form-button--secondary {
+    background: #0ddd6b;
+}
+
+.Form-button--secondary:active {
+    background: #04be58;
+}
