@@ -1,5 +1,7 @@
 import React from 'react';
 
+import api from '../utils/api';
+
 import FormBase from './components/FormBase';
 import FormHeader from './components/FormHeader';
 import FormError from './components/FormError';
@@ -14,6 +16,7 @@ class LoginForm extends React.Component {
             username: '',
             password: '',
             errors: [],
+            isValid: false,
         };
         this.login = this.login.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
@@ -21,15 +24,10 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        let formError = null;
-        if (this.state.errors.length !== 0) {
-            formError = <FormError errors={this.state.errors} />;
-        }
-
         return (
             <FormBase onSubmit={this.login}>
                 <FormHeader title='Sign In' />
-                {formError}
+                {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
                 <FormField type='text' fieldname='username' onChange={this.handleUsername}
                 />
                 <FormField type='password' fieldname='password' onChange={this.handlePassword}
@@ -58,15 +56,7 @@ class LoginForm extends React.Component {
         });
     }
 
-    login(event) {
-        event.preventDefault();
-
-        this.validateFields();
-
-        // Login using the backend api.
-    }
-
-    validateFields() {
+    validate() {
         let errors = [];
 
         if (this.state.username === '') {
@@ -80,6 +70,40 @@ class LoginForm extends React.Component {
         this.setState({
             errors: errors,
         });
+
+        return errors.length === 0;
+    }
+
+    login(event) {
+        event.preventDefault();
+
+        let isValid = this.validate();
+
+        if (isValid) {
+            // Login using backend api.
+            api.post('auth/login/', {
+                username: this.state.username,
+                password: this.state.password,
+            })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        let errors = [];
+
+                        if (error.response.data.non_field_errors) {
+                            errors.push(error.response.data.non_field_errors);
+                        }
+
+                        this.setState({
+                            errors: errors,
+                        });
+                    } else {
+                        // Handle error when request was sent but no response from the server.
+                    }
+                });
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import api from '../utils/api';
+
 import FormBase from './components/FormBase';
 import FormHeader from './components/FormHeader';
 import FormError from './components/FormError';
@@ -23,16 +25,10 @@ class RegisterForm extends React.Component {
     }
 
     render() {
-        let formError = null;
-
-        if (this.state.errors.length !== 0) {
-            formError = <FormError errors={this.state.errors} />;
-        }
-
         return (
             <FormBase onSubmit={this.register}>
                 <FormHeader title='Sign Up' />
-                {formError}
+                {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
                 <FormField type='text' fieldname='username' onChange={this.handleUsername} />
                 <FormField type='password' fieldname='password' onChange={this.handlePassword} />
                 <FormField
@@ -70,15 +66,7 @@ class RegisterForm extends React.Component {
         });
     }
 
-    register(event) {
-        event.preventDefault();
-
-        this.validateFields();
-
-        // Register using backend api.
-    }
-
-    validateFields() {
+    validate() {
         let errors = [];
 
         if (this.state.username === '') {
@@ -93,9 +81,45 @@ class RegisterForm extends React.Component {
             errors.push('Confirm Password is required.');
         }
 
+        if (this.state.password !== this.state.confirmPassword) {
+            errors.push('Passwords didn\'t match.');
+        }
+
         this.setState({
             errors: errors,
         });
+
+        return errors.length === 0;
+    }
+
+    register(event) {
+        event.preventDefault();
+
+        let isValid = this.validate();
+
+        if (isValid) {
+            // Register using backend api.
+            api.post('auth/register/', {
+                username: this.state.username,
+                password: this.state.password,
+            })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        let errors = [];
+
+                        if (error.response.data.username) {
+                            errors.push(error.response.data.username);
+                        }
+
+                        this.setState({
+                            errors: errors,
+                        });
+                    }
+                });
+        }
     }
 }
 
