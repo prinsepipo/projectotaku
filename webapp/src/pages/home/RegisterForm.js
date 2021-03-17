@@ -1,6 +1,6 @@
 import React from 'react';
 
-import api from '../utils/api';
+import api from '../../utils/api';
 
 import FormBase from './components/FormBase';
 import FormHeader from './components/FormHeader';
@@ -9,35 +9,39 @@ import FormField from './components/FormField';
 import FormButton from './components/FormButton';
 
 
-class LoginForm extends React.Component {
+class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             username: '',
             password: '',
+            confirmPassword: '',
             errors: [],
-            isValid: false,
         };
-        this.login = this.login.bind(this);
+        this.register = this.register.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
+        this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
     }
 
     render() {
         return (
-            <FormBase onSubmit={this.login}>
-                <FormHeader title='Sign In' />
+            <FormBase onSubmit={this.register}>
+                <FormHeader title='Sign Up' />
                 {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
-                <FormField type='text' fieldname='username' onChange={this.handleUsername}
+                <FormField type='text' fieldname='username' onChange={this.handleUsername} />
+                <FormField type='password' fieldname='password' onChange={this.handlePassword} />
+                <FormField
+                  type='password'
+                  fieldname='confirm password'
+                  onChange={this.handleConfirmPassword}
                 />
-                <FormField type='password' fieldname='password' onChange={this.handlePassword}
-                />
-                <FormButton classType='primary' buttonType='submit' text='Sign In' />
+                <FormButton classType='primary' buttonType='submit' text='Sign Up' />
                 <p>or</p>
                 <FormButton
                   classType='secondary'
                   buttonType='button'
-                  text='Sign Up'
+                  text='Sign In'
                   onClick={this.props.swapForm}
                 />
             </FormBase>
@@ -56,6 +60,12 @@ class LoginForm extends React.Component {
         });
     }
 
+    handleConfirmPassword(event) {
+        this.setState({
+            confirmPassword: event.target.value,
+        });
+    }
+
     validate() {
         let errors = [];
 
@@ -67,6 +77,14 @@ class LoginForm extends React.Component {
             errors.push('Password is required.');
         }
 
+        if (this.state.confirmPassword === '') {
+            errors.push('Confirm Password is required.');
+        }
+
+        if (this.state.password !== this.state.confirmPassword) {
+            errors.push('Passwords didn\'t match.');
+        }
+
         this.setState({
             errors: errors,
         });
@@ -74,14 +92,14 @@ class LoginForm extends React.Component {
         return errors.length === 0;
     }
 
-    login(event) {
+    register(event) {
         event.preventDefault();
 
         let isValid = this.validate();
 
         if (isValid) {
-            // Login using backend api.
-            api.post('auth/login/', {
+            // Register using backend api.
+            api.post('auth/register/', {
                 username: this.state.username,
                 password: this.state.password,
             })
@@ -92,19 +110,18 @@ class LoginForm extends React.Component {
                     if (error.response) {
                         let errors = [];
 
-                        if (error.response.data.non_field_errors) {
-                            errors.push(error.response.data.non_field_errors);
+                        if (error.response.data.username) {
+                            errors.push(error.response.data.username);
                         }
 
                         this.setState({
                             errors: errors,
                         });
-                    } else {
-                        // Handle error when request was sent but no response from the server.
                     }
                 });
         }
     }
 }
 
-export default LoginForm;
+
+export default RegisterForm;
