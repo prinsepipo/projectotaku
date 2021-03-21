@@ -2,11 +2,11 @@ import React from 'react';
 
 import api from '../../utils/api';
 
-import FormBase from './components/FormBase';
-import FormHeader from './components/FormHeader';
-import FormError from './components/FormError';
-import FormField from './components/FormField';
-import FormButton from './components/FormButton';
+import FormBase from './form/Form';
+import FormHeader from './form/FormHeader';
+import FormError from './form/FormErrorList';
+import FormField from './form/FormField';
+import FormButton from './form/FormButton';
 
 
 class RegisterForm extends React.Component {
@@ -18,10 +18,6 @@ class RegisterForm extends React.Component {
             confirmPassword: '',
             errors: [],
         };
-        this.register = this.register.bind(this);
-        this.handleUsername = this.handleUsername.bind(this);
-        this.handlePassword = this.handlePassword.bind(this);
-        this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
     }
 
     render() {
@@ -29,14 +25,26 @@ class RegisterForm extends React.Component {
             <FormBase onSubmit={this.register}>
                 <FormHeader title='Sign Up' />
                 {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
-                <FormField type='text' fieldname='username' onChange={this.handleUsername} />
-                <FormField type='password' fieldname='password' onChange={this.handlePassword} />
                 <FormField
-                  type='password'
-                  fieldname='confirm password'
-                  onChange={this.handleConfirmPassword}
+                    type='text'
+                    fieldname='username'
+                    onChange={this.handleUsername}
                 />
-                <FormButton classType='primary' buttonType='submit' text='Sign Up' />
+                <FormField
+                    type='password'
+                    fieldname='password'
+                    onChange={this.handlePassword}
+                />
+                <FormField
+                    type='password'
+                    fieldname='confirm password'
+                    onChange={this.handleConfirmPassword}
+                />
+                <FormButton
+                    classType='primary'
+                    buttonType='submit'
+                    text='Sign Up'
+                />
                 <p>or</p>
                 <FormButton
                   classType='secondary'
@@ -48,25 +56,25 @@ class RegisterForm extends React.Component {
         );
     }
 
-    handleUsername(event) {
+    handleUsername = (event) => {
         this.setState({
             username: event.target.value,
         });
     }
 
-    handlePassword(event) {
+    handlePassword = (event) => {
         this.setState({
             password: event.target.value,
         });
     }
 
-    handleConfirmPassword(event) {
+    handleConfirmPassword = (event) => {
         this.setState({
             confirmPassword: event.target.value,
         });
     }
 
-    validate() {
+    validate = () => {
         let errors = [];
 
         if (this.state.username === '') {
@@ -92,7 +100,7 @@ class RegisterForm extends React.Component {
         return errors.length === 0;
     }
 
-    register(event) {
+    register = (event) => {
         event.preventDefault();
 
         let isValid = this.validate();

@@ -1,10 +1,10 @@
-.Form-error-list {
+.FormErrorList {
     margin: 1rem 0;
 
     list-style: none;
 }
 
-.Form-error-listitem {
+.FormErrorList-item {
     color: #f54c4c;
 
     font-size: 0.8rem;

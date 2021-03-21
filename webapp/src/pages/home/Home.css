@@ -2,7 +2,7 @@
     height: 100vh;
 }
 
-.Home-header {
+.HomeHeader {
     height: 30%;
 
     display: flex;
@@ -15,15 +15,15 @@
     text-align: center;
 }
 
-.Home-title {
+.HomeHeader-title {
     color: #790ce6;
 }
 
-.Home-details {
+.HomeHeader-details {
     margin-top: 1rem;
 }
 
-.Form {
+.UserForm {
     display: flex;
     justify-content: center;
     align-items: center;

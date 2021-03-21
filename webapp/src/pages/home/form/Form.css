@@ -1,4 +1,4 @@
-.Form-base {
+.Form {
     min-width: 360px;
     width: 360px;
 
@@ -11,7 +11,7 @@
 
 
 @media only screen and (min-width: 769px) {
-    .Form-base {
+    .Form {
         height: 480px;
 
         display: flex;
@@ -25,7 +25,7 @@
         box-shadow: 2px 2px 2px #e2e2e2;
     }
 
-    .Form-base > :not(h2) {
+    .Form > :not(h2) {
         margin: 0.5rem 0;
     }
 }

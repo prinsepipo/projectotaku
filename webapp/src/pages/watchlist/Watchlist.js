@@ -1,5 +1,4 @@
-import WatchlistHeader from './WatchlistHeader';
-import Kanban from './Kanban';
+import Kanban from './kanban/Kanban';
 
 import './Watchlist.css';
 
@@ -7,7 +6,11 @@ import './Watchlist.css';
 function Watchlist() {
     return (
         <div className='Watchlist'>
-            <WatchlistHeader />
+            <div className='WatchlistHeader'>
+                <div className='WatchlistHeaderContainer'>
+                    <a className='WatchlistHeader-link' href='/watchlist'>Project Otaku</a>
+                </div>
+            </div>
             <Kanban />
         </div>
     );

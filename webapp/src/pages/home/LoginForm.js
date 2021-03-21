@@ -2,11 +2,11 @@ import React from 'react';
 
 import api from '../../utils/api';
 
-import FormBase from './components/FormBase';
-import FormHeader from './components/FormHeader';
-import FormError from './components/FormError';
-import FormField from './components/FormField';
-import FormButton from './components/FormButton';
+import FormBase from './form/Form';
+import FormHeader from './form/FormHeader';
+import FormError from './form/FormErrorList';
+import FormField from './form/FormField';
+import FormButton from './form/FormButton';
 
 
 class LoginForm extends React.Component {
@@ -16,11 +16,7 @@ class LoginForm extends React.Component {
             username: '',
             password: '',
             errors: [],
-            isValid: false,
         };
-        this.login = this.login.bind(this);
-        this.handleUsername = this.handleUsername.bind(this);
-        this.handlePassword = this.handlePassword.bind(this);
     }
 
     render() {
@@ -28,11 +24,21 @@ class LoginForm extends React.Component {
             <FormBase onSubmit={this.login}>
                 <FormHeader title='Sign In' />
                 {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
-                <FormField type='text' fieldname='username' onChange={this.handleUsername}
+                <FormField
+                    type='text'
+                    fieldname='username'
+                    onChange={this.handleUsername}
                 />
-                <FormField type='password' fieldname='password' onChange={this.handlePassword}
+                <FormField
+                    type='password'
+                    fieldname='password'
+                    onChange={this.handlePassword}
                 />
-                <FormButton classType='primary' buttonType='submit' text='Sign In' />
+                <FormButton
+                    classType='primary'
+                    buttonType='submit'
+                    text='Sign In'
+                />
                 <p>or</p>
                 <FormButton
                   classType='secondary'
@@ -44,19 +50,19 @@ class LoginForm extends React.Component {
         );
     }
 
-    handleUsername(event) {
+    handleUsername = (event) => {
         this.setState({
             username: event.target.value,
         });
     }
 
-    handlePassword(event) {
+    handlePassword = (event) => {
         this.setState({
             password: event.target.value,
         });
     }
 
-    validate() {
+    validate = () => {
         let errors = [];
 
         if (this.state.username === '') {
@@ -74,7 +80,7 @@ class LoginForm extends React.Component {
         return errors.length === 0;
     }
 
-    login(event) {
+    login = (event) => {
         event.preventDefault();
 
         let isValid = this.validate();

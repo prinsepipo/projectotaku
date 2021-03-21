@@ -17,18 +17,18 @@ class Home extends React.Component {
     render() {
         return (
             <div className='Home'>
-                <div className='Home-header flex-center'>
-                    <h1 className='Home-title'>Project Otaku</h1>
-                    <p className='Home-details'>Create and manage your anime and manga list.</p>
+                <div className='HomeHeader'>
+                    <h1 className='HomeHeader-title'>Project Otaku</h1>
+                    <p className='HomeHeader-details'>Create and manage your anime and manga list.</p>
                 </div>
-                <div className='Form'>
-                    <this.state.form swapForm={this.swapForm.bind(this)} />
+                <div className='UserForm'>
+                    <this.state.form swapForm={this.swapForm} />
                 </div>
             </div>
         );
     }
 
-    swapForm() {
+    swapForm = () => {
         let form;
 
         if (this.state.form === LoginForm) {

@@ -5,7 +5,7 @@
     overflow: auto;
 }
 
-.Kanban-content {
+.KanbanContent {
     width: 900px;
     height: 100%;
 
@@ -16,7 +16,7 @@
     margin: 0 auto;
 }
 
-.Kanban-section {
+.KanbanSection {
     flex-basis: 30%;
 
     height: 90%;
@@ -31,7 +31,7 @@
     box-shadow: 2px 2px 2px #e3e3e3;
 }
 
-.Kanban-section-header {
+.KanbanSectionHeader {
     height: 3rem;
 
     display: flex;
@@ -40,13 +40,14 @@
     padding: 0 1rem;
 }
 
-.Kanban-section-title {
+.KanbanSectionHeader-title {
     color: #790ce6;
 
-    font-size: 1.25rem;
+    font-size: 1rem;
+    text-transform: uppercase;
 }
 
-.Kanban-list {
+.KanbanList {
     height: calc(100% - 3rem);
 
     padding: 0 0.5rem;
@@ -57,12 +58,14 @@
     overflow: auto;
 }
 
-.Kanban-listitem {
+.KanbanListItem {
     height: 4rem;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    background: #ffffff;
 
     margin: 0.5rem 0;
 
@@ -72,12 +75,11 @@
     overflow: hidden;
 }
 
-
-.Kanban-listitem-image {
+.KanbanListItem-image {
     height: 100%;
 }
 
-.Kanban-listitem-title {
+.KanbanListItem-title {
     width: 100%;
 
     margin: 0.5rem;
