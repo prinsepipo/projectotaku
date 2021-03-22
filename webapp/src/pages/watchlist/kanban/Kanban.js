@@ -4,6 +4,7 @@ import {
     DragDropContext,
 } from 'react-beautiful-dnd';
 
+import KanbanHeader from './KanbanHeader';
 import KanbanSection from './KanbanSection';
 
 // Styling for all kanban related classes will all be stored here.
@@ -29,6 +30,7 @@ class Kanban extends React.Component {
     render() {
         return (
             <div className='Kanban'>
+                <KanbanHeader />
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='KanbanContent'>
                         {this.state.sections.map((section, index) => {

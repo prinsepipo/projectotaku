@@ -1,0 +1,20 @@
+.AddItemButton {
+    color: #790ce6;
+    background: #ffffff;
+
+    padding: 0.25rem 1rem;
+
+    border: solid 1px #790ce6;
+    border-radius: 3px;
+
+    cursor: pointer;
+}
+
+.AddItemButton:hover {
+    color: #f4f4f4;
+    background: #790ce6;
+}
+
+.AddItemButton:active {
+    background: #6a11c4;
+}
