@@ -3,7 +3,7 @@ import './AddItemButton.css';
 
 function AddItemButton(props) {
     return (
-        <button className='AddItemButton' type='button'>Add Item</button>
+        <button className='AddItemButton' type='button' onClick={props.onClick}>Add Item</button>
     );
 }
 

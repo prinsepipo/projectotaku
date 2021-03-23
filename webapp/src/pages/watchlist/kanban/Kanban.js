@@ -30,7 +30,7 @@ class Kanban extends React.Component {
     render() {
         return (
             <div className='Kanban'>
-                <KanbanHeader />
+                <KanbanHeader toggleBrowsing={this.props.toggleBrowsing} />
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='KanbanContent'>
                         {this.state.sections.map((section, index) => {

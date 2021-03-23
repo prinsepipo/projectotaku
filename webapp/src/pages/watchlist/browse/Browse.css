@@ -1,0 +1,81 @@
+.Browse {
+    height: 100%;
+}
+
+.BrowseHeader {
+    display: flex;
+    align-items: center;
+}
+
+.BrowseHeader-title {
+    font-size: 1.25rem;
+}
+
+.BrowseHeader-button-close {
+    padding: 0.5rem 1rem;
+    margin-left: auto;
+
+    color: #d83737;
+    background: transparent;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.BrowseHeader-button-close:hover {
+    color: #f03636;
+}
+
+.BrowseSearch {
+    height: 95%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.BrowseSearchBar {
+    flex-grow: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}
+
+.BrowseSearchBar-input {
+    width: 400px;
+
+    padding: 0.5rem 1rem;
+
+    border: solid 1px #d0d0d0;
+    border-right: none;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+
+.BrowseSearchBar-button {
+    background: #790ce6;
+
+    padding: 0.5rem 1rem;
+
+    border: solid 1px #d0d0d0;
+    border-left: none;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+
+    cursor: pointer;
+}
+
+.BrowseSearchBar-button:hover {
+    background: #8822ee;
+}
+
+.BrowseSearchBar-button:active {
+    background: #6f0fce;
+}
+
+.BrowseSearchBar-button svg path {
+    color: #f4f4f4;
+}
