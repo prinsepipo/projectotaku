@@ -3,7 +3,7 @@ import ReactModal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { jikan } from '../../../utils/api';
+import { jikanAPI } from '../../../utils/api';
 
 import './Browse.css';
 
@@ -89,7 +89,7 @@ class BrowseModal extends React.Component {
         event.preventDefault();
 
         if (this.state.query) {
-            jikan.get(`search/anime?q=${this.state.query}`)
+            jikanAPI.get(`search/anime?q=${this.state.query}`)
                 .then((response) => {
                     this.setState({
                         results: response.data.results,

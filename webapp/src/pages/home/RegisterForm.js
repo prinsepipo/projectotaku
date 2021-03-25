@@ -1,6 +1,6 @@
 import React from 'react';
 
-import api from '../../utils/api';
+import { watchlistAPI } from '../../utils/api';
 
 import FormBase from './form/Form';
 import FormHeader from './form/FormHeader';
@@ -107,7 +107,7 @@ class RegisterForm extends React.Component {
 
         if (isValid) {
             // Register using backend api.
-            api.post('auth/register/', {
+            watchlistAPI.post('auth/register/', {
                 username: this.state.username,
                 password: this.state.password,
             })

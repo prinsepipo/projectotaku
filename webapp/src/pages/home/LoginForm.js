@@ -1,6 +1,6 @@
 import React from 'react';
 
-import api from '../../utils/api';
+import { watchlistAPI } from '../../utils/api';
 
 import FormBase from './form/Form';
 import FormHeader from './form/FormHeader';
@@ -87,7 +87,7 @@ class LoginForm extends React.Component {
 
         if (isValid) {
             // Login using backend api.
-            api.post('auth/login/', {
+            watchlistAPI.post('auth/login/', {
                 username: this.state.username,
                 password: this.state.password,
             })

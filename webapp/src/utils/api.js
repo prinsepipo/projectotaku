@@ -1,17 +1,17 @@
 import axios from 'axios';
 
 
-const watchlist = axios.create({
+const watchlistAPI = axios.create({
     baseURL: 'http://localhost:8000/api/',
     timeout: 1000,
 });
 
-const jikan = axios.create({
+const jikanAPI = axios.create({
     baseURL: 'https://api.jikan.moe/v3/',
 })
 
 
 export {
-    watchlist,
-    jikan,
+    watchlistAPI,
+    jikanAPI,
 }
