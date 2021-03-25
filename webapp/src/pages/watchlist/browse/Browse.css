@@ -41,7 +41,7 @@
     justify-content: center;
     align-items: center;
 
-    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .BrowseSearchBar-input {
@@ -60,7 +60,7 @@
 
     padding: 0.5rem 1rem;
 
-    border: solid 1px #d0d0d0;
+    border: solid 1px #790ce6;
     border-left: none;
     border-top-right-radius: 24px;
     border-bottom-right-radius: 24px;
@@ -78,4 +78,67 @@
 
 .BrowseSearchBar-button svg path {
     color: #f4f4f4;
+}
+
+.BrowseSearchResult {
+    overflow: auto;
+}
+
+.BrowseSearchItem {
+    width: 80%;
+
+    display: flex;
+
+    margin: 1rem auto;
+    padding: 0.5rem;
+
+    border: solid 1px #d0d0d0;
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+.BrowseSearchItem:hover {
+    box-shadow: 2px 2px 2px #e0e0e0;
+}
+
+.BrowseSearchItem-img {
+    width: 96px;
+
+    border-radius: 4px;
+}
+
+.BrowseSearchItem-details {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0 1rem;
+}
+
+.BrowseSearchItem-title {
+    color: #2b6cf8;
+
+    text-align: center;
+    font-size: 1rem;
+
+    margin-bottom: 0.5rem;
+
+    text-decoration: none;
+
+    outline: none;
+}
+
+.BrowseSearchItem-synopsis {
+    flex-grow: 1;
+
+    font-size: 0.8rem;
+}
+
+.BrowseFlair-item {
+    position: relative;
+    z-index: 99;
+}
+
+.BrowseFlair-item:nth-of-type(2) {
+    margin: 0 0.5rem;
 }
