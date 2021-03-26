@@ -6,6 +6,7 @@ import {
 
 import Home from './pages/home/Home';
 import Watchlist from './pages/watchlist/Watchlist';
+import ServerError from './pages/server-error/ServerError';
 
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
             </Route>
             <Route exact path='/'>
                 <Home />
+            </Route>
+            <Route path='/server-error'>
+                <ServerError />
             </Route>
             <Route path='*'>
                 {/* TODO: 404 page not found. */}

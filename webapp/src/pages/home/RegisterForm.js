@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { watchlistAPI } from '../../utils/api';
 
@@ -17,10 +18,16 @@ class RegisterForm extends React.Component {
             password: '',
             confirmPassword: '',
             errors: [],
+            redirect: false,
+            redirectPath: '',
         };
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect push to={this.state.redirectPath} />
+        }
+
         return (
             <FormBase onSubmit={this.register}>
                 <FormHeader title='Sign Up' />
@@ -124,6 +131,11 @@ class RegisterForm extends React.Component {
 
                         this.setState({
                             errors: errors,
+                        });
+                    } else {
+                        this.setState({
+                            redirect: true,
+                            redirectPath: '/server-error',
                         });
                     }
                 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { watchlistAPI } from '../../utils/api';
 
@@ -16,10 +17,16 @@ class LoginForm extends React.Component {
             username: '',
             password: '',
             errors: [],
+            redirect: false,
+            redirectPath: '',
         };
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect push to={this.state.redirectPath} />
+        }
+
         return (
             <FormBase onSubmit={this.login}>
                 <FormHeader title='Sign In' />
@@ -107,6 +114,10 @@ class LoginForm extends React.Component {
                         });
                     } else {
                         // Handle error when request was sent but no response from the server.
+                        this.setState({
+                            redirect: true,
+                            redirectPath: '/server-error',
+                        });
                     }
                 });
         }
