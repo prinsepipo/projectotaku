@@ -1,5 +1,7 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+
+import UserContext from '../../context/UserContext';
 
 import { watchlistAPI } from '../../utils/api';
 
@@ -11,22 +13,18 @@ import FormButton from './form/FormButton';
 
 
 class LoginForm extends React.Component {
+    static contextType = UserContext;
+
     constructor(props) {
         super(props);
         this.state = {
             username: '',
             password: '',
             errors: [],
-            redirect: false,
-            redirectPath: '',
         };
     }
 
     render() {
-        if (this.state.redirect) {
-            return <Redirect push to={this.state.redirectPath} />
-        }
-
         return (
             <FormBase onSubmit={this.login}>
                 <FormHeader title='Sign In' />
@@ -93,13 +91,16 @@ class LoginForm extends React.Component {
         let isValid = this.validate();
 
         if (isValid) {
-            // Login using backend api.
             watchlistAPI.post('auth/login/', {
                 username: this.state.username,
                 password: this.state.password,
             })
                 .then(response => {
-                    console.log(response.data);
+                    localStorage.setItem('TOKEN', response.data.token);
+
+                    this.context.setIsAuthenticated(() => true);
+
+                    this.props.history.push('/watchlist');
                 })
                 .catch(error => {
                     if (error.response) {
@@ -114,14 +115,12 @@ class LoginForm extends React.Component {
                         });
                     } else {
                         // Handle error when request was sent but no response from the server.
-                        this.setState({
-                            redirect: true,
-                            redirectPath: '/server-error',
-                        });
+                        this.props.history.push('/server-error');
                     }
-                });
+                }
+            );
         }
     }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+
+import UserContext from '../../context/UserContext';
 
 import { watchlistAPI } from '../../utils/api';
 
@@ -11,6 +13,8 @@ import FormButton from './form/FormButton';
 
 
 class RegisterForm extends React.Component {
+    static contextType = UserContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -18,16 +22,10 @@ class RegisterForm extends React.Component {
             password: '',
             confirmPassword: '',
             errors: [],
-            redirect: false,
-            redirectPath: '',
         };
     }
 
     render() {
-        if (this.state.redirect) {
-            return <Redirect push to={this.state.redirectPath} />
-        }
-
         return (
             <FormBase onSubmit={this.register}>
                 <FormHeader title='Sign Up' />
@@ -113,13 +111,40 @@ class RegisterForm extends React.Component {
         let isValid = this.validate();
 
         if (isValid) {
-            // Register using backend api.
-            watchlistAPI.post('auth/register/', {
+            const data = {
                 username: this.state.username,
                 password: this.state.password,
-            })
+            }
+
+            watchlistAPI.post('auth/register/', data)
                 .then(response => {
-                    console.log(response.data);
+                    // After registering, automatically login the user to
+                    // remove extra step of loggin in.
+                    watchlistAPI.post('auth/login/', data)
+                        .then(response => {
+                            localStorage.setItem('TOKEN', response.data.token);
+
+                            this.context.setIsAuthenticated(() => true);
+
+                            this.props.history.push('/watchlist');
+                        })
+                        .catch(error => {
+                            if (error.response) {
+                                let errors = [];
+
+                                if (error.response.data.non_field_errors) {
+                                    errors.push(error.response.data.non_field_errors);
+                                }
+
+                                this.setState({
+                                    errors: errors,
+                                });
+                            } else {
+                                // Handle error when request was sent but no response from the server.
+                                this.props.history.push('/server-error');
+                            }
+                        }
+                    );
                 })
                 .catch(error => {
                     if (error.response) {
@@ -133,15 +158,14 @@ class RegisterForm extends React.Component {
                             errors: errors,
                         });
                     } else {
-                        this.setState({
-                            redirect: true,
-                            redirectPath: '/server-error',
-                        });
+                        // Handle error when request was sent but no response from the server.
+                        this.props.history.push('/server-error');
                     }
-                });
+                }
+            );
         }
     }
 }
 
 
-export default RegisterForm;
+export default withRouter(RegisterForm);

@@ -1,4 +1,7 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+
+import UserContext from '../../context/UserContext';
 
 import Kanban from './kanban/Kanban';
 import Browse from './browse/Browse';
@@ -7,6 +10,8 @@ import './Watchlist.css';
 
 
 class Watchlist extends React.Component {
+    static contextType = UserContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +20,10 @@ class Watchlist extends React.Component {
     }
 
     render() {
+        if (!this.context.isAuthenticated) {
+            return <Redirect push to='/' />
+        }
+
         return (
             <div className='Watchlist'>
                 <div className='WatchlistHeader'>
