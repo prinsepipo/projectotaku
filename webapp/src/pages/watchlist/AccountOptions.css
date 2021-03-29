@@ -1,0 +1,21 @@
+.AccountOptions {
+    margin-left: auto;
+
+    list-style: none;
+}
+
+.AccountOptions-item button {
+    background: transparent;
+    color: #e3e3e3;
+
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.AccountOptions-item button:hover {
+    color: #f4f4f4;
+}

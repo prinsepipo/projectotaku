@@ -5,6 +5,7 @@ import UserContext from '../../context/UserContext';
 
 import Kanban from './kanban/Kanban';
 import Browse from './browse/Browse';
+import AccountOptions from './AccountOptions';
 
 import './Watchlist.css';
 
@@ -29,6 +30,7 @@ class Watchlist extends React.Component {
                 <div className='WatchlistHeader'>
                     <div className='WatchlistHeaderContainer'>
                         <a className='WatchlistHeader-link' href='/watchlist'>Project Otaku</a>
+                        <AccountOptions />
                     </div>
                 </div>
                 <Kanban toggleBrowsing={this.toggleBrowsing} />
