@@ -1,0 +1,45 @@
+.BrowseSearchBar {
+    flex-grow: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 1rem;
+}
+
+.BrowseSearchBar-input {
+    width: 400px;
+
+    padding: 0.5rem 1rem;
+
+    border: solid 1px #d0d0d0;
+    border-right: none;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+
+.BrowseSearchBar-button {
+    background: #790ce6;
+
+    padding: 0.5rem 1rem;
+
+    border: solid 1px #790ce6;
+    border-left: none;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+
+    cursor: pointer;
+}
+
+.BrowseSearchBar-button:hover {
+    background: #8822ee;
+}
+
+.BrowseSearchBar-button:active {
+    background: #6f0fce;
+}
+
+.BrowseSearchBar-button svg path {
+    color: #f4f4f4;
+}

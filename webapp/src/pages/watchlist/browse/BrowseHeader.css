@@ -1,0 +1,24 @@
+.BrowseHeader {
+    display: flex;
+    align-items: center;
+}
+
+.BrowseHeader-title {
+    font-size: 1.25rem;
+}
+
+.BrowseHeader-close {
+    padding: 0.5rem 1rem;
+    margin-left: auto;
+
+    color: #d82b2b;
+    background: transparent;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+.BrowseHeader-close:hover {
+    color: #f03636;
+}
