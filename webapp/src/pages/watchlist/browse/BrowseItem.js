@@ -22,7 +22,7 @@ function BrowseItem(props) {
                     {props.item.title} - ({props.item.type}) {props.item.episodes} episode/s
                 </a>
                 <p className='BrowseItem-synopsis'>{props.item.synopsis}</p>
-                <AddItemOptions />
+                <AddItemOptions item={props.item} />
             </div>
         </div>
     );
