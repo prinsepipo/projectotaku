@@ -1,7 +1,10 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useState, useContext, useEffect } from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
+import WatchlistContext from '../../context/WatchlistContext';
+
+import { watchlistAPI } from '../../utils/api';
 
 import Kanban from './kanban/Kanban';
 import Browse from './browse/Browse';
@@ -10,40 +13,50 @@ import AccountOptions from './AccountOptions';
 import './Watchlist.css';
 
 
-class Watchlist extends React.Component {
-    static contextType = UserContext;
+function Watchlist(props) {
+    const [isBrowsing, setIsBrowsing] = useState(false);
+    const user = useContext(UserContext);
+    const [watchlist, setWatchlist] = useContext(WatchlistContext);
+    const history = useHistory();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isBrowsing: false,
+    useEffect(() => {
+        const headers = {
+            Authorization: `Token ${localStorage.getItem('TOKEN')}`,
         };
+        watchlistAPI.get('watchlist/', {headers})
+            .then((response) => {
+                setWatchlist(response.data);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // Handle response error.
+                    console.log(error.response.data);
+                } else {
+                    history.push('/server-error');
+                }
+            });
+    }, [setWatchlist, history]);
+
+    if (!user.isAuthenticated) {
+        return <Redirect push to='/' />
     }
 
-    render() {
-        if (!this.context.isAuthenticated) {
-            return <Redirect push to='/' />
-        }
+    const toggleBrowsing = () => {
+        setIsBrowsing(!isBrowsing);
+    }
 
-        return (
-            <div className='Watchlist'>
-                <div className='WatchlistHeader'>
-                    <div className='WatchlistHeaderContainer'>
-                        <a className='WatchlistHeader-link' href='/watchlist'>Project Otaku</a>
-                        <AccountOptions />
-                    </div>
+    return (
+        <div className='Watchlist'>
+            <div className='WatchlistHeader'>
+                <div className='WatchlistHeaderContainer'>
+                    <a className='WatchlistHeader-link' href='/watchlist'>Project Otaku</a>
+                    <AccountOptions />
                 </div>
-                <Kanban toggleBrowsing={this.toggleBrowsing} />
-                <Browse isBrowsing={this.state.isBrowsing} toggleBrowsing={this.toggleBrowsing} />
             </div>
-        );
-    }
-
-    toggleBrowsing = () => {
-        this.setState({
-            isBrowsing: !this.state.isBrowsing,
-        });
-    }
+            <Kanban watchlist={watchlist} toggleBrowsing={toggleBrowsing} />
+            <Browse isBrowsing={isBrowsing} toggleBrowsing={toggleBrowsing} />
+        </div>
+    );
 }
 
 
