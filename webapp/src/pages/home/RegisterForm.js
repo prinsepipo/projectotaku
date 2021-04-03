@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
 
-import { watchlistAPI } from '../../utils/api';
+import { backendAPI } from '../../utils/api';
 
 import FormBase from './form/Form';
 import FormHeader from './form/FormHeader';
@@ -116,11 +116,10 @@ class RegisterForm extends React.Component {
                 password: this.state.password,
             }
 
-            watchlistAPI.post('auth/register/', data)
+            // Register then login user if successful.
+            backendAPI.post('auth/register/', data)
                 .then(response => {
-                    // After registering, automatically login the user to
-                    // remove extra step of loggin in.
-                    watchlistAPI.post('auth/login/', data)
+                    backendAPI.post('auth/login/', data)
                         .then(response => {
                             localStorage.setItem('TOKEN', response.data.token);
 

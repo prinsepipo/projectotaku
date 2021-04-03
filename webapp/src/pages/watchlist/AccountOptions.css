@@ -4,18 +4,20 @@
     list-style: none;
 }
 
-.AccountOptions-item button {
+.AccountOptions-item a {
     background: transparent;
     color: #e3e3e3;
 
     font-size: 0.9rem;
     font-weight: bold;
 
+    text-decoration: none;
+
     border: none;
 
     cursor: pointer;
 }
 
-.AccountOptions-item button:hover {
+.AccountOptions-item a:hover {
     color: #f4f4f4;
 }

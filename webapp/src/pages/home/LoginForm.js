@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
 
-import { watchlistAPI } from '../../utils/api';
+import { backendAPI } from '../../utils/api';
 
 import FormBase from './form/Form';
 import FormHeader from './form/FormHeader';
@@ -91,7 +91,7 @@ class LoginForm extends React.Component {
         let isValid = this.validate();
 
         if (isValid) {
-            watchlistAPI.post('auth/login/', {
+            backendAPI.post('auth/login/', {
                 username: this.state.username,
                 password: this.state.password,
             })

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 
 import WatchlistContext from '../../../context/WatchlistContext';
 
-import { watchlistAPI } from '../../../utils/api';
+import { backendAPI } from '../../../utils/api';
 
 import './AddItemOptions.css';
 
@@ -27,7 +27,7 @@ function AddItemOptions(props) {
         };
 
         const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-        watchlistAPI.post('watchlist/', data, {headers})
+        backendAPI.post('watchlist/', data, {headers})
             .then((response) => {
                 setWatchlist((oldValue) => [...oldValue, response.data]);
             })

@@ -4,7 +4,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import WatchlistContext from '../../context/WatchlistContext';
 
-import { watchlistAPI } from '../../utils/api';
+import { backendAPI } from '../../utils/api';
 
 import Kanban from './kanban/Kanban';
 import Browse from './browse/Browse';
@@ -23,19 +23,21 @@ function Watchlist(props) {
         const headers = {
             Authorization: `Token ${localStorage.getItem('TOKEN')}`,
         };
-        watchlistAPI.get('watchlist/', {headers})
+        backendAPI.get('watchlist/', {headers})
             .then((response) => {
                 setWatchlist(response.data);
             })
             .catch((error) => {
                 if (error.response) {
-                    // Handle response error.
-                    console.log(error.response.data);
+                    // Token used for authentication is no longer valid.
+                    if (error.response.status === 401) {
+                        history.push('/logout');
+                    }
                 } else {
                     history.push('/server-error');
                 }
             });
-    }, [setWatchlist, history]);
+    }, []);
 
     if (!user.isAuthenticated) {
         return <Redirect push to='/' />
