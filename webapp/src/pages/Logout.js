@@ -19,7 +19,7 @@ function Logout(props) {
         localStorage.removeItem('TOKEN');
         setIsAuthenticated(false);
         history.push('/');
-    }, []);
+    }, [setIsAuthenticated, history]);
 
     return (
         <div>

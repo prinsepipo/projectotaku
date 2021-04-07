@@ -37,7 +37,7 @@ function Watchlist(props) {
                     history.push('/server-error');
                 }
             });
-    }, []);
+    }, [setWatchlist, history]);
 
     if (!user.isAuthenticated) {
         return <Redirect push to='/' />
