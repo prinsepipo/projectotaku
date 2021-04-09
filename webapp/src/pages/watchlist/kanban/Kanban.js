@@ -1,30 +1,22 @@
-import { useState, useEffect } from "react";
+import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
     DragDropContext,
 } from 'react-beautiful-dnd';
 
+import WatchlistContext from '../../../context/WatchlistContext';
 
 import KanbanHeader from './KanbanHeader';
 import KanbanSection from './KanbanSection';
 
 // Styling for all kanban related classes will all be stored here.
 import './Kanban.css';
+import { backendAPI } from '../../../utils/api';
 
 function Kanban(props) {
-    const [list, setList] = useState({
-        watch: [],
-        watching: [],
-        watched: [],
-    });
     const sections = ['watch', 'watching', 'watched'];
-
-    useEffect(() => {
-        setList({
-            watch: props.watchlist.filter((item) => item.status === 'watch'),
-            watching: props.watchlist.filter((item) => item.status === 'watching'),
-            watched: props.watchlist.filter((item) => item.status === 'watched'),
-        })
-    }, [props.watchlist]);
+    const [watchlist, setWatchlist] = useContext(WatchlistContext);
+    const history = useHistory();
 
     const onDragEnd = ({source, destination, draggableId}) => {
         // Operate only if the destination is not null.
@@ -35,15 +27,53 @@ function Kanban(props) {
                 return;
             }
 
-            // Update the list where the dragged item will be removed.
-            const newList = list;
-            const sourceList = newList[source.droppableId];
-            const item = sourceList.splice(source.index, 1)[0];
-            // Update the list where the dragged item will be inserted.
-            const destinationList = newList[destination.droppableId];
+            // Update dragged item and its source and destination neighboring items.
+            const list = {...watchlist};
+            const updatedItems = [];
+            const sourceList = list[source.droppableId];
+            const destinationList = list[destination.droppableId];
+
+            const sourcePrevItem = sourceList[source.index - 1];
+            const sourceNextItem = sourceList[source.index + 1];
+            if (sourcePrevItem) {
+                sourcePrevItem.next_item_id = sourceNextItem ? sourceNextItem.id : null;
+                updatedItems.push(sourcePrevItem);
+            }
+
+            let item = sourceList.splice(source.index, 1)[0];
+            item.status = destination.droppableId;
             destinationList.splice(destination.index, 0, item);
 
-            setList(newList);
+            item = destinationList[destination.index];
+            const destinationPrevItem = destinationList[destination.index - 1];
+            const destinationNextItem = destinationList[destination.index + 1];
+            if (destinationPrevItem) {
+                destinationPrevItem.next_item_id = item ? item.id : null;
+                updatedItems.push(destinationPrevItem);
+            }
+
+            item.next_item_id = destinationNextItem ? destinationNextItem.id : null;
+            updatedItems.push(item);
+
+            setWatchlist(list);
+
+            // Persist changes to database.
+            for (let i = 0; i < updatedItems.length; i++) {
+                const item = updatedItems[i];
+                const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
+                backendAPI.put(`watchlist/${item.id}/`, item, {headers})
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 401) {
+                                history.push('/logout');
+                            } else {
+                                console.log(error.response.data);
+                            }
+                        } else {
+                            history.push('/server-error');
+                        }
+                    });
+            }
         }
     }
 
@@ -53,7 +83,7 @@ function Kanban(props) {
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className='KanbanContent'>
                     {sections.map((section, index) => {
-                        return <KanbanSection key={index} section={section} list={list[section]} />;
+                        return <KanbanSection key={index} section={section} list={watchlist[section]} />;
                     })}
                 </div>
             </DragDropContext>

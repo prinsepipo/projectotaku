@@ -25,7 +25,33 @@ function Watchlist(props) {
         };
         backendAPI.get('watchlist/', {headers})
             .then((response) => {
-                setWatchlist(response.data);
+                // Order watchlist items based on its status/section and link/position.
+                const list = response.data;
+                const newList = {
+                    watch: [],
+                    watching: [],
+                    watched: [],
+                };
+
+                for (const section in newList) {
+                    const sectionList = newList[section];
+                    const filteredList = list.filter((element) => element.status === section);
+
+                    while (filteredList.length !== 0) {
+                        if (sectionList.length === 0) {
+                            const tailItemIndex = filteredList.findIndex((element) => element.next_item_id === null);
+                            const tailItem = filteredList.splice(tailItemIndex, 1)[0];
+                            sectionList.unshift(tailItem);
+                        } else {
+                            const headItem = sectionList[0];
+                            const prevItemIndex = filteredList.findIndex((element) => element.next_item_id === headItem.id);
+                            const prevItem = filteredList.splice(prevItemIndex, 1)[0];
+                            sectionList.unshift(prevItem);
+                        }
+                    }
+                }
+
+                setWatchlist(newList);
             })
             .catch((error) => {
                 if (error.response) {

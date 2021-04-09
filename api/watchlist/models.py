@@ -22,3 +22,4 @@ class WatchlistItem(models.Model):
     mal_url = models.URLField()
     type = models.CharField(choices=TYPES, max_length=len(TYPES[0][0]), default=TYPES[0][0])
     status = models.CharField(choices=STATUSES, max_length=len(STATUSES[1][0]), default=STATUSES[0][0])
+    next_item_id = models.IntegerField(null=True, blank=True)
