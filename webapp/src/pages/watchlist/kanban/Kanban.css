@@ -6,21 +6,32 @@
 }
 
 .KanbanHeader {
-    margin-top: 1rem;
+    height: 3rem;
+    max-width: 900px;
+
+    padding: 0 1rem;
+    margin: auto;
 }
 
 .KanbanHeader-title {
-    color: #790ce6;
+    display: flex;
+    align-items: center;
+
+    color: #2b2b2b;
     font-size: 1rem;
 }
 
 .KanbanHeaderContent {
-    max-width: 900px;
+    height: 100%;
 
     display: flex;
     align-items: center;
+}
 
-    margin: auto;
+.KanbanWrapper {
+    height: calc(100% - 3rem);
+
+    overflow: auto;
 }
 
 .KanbanContent {
@@ -28,8 +39,6 @@
     height: 100%;
 
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
 
     margin: 0 auto;
 }
@@ -37,16 +46,15 @@
 .KanbanSection {
     flex-basis: 30%;
 
-    height: 90%;
+    height: 95%;
+    min-height: 480px;
+    max-height: 600px;
 
     padding-bottom: 1rem;
+    margin: 0 auto;
 
-    background: #ffffff;
-
-    border: solid 1px #d0d0d0;
+    border: solid 1px #e0e0e0;
     border-radius: 4px;
-
-    box-shadow: 2px 2px 2px #e3e3e3;
 }
 
 .KanbanSectionHeader {
@@ -59,7 +67,7 @@
 }
 
 .KanbanSectionHeader-title {
-    color: #790ce6;
+    color: #2b2b2b;
 
     font-size: 1rem;
     text-transform: uppercase;
@@ -68,7 +76,7 @@
 .KanbanList {
     height: calc(100% - 3rem);
 
-    padding: 0 0.5rem;
+    padding: 0 0.8rem;
 
     border-top: solid 1px #d0d0d0;
     border-bottom: solid 1px #d0d0d0;
@@ -77,23 +85,23 @@
 }
 
 .KanbanListItem {
-    height: 4rem;
+    height: 4em;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: #ffffff;
+    background: #f4f4f4;
 
     margin: 0.5rem 0;
 
-    border: solid 1px #d0d0d0;
     border-radius: 4px;
 
     overflow: hidden;
 }
 
 .KanbanListItem-image {
+    width: 25%;
     height: 100%;
 }
 
@@ -103,6 +111,7 @@
     margin: 0.5rem;
 
     font-size: 0.8rem;
+    font-weight: bold;
 
     text-align: center;
 }

@@ -1,20 +1,17 @@
 .AddItemButton {
-    color: #790ce6;
-    background: #ffffff;
+    color: #e3e3e3;
+    background: #171717;
 
-    padding: 0.25rem 1rem;
+    padding: 0.5rem 1rem;
 
-    border: solid 1px #790ce6;
+    border: none;
     border-radius: 3px;
+
+    font-weight: bold;
 
     cursor: pointer;
 }
 
 .AddItemButton:hover {
     color: #f4f4f4;
-    background: #790ce6;
-}
-
-.AddItemButton:active {
-    background: #6a11c4;
 }

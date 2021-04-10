@@ -1,26 +1,27 @@
 .Watchlist {
+    width: 100vw;
     height: 100vh;
-
-    background: #f4f4f4;
 }
 
-.WatchlistHeader {
+.WatchlistNavbar {
     width: 100vw;
     height: 3rem;
 
-    background: #790ce6;
+    background: #1b1b1b;
 }
 
-.WatchlistHeaderContainer {
+.WatchlistNavbarContainer {
+    max-width: 900px;
     height: 100%;
 
     display: flex;
     align-items: center;
 
     padding: 0 1rem;
+    margin: auto;
 }
 
-.WatchlistHeader-link {
+.WatchlistNavbar-link {
     color: #f0f0f0;
 
     font-size: 1.25rem;

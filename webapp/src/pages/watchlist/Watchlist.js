@@ -75,9 +75,9 @@ function Watchlist(props) {
 
     return (
         <div className='Watchlist'>
-            <div className='WatchlistHeader'>
-                <div className='WatchlistHeaderContainer'>
-                    <a className='WatchlistHeader-link' href='/watchlist'>Project Otaku</a>
+            <div className='WatchlistNavbar'>
+                <div className='WatchlistNavbarContainer'>
+                    <a className='WatchlistNavbar-link' href='/watchlist'>Project Otaku</a>
                     <AccountOptions />
                 </div>
             </div>

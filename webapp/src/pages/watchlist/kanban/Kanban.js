@@ -80,13 +80,15 @@ function Kanban(props) {
     return (
         <div className='Kanban'>
             <KanbanHeader toggleBrowsing={props.toggleBrowsing} />
-            <DragDropContext onDragEnd={onDragEnd}>
-                <div className='KanbanContent'>
-                    {sections.map((section, index) => {
-                        return <KanbanSection key={index} section={section} list={watchlist[section]} />;
-                    })}
-                </div>
-            </DragDropContext>
+            <div className='KanbanWrapper'>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <div className='KanbanContent'>
+                        {sections.map((section, index) => {
+                            return <KanbanSection key={index} section={section} list={watchlist[section]} />;
+                        })}
+                    </div>
+                </DragDropContext>
+            </div>
         </div>
     );
 }
