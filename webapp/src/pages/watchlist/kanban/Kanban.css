@@ -85,6 +85,8 @@
 }
 
 .KanbanListItem {
+    position: relative;
+
     height: 4em;
 
     display: flex;
@@ -108,12 +110,42 @@
 .KanbanListItem-title {
     width: 100%;
 
-    margin: 0.5rem;
+    padding: 0.5rem 0;
+    padding-left: 0.5rem;
+    padding-right: 2rem;
 
     font-size: 0.8rem;
     font-weight: bold;
 
     text-align: center;
+}
+
+.KanbanListItem-delete {
+    display: none;
+
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
+.KanbanListItem:hover .KanbanListItem-delete {
+    display: block;
+}
+
+.KanbanListItem--shrink {
+    animation: KanbanListItem--shrink 0.4s forwards;
+}
+
+@keyframes KanbanListItem--shrink {
+    to {
+        height: 0;
+        display: none;
+    }
 }
 
 .KanbanToolbar {
