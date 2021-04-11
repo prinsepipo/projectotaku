@@ -1,0 +1,10 @@
+.KanbanList {
+    height: calc(100% - 3rem);
+
+    padding: 0 0.8rem;
+
+    border-top: solid 1px #d0d0d0;
+    border-bottom: solid 1px #d0d0d0;
+
+    overflow: auto;
+}

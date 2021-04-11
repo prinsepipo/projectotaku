@@ -1,17 +1,15 @@
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-    DragDropContext,
-} from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 import WatchlistContext from '../../../context/WatchlistContext';
+import { backendAPI } from '../../../utils/api';
 
 import KanbanHeader from './KanbanHeader';
 import KanbanSection from './KanbanSection';
 
-// Styling for all kanban related classes will all be stored here.
 import './Kanban.css';
-import { backendAPI } from '../../../utils/api';
+
 
 function Kanban(props) {
     const sections = ['watch', 'watching', 'watched'];

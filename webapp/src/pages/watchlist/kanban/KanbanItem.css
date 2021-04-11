@@ -1,0 +1,63 @@
+.KanbanItem {
+    position: relative;
+
+    height: 4em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f4f4f4;
+
+    margin: 0.5rem 0;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+.KanbanItem-image {
+    width: 25%;
+    height: 100%;
+}
+
+.KanbanItem-title {
+    width: 100%;
+
+    padding: 0.5rem 0;
+    padding-left: 0.5rem;
+    padding-right: 2rem;
+
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    text-align: center;
+}
+
+.KanbanItem-delete {
+    display: none;
+
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
+.KanbanItem:hover .KanbanItem-delete {
+    display: block;
+}
+
+.KanbanItem--shrink {
+    animation: shrink 0.4s forwards;
+}
+
+@keyframes shrink {
+    to {
+        height: 0;
+        display: none;
+    }
+}

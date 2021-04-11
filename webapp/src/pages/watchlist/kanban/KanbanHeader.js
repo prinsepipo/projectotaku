@@ -1,4 +1,6 @@
-import AddAnimeButton from './AddItemButton';
+import KanbanToolbar from './KanbanToolbar';
+
+import './KanbanHeader.css';
 
 
 function KanbanHeader(props) {
@@ -6,9 +8,7 @@ function KanbanHeader(props) {
         <div className='KanbanHeader'>
             <div className='KanbanHeaderContent'>
                 <h2 className='KanbanHeader-title'>Your Anime List</h2>
-                <div className='KanbanToolbar'>
-                    <AddAnimeButton onClick={props.toggleBrowsing} />
-                </div>
+                <KanbanToolbar toggleBrowsing={props.toggleBrowsing} />
             </div>
         </div>
     );

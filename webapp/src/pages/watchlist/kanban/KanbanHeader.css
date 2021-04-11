@@ -1,0 +1,22 @@
+.KanbanHeader {
+    height: 3rem;
+    max-width: 900px;
+
+    padding: 0 1rem;
+    margin: auto;
+}
+
+.KanbanHeader-title {
+    display: flex;
+    align-items: center;
+
+    color: #2b2b2b;
+    font-size: 1rem;
+}
+
+.KanbanHeaderContent {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+}

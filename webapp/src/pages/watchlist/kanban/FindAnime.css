@@ -1,4 +1,4 @@
-.AddItemButton {
+.FindAnime {
     color: #e3e3e3;
     background: #171717;
 
@@ -12,6 +12,6 @@
     cursor: pointer;
 }
 
-.AddItemButton:hover {
+.FindAnime:hover {
     color: #f4f4f4;
 }

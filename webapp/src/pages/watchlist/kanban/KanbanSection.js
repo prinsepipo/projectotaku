@@ -1,6 +1,8 @@
 import { Droppable } from 'react-beautiful-dnd';
 
-import KanbanListItem from './KanbanListItem';
+import KanbanList from './KanbanList';
+
+import './KanbanSection.css';
 
 
 function KanbanSection(props) {
@@ -13,22 +15,7 @@ function KanbanSection(props) {
             </div>
             <Droppable droppableId={props.section}>
                 {(provided) => (
-                    <div
-                        className='KanbanList'
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                    >
-                        {props.list.map((item, index) => {
-                            return (
-                                <KanbanListItem
-                                    key={item.id}
-                                    item={item}
-                                    index={index}
-                                />
-                            );
-                        })}
-                        {provided.placeholder}
-                    </div>
+                    <KanbanList provided={provided} list={props.list} />
                 )}
             </Droppable>
         </div>

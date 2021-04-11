@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import WatchlistContext from '../../../context/WatchlistContext';
-
 import { backendAPI } from '../../../utils/api';
 
+import './KanbanItem.css';
 
-function KanbanListItem(props) {
+
+function KanbanItem(props) {
     const [watchlist, setWatchlist] = useContext(WatchlistContext);
     const [modifier, setModifier] = useState('');
     const history = useHistory();
@@ -63,18 +63,18 @@ function KanbanListItem(props) {
         <Draggable draggableId={props.item.id.toString()} index={props.index}>
             {(provided) => (
                 <div
-                    className={'KanbanListItem KanbanListItem--' + modifier}
+                    className={'KanbanItem KanbanItem--' + modifier}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                 >
                     <img
-                        className='KanbanListItem-image'
+                        className='KanbanItem-image'
                         src={props.item.image_url}
                         alt={props.item.title}
                     />
-                    <p className='KanbanListItem-title'>{props.item.title}</p>
-                    <button className='KanbanListItem-delete' onClick={deleteItem}>
+                    <p className='KanbanItem-title'>{props.item.title}</p>
+                    <button className='KanbanItem-delete' onClick={deleteItem}>
                         <FontAwesomeIcon icon='trash' />
                     </button>
                 </div>
@@ -84,4 +84,4 @@ function KanbanListItem(props) {
 }
 
 
-export default KanbanListItem;
+export default KanbanItem;
