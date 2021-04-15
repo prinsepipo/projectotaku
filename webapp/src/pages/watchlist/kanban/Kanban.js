@@ -77,7 +77,7 @@ function Kanban(props) {
 
     return (
         <div className='Kanban'>
-            <KanbanHeader toggleBrowsing={props.toggleBrowsing} />
+            <KanbanHeader />
             <div className='KanbanWrapper'>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className='KanbanContent'>

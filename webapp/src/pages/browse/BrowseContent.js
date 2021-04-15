@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { jikanAPI } from '../../../utils/api';
+import { jikanAPI } from '../../utils/api';
 
 import BrowseSearchBar from './BrowseSearchBar';
 import BrowseResult from './BrowseResult';

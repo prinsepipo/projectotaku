@@ -1,0 +1,35 @@
+.Navbar {
+    height: 3rem;
+
+    background: #1b1b1b;
+}
+
+.NavbarInner {
+    height: 100%;
+    max-width: 900px;
+
+    display: flex;
+    align-items: center;
+
+    margin: auto;
+}
+
+.NavbarHeader {
+    color: #f4f4f4;
+
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-decoration: none;
+
+    margin-right: 0.5rem;
+}
+
+.NavbarNav {
+    display: flex;
+
+    list-style: none;
+}
+
+.NavbarNav-item {
+    margin: 0 0.5rem;
+}

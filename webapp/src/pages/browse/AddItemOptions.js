@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import WatchlistContext from '../../../context/WatchlistContext';
+import WatchlistContext from '../../context/WatchlistContext';
 
-import { backendAPI } from '../../../utils/api';
+import { backendAPI } from '../../utils/api';
 
 import './AddItemOptions.css';
 

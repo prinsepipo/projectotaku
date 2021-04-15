@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
@@ -6,15 +6,13 @@ import WatchlistContext from '../../context/WatchlistContext';
 
 import { backendAPI } from '../../utils/api';
 
+import Navbar from '../../components/layout/Navbar';
 import Kanban from './kanban/Kanban';
-import Browse from './browse/Browse';
-import AccountOptions from './AccountOptions';
 
 import './Watchlist.css';
 
 
 function Watchlist(props) {
-    const [isBrowsing, setIsBrowsing] = useState(false);
     const user = useContext(UserContext);
     const [watchlist, setWatchlist] = useContext(WatchlistContext);
     const history = useHistory();
@@ -69,20 +67,10 @@ function Watchlist(props) {
         return <Redirect push to='/' />
     }
 
-    const toggleBrowsing = () => {
-        setIsBrowsing(!isBrowsing);
-    }
-
     return (
         <div className='Watchlist'>
-            <div className='WatchlistNavbar'>
-                <div className='WatchlistNavbarContainer'>
-                    <a className='WatchlistNavbar-link' href='/watchlist'>Project Otaku</a>
-                    <AccountOptions />
-                </div>
-            </div>
-            <Kanban watchlist={watchlist} toggleBrowsing={toggleBrowsing} />
-            <Browse isBrowsing={isBrowsing} toggleBrowsing={toggleBrowsing} />
+            <Navbar />
+            <Kanban watchlist={watchlist} />
         </div>
     );
 }

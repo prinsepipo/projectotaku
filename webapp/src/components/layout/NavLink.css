@@ -1,0 +1,13 @@
+.NavLink {
+    color: #d4d4d4;
+
+    text-decoration: none;
+}
+
+.NavLink:hover {
+    color: #f4f4f4;
+}
+
+.NavLink--active {
+    color: #f4f4f4;
+}
