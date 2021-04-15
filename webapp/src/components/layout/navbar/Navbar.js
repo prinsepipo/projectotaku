@@ -1,5 +1,5 @@
 import NavLink from './NavLink';
-import AccountOptions from '../AccountOptions';
+import AccountOptions from '../../AccountOptions';
 
 import './Navbar.css';
 

@@ -6,7 +6,6 @@ import WatchlistContext from '../../context/WatchlistContext';
 
 import { backendAPI } from '../../utils/api';
 
-import Navbar from '../../components/layout/Navbar';
 import Kanban from './kanban/Kanban';
 
 import './Watchlist.css';
@@ -64,12 +63,11 @@ function Watchlist(props) {
     }, [setWatchlist, history]);
 
     if (!user.isAuthenticated) {
-        return <Redirect push to='/' />
+        return <Redirect push to='/auth' />
     }
 
     return (
         <div className='Watchlist'>
-            <Navbar />
             <Kanban watchlist={watchlist} />
         </div>
     );

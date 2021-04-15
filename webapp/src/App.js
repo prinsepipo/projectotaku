@@ -7,11 +7,10 @@ import {
 import { UserProvider } from './context/UserContext';
 import { WatchlistProvider } from './context/WatchlistContext';
 
-import Home from './pages/home/Home';
-import Watchlist from './pages/watchlist/Watchlist';
-import Browse from './pages/browse/Browse';
-import ServerError from './pages/server-error/ServerError';
-import Logout from './pages/Logout';
+import Home from './components/Home';
+import Auth from './components/auth/Auth';
+import ServerError from './components/server-error/ServerError';
+import Logout from './components/Logout';
 
 
 function App() {
@@ -20,20 +19,17 @@ function App() {
         <WatchlistProvider>
             <Router>
                 <Switch>
-                    <Route exact path='/'>
-                        <Home />
-                    </Route>
-                    <Route path='/watchlist'>
-                        <Watchlist />
-                    </Route>
-                    <Route path='/browse'>
-                        <Browse />
+                    <Route path='/auth'>
+                        <Auth />
                     </Route>
                     <Route path='/logout'>
                         <Logout />
                     </Route>
                     <Route path='/server-error'>
                         <ServerError />
+                    </Route>
+                    <Route path='/'>
+                        <Home />
                     </Route>
                     <Route path='*'>
                         {/* TODO: 404 page not found. */}

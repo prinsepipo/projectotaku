@@ -18,7 +18,7 @@ function Logout(props) {
 
         localStorage.removeItem('TOKEN');
         setIsAuthenticated(false);
-        history.push('/');
+        history.push('/auth');
     }, [setIsAuthenticated, history]);
 
     return (

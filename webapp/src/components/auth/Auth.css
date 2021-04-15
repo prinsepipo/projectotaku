@@ -1,8 +1,8 @@
-.Home {
+.Auth {
     height: 100vh;
 }
 
-.HomeHeader {
+.AuthHeader {
     height: 30%;
 
     display: flex;
@@ -15,11 +15,11 @@
     text-align: center;
 }
 
-.HomeHeader-title {
+.AuthHeader-title {
     color: #790ce6;
 }
 
-.HomeHeader-details {
+.AuthHeader-details {
     margin-top: 1rem;
 }
 
@@ -31,7 +31,7 @@
 
 
 @media only screen and (min-width: 769px) {
-    .Home {
+    .Auth {
         display: flex;
         justify-content: space-evenly;
         align-items: center;

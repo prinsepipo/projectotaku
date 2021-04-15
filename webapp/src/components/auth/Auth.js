@@ -1,15 +1,15 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import UserContext from '../../context//UserContext';
+import UserContext from '../../context/UserContext';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
-import './Home.css';
+import './Auth.css';
 
 
-class Home extends React.Component {
+class Auth extends React.Component {
     static contextType = UserContext;
 
     constructor(props) {
@@ -25,10 +25,10 @@ class Home extends React.Component {
         }
 
         return (
-            <div className='Home'>
-                <div className='HomeHeader'>
-                    <h1 className='HomeHeader-title'>Project Otaku</h1>
-                    <p className='HomeHeader-details'>Create and manage your anime and manga list.</p>
+            <div className='Auth'>
+                <div className='AuthHeader'>
+                    <h1 className='AuthHeader-title'>Project Otaku</h1>
+                    <p className='AuthHeader-details'>Create and manage your anime and manga list.</p>
                 </div>
                 <div className='UserForm'>
                     <this.state.form swapForm={this.swapForm} />
@@ -53,4 +53,4 @@ class Home extends React.Component {
 }
 
 
-export default Home;
+export default Auth;
