@@ -1,49 +1,50 @@
 .BrowseItem {
-    width: 80%;
+    width: calc(360px / 2 - 2rem);
 
-    display: flex;
+    position: relative;
 
-    margin: 1rem auto;
-    padding: 0.5rem;
-
-    border: solid 1px #d0d0d0;
-    border-radius: 4px;
+    margin: 0.5rem;
 
     overflow: hidden;
 }
 
-.BrowseItem:hover {
-    border-color: #a2befa;
+.BrowseItemImage {
+    height: 80%;
+}
+
+.BrowseItemDetails {
+    height: 20%;
+
+    text-align: center;
+
+    padding: 0.25rem;
+}
+
+.BrowseItem-title {
+    color: #555555;
+
+    font-size: 80%;
+
+    text-decoration: none;
 }
 
 .BrowseItem-img {
-    width: 96px;
+    width: 100%;
+    max-height: 100%;
+
+    display: block;
 
     border-radius: 4px;
 }
 
-.BrowseItem-details {
-    display: flex;
-    flex-direction: column;
-
-    padding: 0 1rem;
+.BrowseItem:hover .BrowseItem-title {
+    color: #1b1b1b;
 }
 
-.BrowseItem-title {
-    color: #2b6cf8;
-
-    text-align: center;
-    font-size: 1rem;
-
-    margin-bottom: 0.5rem;
-
-    text-decoration: none;
-
-    outline: none;
+.BrowseItemOptions {
+    display: none;
 }
 
-.BrowseItem-synopsis {
-    flex-grow: 1;
-
-    font-size: 0.8rem;
+.BrowseItem:hover .BrowseItemOptions {
+    display: block;
 }

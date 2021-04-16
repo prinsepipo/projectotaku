@@ -1,17 +1,32 @@
-import AddItemOptions from './AddItemOptions';
+import { useEffect, useState } from 'react';
+
+import AddItem from './AddItem';
 
 import './BrowseItem.css';
 
 
 function BrowseItem(props) {
+    const [title, setTitle] = useState('');
+    const maxTitleLength = 40;
+
+    useEffect(() => {
+        if (props.item.title.length >= maxTitleLength) {
+            setTitle(props.item.title.substring(0, maxTitleLength - 1) + '...');
+        } else {
+            setTitle(props.item.title);
+        }
+    }, [props.item.title])
+
     return (
         <div className='BrowseItem'>
-            <img
-                className='BrowseItem-img'
-                src={props.item.image_url}
-                alt={props.item.title}
-            />
-            <div className='BrowseItem-details'>
+            <div className='BrowseItemImage'>
+                <img
+                    className='BrowseItem-img'
+                    src={props.item.image_url}
+                    alt={props.item.title}
+                />
+            </div>
+            <div className='BrowseItemDetails'>
                 <a
                     className='BrowseItem-title'
                     href={props.item.url}
@@ -19,10 +34,11 @@ function BrowseItem(props) {
                     target='_blank'
                     rel='noreferrer'
                 >
-                    {props.item.title} - ({props.item.type}) {props.item.episodes} episode/s
+                    {title}
                 </a>
-                <p className='BrowseItem-synopsis'>{props.item.synopsis}</p>
-                <AddItemOptions item={props.item} />
+            </div>
+            <div className='BrowseItemOptions'>
+                <AddItem item={props.item} />
             </div>
         </div>
     );

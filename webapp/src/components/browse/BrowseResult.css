@@ -1,3 +1,7 @@
 .BrowseResult {
-    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    margin: auto;
 }

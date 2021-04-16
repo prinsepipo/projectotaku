@@ -5,10 +5,10 @@ import WatchlistContext from '../../context/WatchlistContext';
 
 import { backendAPI } from '../../utils/api';
 
-import './AddItemOptions.css';
+import './AddItem.css';
 
 
-function AddItemOptions(props) {
+function AddItem(props) {
     const [message, setMessage] = useState('');
     const [exists, setExists] = useState(false);
     const [watchlist, setWatchlist] = useContext(WatchlistContext);
@@ -29,7 +29,9 @@ function AddItemOptions(props) {
     // there is no need for the user to add the item.
     if (exists) {
         return (
-            <div className='AddItemOptions'>{message}</div>
+            <div className='AddItem'>
+                <p className='AddItem-text'>{message}</p>
+            </div>
         );
     }
 
@@ -68,20 +70,20 @@ function AddItemOptions(props) {
     }
 
     return (
-        <div className='AddItemOptions'>
-            <span>Add to: </span>
+        <div className='AddItem'>
+            <p className='AddItem-text'>Add to:</p>
             <button
-                className='AddItemOptions-button'
+                className='AddItem-button'
                 type='button'
                 onClick={(e) => addTo(e, props.item, 'watch')}
             >Watch</button>
             <button
-                className='AddItemOptions-button'
+                className='AddItem-button'
                 type='button'
                 onClick={(e) => addTo(e, props.item, 'watching')}
             >Watching</button>
             <button
-                className='AddItemOptions-button'
+                className='AddItem-button'
                 type='button'
                 onClick={(e) => addTo(e, props.item, 'watched')}
             >Watched</button>
@@ -90,4 +92,4 @@ function AddItemOptions(props) {
 }
 
 
-export default AddItemOptions;
+export default AddItem;
