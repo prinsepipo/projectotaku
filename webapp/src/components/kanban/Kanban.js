@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import WatchlistContext from '../../../context/WatchlistContext';
-import { backendAPI } from '../../../utils/api';
+import WatchlistContext from '../../context/WatchlistContext';
+import { backendAPI } from '../../utils/api';
 
 import KanbanHeader from './KanbanHeader';
 import KanbanSection from './KanbanSection';

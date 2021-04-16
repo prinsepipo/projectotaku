@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import WatchlistContext from '../../../context/WatchlistContext';
-import { backendAPI } from '../../../utils/api';
+import WatchlistContext from '../../context/WatchlistContext';
+import { backendAPI } from '../../utils/api';
 
 import './KanbanItem.css';
 
