@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Redirect, Route, useHistory } from 'react-router-dom';
+import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 
 import UserContext from '../context/UserContext';
 import WatchlistContext from '../context/WatchlistContext';
@@ -82,12 +82,14 @@ function Home(props) {
         <div className='Home'>
             <Navbar />
             <MainContent>
-                <Route path='/watchlist'>
-                    <Watchlist watchlist={watchlist} />
-                </Route>
-                <Route path='/browse'>
-                    <Browse />
-                </Route>
+                <Switch>
+                    <Route path='/watchlist'>
+                        <Watchlist watchlist={watchlist} />
+                    </Route>
+                    <Route path='/browse'>
+                        <Browse />
+                    </Route>
+                </Switch>
             </MainContent>
         </div>
     );

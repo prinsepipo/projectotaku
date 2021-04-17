@@ -1,11 +1,8 @@
-import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import WatchlistContext from '../../context/WatchlistContext';
 import { backendAPI } from '../../utils/api';
 
-import KanbanHeader from './KanbanHeader';
 import KanbanSection from './KanbanSection';
 
 import './Kanban.css';
@@ -13,7 +10,6 @@ import './Kanban.css';
 
 function Kanban(props) {
     const sections = ['watch', 'watching', 'watched'];
-    const [watchlist, setWatchlist] = useContext(WatchlistContext);
     const history = useHistory();
 
     const onDragEnd = ({source, destination, draggableId}) => {
@@ -26,7 +22,7 @@ function Kanban(props) {
             }
 
             // Update dragged item and its source and destination neighboring items.
-            const list = {...watchlist};
+            const list = {...props.watchlist};
             const updatedItems = [];
             const sourceList = list[source.droppableId];
             const destinationList = list[destination.droppableId];
@@ -53,7 +49,7 @@ function Kanban(props) {
             item.next_item_id = destinationNextItem ? destinationNextItem.id : null;
             updatedItems.push(item);
 
-            setWatchlist(list);
+            props.setWatchlist(list);
 
             // Persist changes to database.
             for (let i = 0; i < updatedItems.length; i++) {
@@ -77,12 +73,11 @@ function Kanban(props) {
 
     return (
         <div className='Kanban'>
-            <KanbanHeader />
             <div className='KanbanWrapper'>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className='KanbanContent'>
                         {sections.map((section, index) => {
-                            return <KanbanSection key={index} section={section} list={watchlist[section]} />;
+                            return <KanbanSection key={index} section={section} list={props.watchlist[section]} />;
                         })}
                     </div>
                 </DragDropContext>

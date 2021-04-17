@@ -1,0 +1,26 @@
+.WatchlistTypeLink {
+    color: #1b1b1b;
+
+    padding: 0.25rem 1rem;
+
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none;
+
+    border-radius: 4px;
+    border: solid 1px #1b1b1b;
+}
+
+.WatchlistTypeLink:nth-child(2) {
+    margin-left: 0.5rem;
+}
+
+.WatchlistTypeLink--active {
+    background: #1b1b1b;
+    color: #f4f4f4;
+}
+
+.WatchlistTypeLink:hover {
+    background: #1b1b1b;
+    color: #f4f4f4;
+}

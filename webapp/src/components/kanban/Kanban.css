@@ -1,12 +1,10 @@
 .Kanban {
     /* 3rem is the height of the watchlist header. */
-    height: calc(100vh - 3rem);
-
-    overflow: auto;
+    height: calc(100vh - 6rem);
 }
 
 .KanbanWrapper {
-    height: calc(100% - 3rem);
+    height: 100%;
 
     overflow: auto;
 }
