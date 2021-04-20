@@ -1,12 +1,12 @@
 import BrowseItem from './BrowseItem';
 
-import './BrowseResult.css';
+import './BrowseList.css';
 
 
-function BrowseResult(props) {
+function BrowseList(props) {
     return (
-        <div className='BrowseResult'>
-            {props.results.map((item, index) => {
+        <div className='BrowseList'>
+            {props.list.map((item, index) => {
                 return (
                     <BrowseItem key={index} item={item} />
                 );
@@ -15,4 +15,4 @@ function BrowseResult(props) {
     );
 }
 
-export default BrowseResult;
+export default BrowseList;
