@@ -8,7 +8,7 @@ function BrowseList(props) {
         <div className='BrowseList'>
             {props.list.map((item, index) => {
                 return (
-                    <BrowseItem key={index} item={item} />
+                    <BrowseItem key={index} item={item} type={props.type} />
                 );
             })}
         </div>

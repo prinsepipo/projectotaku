@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
+
+import WatchlistContext from '../../context/WatchlistContext';
 
 import WatchlistHeader from './WatchlistHeader';
 import Kanban from '../kanban/Kanban';
@@ -8,31 +10,15 @@ import './Watchlist.css';
 
 
 function Watchlist(props) {
-    const [animelist, setAnimelist] = useState({});
-    const [mangalist, setMangalist] = useState({});
+    const {
+        animeList,
+        setAnimeList,
+        mangaList,
+        setMangaList,
+    } = useContext(WatchlistContext);
 
     const history = useHistory();
     const location = useLocation();
-
-    const filterWatchlist = (watchlist, type) => {
-        const list = {
-            watch: [],
-            watching: [],
-            watched: [],
-        };
-        const sections = ['watch', 'watching', 'watched'];
-
-        sections.forEach((section) => {
-            list[section] = watchlist[section].filter((element) => element.type === type);
-        })
-
-        return list;
-    }
-
-    useEffect(() => {
-        setAnimelist(() => filterWatchlist(props.watchlist, 'anime'));
-        setMangalist(() => filterWatchlist(props.watchlist, 'manga'));
-    }, [props.watchlist]);
 
     // Watchlist is only a wrapper/container component. It has no content so we push/redirect
     // to /anime subroute since that contains our watchlist content. Why /anime subroute? No
@@ -48,10 +34,10 @@ function Watchlist(props) {
             <WatchlistHeader />
             <Switch>
                 <Route path='/watchlist/anime'>
-                    <Kanban watchlist={animelist} setWatchlist={setAnimelist} />
+                    <Kanban list={animeList} setList={setAnimeList} />
                 </Route>
                 <Route path='/watchlist/manga'>
-                    <Kanban watchlist={mangalist} setWatchlist={setMangalist} />
+                    <Kanban list={mangaList} setList={setMangaList} />
                 </Route>
             </Switch>
         </div>

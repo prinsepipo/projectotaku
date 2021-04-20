@@ -79,7 +79,7 @@ function Browse (props) {
     let content = (
         <>
             <h3>Airing</h3>
-            <BrowseList list={airingAnime} />
+            <BrowseList list={airingAnime} type='anime' />
         </>
     );
 
@@ -88,11 +88,11 @@ function Browse (props) {
             <>
                 <div>
                     <h3>Anime</h3>
-                    <BrowseList list={animeResult.slice(0, maxResult)} />
+                    <BrowseList list={animeResult.slice(0, maxResult)} type='anime' />
                 </div>
                 <div>
                     <h3>Manga</h3>
-                    <BrowseList list={mangaResult.slice(0, maxResult)} />
+                    <BrowseList list={mangaResult.slice(0, maxResult)} type='manga' />
                 </div>
             </>
         )

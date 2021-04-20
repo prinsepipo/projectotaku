@@ -38,7 +38,7 @@ function BrowseItem(props) {
                 </a>
             </div>
             <div className='BrowseItemOptions'>
-                <AddItem item={props.item} />
+                <AddItem item={props.item} type={props.type} />
             </div>
         </div>
     );

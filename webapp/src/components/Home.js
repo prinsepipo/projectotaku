@@ -17,7 +17,10 @@ import './Home.css';
 
 function Home(props) {
     const {isAuthenticated} = useContext(UserContext);
-    const [watchlist, setWatchlist] = useContext(WatchlistContext);
+    const {
+        setAnimeList,
+        setMangaList,
+    } = useContext(WatchlistContext);
     const history = useHistory();
 
     useEffect(() => {
@@ -28,31 +31,40 @@ function Home(props) {
             .then((response) => {
                 // Order watchlist items based on its status/section and link/position.
                 const list = response.data;
-                const newList = {
-                    watch: [],
-                    watching: [],
-                    watched: [],
-                };
 
-                for (const section in newList) {
-                    const sectionList = newList[section];
-                    const filteredList = list.filter((element) => element.status === section);
+                const orderForWatchlist = (list) => {
+                    const newList = {
+                        watch: [],
+                        watching: [],
+                        watched: [],
+                    };
 
-                    while (filteredList.length !== 0) {
-                        if (sectionList.length === 0) {
-                            const tailItemIndex = filteredList.findIndex((element) => element.next_item_id === null);
-                            const tailItem = filteredList.splice(tailItemIndex, 1)[0];
-                            sectionList.unshift(tailItem);
-                        } else {
-                            const headItem = sectionList[0];
-                            const prevItemIndex = filteredList.findIndex((element) => element.next_item_id === headItem.id);
-                            const prevItem = filteredList.splice(prevItemIndex, 1)[0];
-                            sectionList.unshift(prevItem);
+                    for (const section in newList) {
+                        const sectionList = newList[section];
+                        const filteredList = list.filter((element) => element.status === section);
+
+                        while (filteredList.length !== 0) {
+                            if (sectionList.length === 0) {
+                                const tailItemIndex = filteredList.findIndex((element) => element.next_item_id === null);
+                                const tailItem = filteredList.splice(tailItemIndex, 1)[0];
+                                sectionList.unshift(tailItem);
+                            } else {
+                                const headItem = sectionList[0];
+                                const prevItemIndex = filteredList.findIndex((element) => element.next_item_id === headItem.id);
+                                const prevItem = filteredList.splice(prevItemIndex, 1)[0];
+                                sectionList.unshift(prevItem);
+                            }
                         }
                     }
-                }
 
-                setWatchlist(newList);
+                    return newList;
+                };
+
+                const filteredListAnime = list.filter((element) => element.type === 'anime');
+                const filteredListManga = list.filter((element) => element.type === 'manga');
+
+                setAnimeList(orderForWatchlist(filteredListAnime));
+                setMangaList(orderForWatchlist(filteredListManga));
             })
             .catch((error) => {
                 if (error.response) {
@@ -64,7 +76,7 @@ function Home(props) {
                     history.push('/server-error');
                 }
             });
-    }, [setWatchlist, history]);
+    }, [setAnimeList, setMangaList, history]);
 
     // Home route is just a container for the watchlist and browse routes so
     // watchlist route will be our index route.
@@ -84,7 +96,7 @@ function Home(props) {
             <MainContent>
                 <Switch>
                     <Route path='/watchlist'>
-                        <Watchlist watchlist={watchlist} />
+                        <Watchlist />
                     </Route>
                     <Route path='/browse'>
                         <Browse />

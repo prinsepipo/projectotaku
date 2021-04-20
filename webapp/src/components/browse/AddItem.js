@@ -11,19 +11,31 @@ import './AddItem.css';
 function AddItem(props) {
     const [message, setMessage] = useState('');
     const [exists, setExists] = useState(false);
-    const [watchlist, setWatchlist] = useContext(WatchlistContext);
+    const {
+        animeList,
+        setAnimeList,
+        mangaList,
+        setMangaList,
+    } = useContext(WatchlistContext);
     const history = useHistory();
 
     useEffect(() => {
-        for (const section in watchlist) {
-            const item = watchlist[section].find((element) => element.mal_id === props.item.mal_id);
+        let list;
+        if (props.type === 'anime') {
+            list = animeList;
+        } else if (props.type === 'manga') {
+            list = mangaList;
+        }
+
+        for (const section in list) {
+            const item = list[section].find((element) => element.mal_id === props.item.mal_id);
 
             if (item) {
                 setExists(true);
                 setMessage(`Already in ${item.status}.`);
             }
         }
-    }, [watchlist, props.item.mal_id]);
+    }, [animeList, mangaList, props.type, props.item.mal_id]);
 
     // If the current item exists in the user's watchlist,
     // there is no need for the user to add the item.
@@ -36,13 +48,25 @@ function AddItem(props) {
     }
 
     const addTo = (event, item, status) => {
-        const headItem = watchlist[status][0];
+        let list;
+        let setList;
+        if (props.type === 'anime') {
+            list = animeList;
+            setList = setAnimeList;
+        } else if (props.type === 'manga') {
+            list = mangaList;
+            setList = setMangaList;
+        } else {
+            return;
+        }
+
+        const headItem = list[status][0];
         const data = {
             mal_id: item.mal_id,
             title: item.title,
             image_url: item.image_url,
             mal_url: item.url,
-            type: 'anime',
+            type: props.type,
             status: status,
             next_item_id: headItem ? headItem.id : null,
         };
@@ -50,9 +74,9 @@ function AddItem(props) {
         const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
         backendAPI.post('watchlist/', data, {headers})
             .then((response) => {
-                const list = {...watchlist};
-                list[status].unshift(response.data);
-                setWatchlist(list);
+                const newList = {...list};
+                newList[status].unshift(response.data);
+                setList(newList);
                 setExists(true);
                 setMessage(`Added to ${response.data.status}`);
             })
