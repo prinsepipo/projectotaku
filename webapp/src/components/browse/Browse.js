@@ -62,7 +62,9 @@ function Browse (props) {
             .then((response) => {
                 // By default, the manga search returns both manga and light novels.
                 // We only want the manga.
-                setMangaResult(response.data.results.filter((element) => element.type === 'Manga'));
+                setMangaResult(response.data.results.filter((element) => (
+                    element.type === 'Manga' || element.type === 'Manhwa'
+                )));
             })
             .catch((error) => {
                 console.log(error);
