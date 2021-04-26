@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import WatchlistContext from '../../context/WatchlistContext';
 
-import { backendAPI } from '../../utils/api';
+import axios from 'axios';
 
 import './AddItem.css';
 
@@ -72,7 +72,7 @@ function AddItem(props) {
         };
 
         const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-        backendAPI.post('watchlist/', data, {headers})
+        axios.post('/api/watchlist/', data, {headers})
             .then((response) => {
                 const newList = {...list};
                 newList[status].unshift(response.data);

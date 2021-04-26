@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
 
-import { backendAPI } from '../../utils/api';
+import axios from 'axios';
 
 import FormBase from './form/Form';
 import FormHeader from './form/FormHeader';
@@ -117,9 +117,9 @@ class RegisterForm extends React.Component {
             }
 
             // Register then login user if successful.
-            backendAPI.post('auth/register/', data)
+            axios.post('/api/auth/register/', data)
                 .then(response => {
-                    backendAPI.post('auth/login/', data)
+                    axios.post('/api/auth/login/', data)
                         .then(response => {
                             localStorage.setItem('TOKEN', response.data.token);
 

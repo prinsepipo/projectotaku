@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { jikanAPI } from '../../utils/api';
+import { jikanAPI } from '../../api';
 
 import BrowseHeader from './BrowseHeader';
 import BrowseContent from './BrowseContent';

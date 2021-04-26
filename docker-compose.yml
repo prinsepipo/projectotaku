@@ -6,7 +6,7 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-  web:
+  backend:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     env_file: .env

@@ -3,11 +3,13 @@
 Project Otaku is a web app for creating and managing your anime and manga list.
 It uses drag'n'drop system to manage your list.
 
+
 ## Goal
 
 There are many applications out there like this project but I want something that I can
 personalize. I also want to learn how to create web applications using Django with Djano REST
-framework for the REST API and Reactjs for Single Page Applicaitons.
+framework and ReactJS.
+
 
 ## Scope
 
@@ -21,6 +23,7 @@ framework for the REST API and Reactjs for Single Page Applicaitons.
     - Anime list page
     - Manga list page
     - Search anime/manga in the list
+
 
 ## Additional Note
 

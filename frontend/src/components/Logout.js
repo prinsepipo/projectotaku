@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import UserContext from '../context/UserContext';
 
-import { backendAPI } from '../utils/api';
+import axios from 'axios'
 
 
 function Logout(props) {
@@ -13,7 +13,7 @@ function Logout(props) {
     useEffect(() => {
         // Delete token from database then client.
         const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-        backendAPI.post('auth/logout/', null, {headers})
+        axios.post('/api/auth/logout/', null, {headers})
             .catch((error) => {});
 
         localStorage.removeItem('TOKEN');

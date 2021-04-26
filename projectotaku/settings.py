@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from decouple import config
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,7 @@ SECRET_KEY = config('SECRET_KEY', default='')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    '0.0.0.0',
-    'localhost',
+    '*',
 ]
 
 
@@ -44,14 +44,13 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
-    'account',
-    'watchlist',
+    'account.apps.AccountConfig',
+    'watchlist.apps.WatchlistConfig',
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
     'knox',
-    'corsheaders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -59,7 +58,6 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -72,7 +70,9 @@ ROOT_URLCONF = 'projectotaku.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'frontend/build'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,6 +141,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-# CORS HEADERS
-CORS_ALLOW_ALL_ORIGINS = True
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend/build/static/'),
+]

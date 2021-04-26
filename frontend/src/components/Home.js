@@ -4,7 +4,7 @@ import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 import UserContext from '../context/UserContext';
 import WatchlistContext from '../context/WatchlistContext';
 
-import { backendAPI } from '../utils/api';
+import axios from 'axios';
 
 import Navbar from './layout/navbar/Navbar';
 import MainContent from './layout/MainContent';
@@ -27,7 +27,7 @@ function Home(props) {
         const headers = {
             Authorization: `Token ${localStorage.getItem('TOKEN')}`,
         };
-        backendAPI.get('watchlist/', {headers})
+        axios.get('/api/watchlist/', {headers})
             .then((response) => {
                 // Order watchlist items based on its status/section and link/position.
                 const list = response.data;

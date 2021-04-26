@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import { backendAPI } from '../../utils/api';
+import axios from 'axios';
 
 import KanbanSection from './KanbanSection';
 import KanbanList from './KanbanList';
@@ -57,7 +57,7 @@ function Kanban(props) {
             for (let i = 0; i < updatedItems.length; i++) {
                 const item = updatedItems[i];
                 const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-                backendAPI.put(`watchlist/${item.id}/`, item, {headers})
+                axios.put(`/api/watchlist/${item.id}/`, item, {headers})
                     .catch((error) => {
                         if (error.response) {
                             if (error.response.status === 401) {
@@ -83,7 +83,7 @@ function Kanban(props) {
             prevItem.next_item_id = nextItem ? nextItem.id : null;
 
             const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-            backendAPI.put(`watchlist/${prevItem.id}/`, prevItem, {headers})
+            axios.put(`/api/watchlist/${prevItem.id}/`, prevItem, {headers})
                 .catch((error) => {
                     if (error.response) {
                         if (error.response.status === 401) {
@@ -102,7 +102,7 @@ function Kanban(props) {
         setTimeout(() => props.setList(list), 500);
 
         const headers = { Authorization: `Token ${localStorage.getItem('TOKEN')}` };
-        backendAPI.delete(`watchlist/${item.id}/`, {headers})
+        axios.delete(`/api/watchlist/${item.id}/`, {headers})
             .catch((error) => {
                 if (error.response) {
                     if (error.response.status === 401) {
