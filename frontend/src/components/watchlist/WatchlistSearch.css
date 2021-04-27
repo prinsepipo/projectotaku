@@ -1,0 +1,38 @@
+.WatchlistSearch {
+    position: relative;
+
+    margin-left: auto;
+}
+
+.WatchlistSearch-input {
+    display: block;
+
+    width: 240px;
+
+    padding: 0.5rem 1rem;
+    padding-right: 2rem;
+
+    border: solid 1px #d4d4d4;
+    border-radius: 24px;
+}
+
+.WatchlistSearch-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    height: 100%;
+
+    background: transparent;
+
+    padding: 0.5rem 1rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+
+    border: none;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+
+    cursor: pointer;
+}
