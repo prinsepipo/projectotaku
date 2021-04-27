@@ -34,10 +34,18 @@ function Watchlist(props) {
             <WatchlistHeader />
             <Switch>
                 <Route path='/watchlist/anime'>
-                    <Kanban list={animeList} setList={setAnimeList} />
+                    <Kanban
+                        list={animeList}
+                        setList={setAnimeList}
+                        isFetchingWatchlist={props.isFetchingWatchlist}
+                    />
                 </Route>
                 <Route path='/watchlist/manga'>
-                    <Kanban list={mangaList} setList={setMangaList} />
+                    <Kanban
+                        list={mangaList}
+                        setList={setMangaList}
+                        isFetchingWatchlist={props.isFetchingWatchlist}
+                    />
                 </Route>
             </Switch>
         </div>

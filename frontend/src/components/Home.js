@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 
 import UserContext from '../context/UserContext';
@@ -16,6 +16,7 @@ import './Home.css';
 
 
 function Home(props) {
+    const [isFetchingWatchlist, setIsFetchingWatchlist] = useState(false);
     const {isAuthenticated} = useContext(UserContext);
     const {
         setAnimeList,
@@ -23,7 +24,10 @@ function Home(props) {
     } = useContext(WatchlistContext);
     const history = useHistory();
 
+    // Fetch watchlist.
     useEffect(() => {
+        setIsFetchingWatchlist(true);
+
         const headers = {
             Authorization: `Token ${localStorage.getItem('TOKEN')}`,
         };
@@ -75,6 +79,9 @@ function Home(props) {
                 } else {
                     history.push('/server-error');
                 }
+            })
+            .finally(() => {
+                setIsFetchingWatchlist(false);
             });
     }, [setAnimeList, setMangaList, history]);
 
@@ -96,7 +103,7 @@ function Home(props) {
             <MainContent>
                 <Switch>
                     <Route path='/watchlist'>
-                        <Watchlist />
+                        <Watchlist isFetchingWatchlist={isFetchingWatchlist} />
                     </Route>
                     <Route path='/browse'>
                         <Browse />

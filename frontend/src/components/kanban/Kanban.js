@@ -6,6 +6,7 @@ import axios from 'axios';
 import KanbanSection from './KanbanSection';
 import KanbanList from './KanbanList';
 import KanbanItem from './KanbanItem';
+import KanbanItemPlaceholder from './KanbanItemPlaceholder';
 
 import './Kanban.css';
 
@@ -127,17 +128,21 @@ function Kanban(props) {
                                     <Droppable droppableId={section}>
                                         {(provided) => (
                                             <KanbanList provided={provided}>
-                                                {props.list[section].map((item, index) => {
-                                                    return (
-                                                        <KanbanItem
-                                                            key={item.id}
-                                                            item={item}
-                                                            index={index}
-                                                            handleDelete={deleteItem}
-                                                        />
-                                                    );
-                                                })}
-                                                {provided.placeholder}
+                                                {props.isFetchingWatchlist ?
+                                                <KanbanItemPlaceholder /> :
+                                                <>
+                                                    {props.list[section].map((item, index) => {
+                                                        return (
+                                                            <KanbanItem
+                                                                key={item.id}
+                                                                item={item}
+                                                                index={index}
+                                                                handleDelete={deleteItem}
+                                                            />
+                                                        );
+                                                    })}
+                                                    {provided.placeholder}
+                                                </>}
                                             </KanbanList>
                                         )}
                                     </Droppable>
