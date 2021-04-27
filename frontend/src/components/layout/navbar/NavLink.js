@@ -10,7 +10,7 @@ function NavLink(props) {
     useEffect(() => {
         let clsname = 'NavLink';
 
-        if (location.pathname === props.path) {
+        if (location.pathname.includes(props.path)) {
             clsname = `${clsname} ${clsname}--active`;
         }
 
