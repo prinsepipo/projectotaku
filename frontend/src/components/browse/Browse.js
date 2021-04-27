@@ -12,7 +12,6 @@ import './Browse.css';
 
 
 function Browse (props) {
-    const [airingAnime, setAiringAnime] = useState([]);
     const [animeResult, setAnimeResult] = useState([]);
     const [mangaResult, setMangaResult] = useState([]);
 
@@ -20,21 +19,6 @@ function Browse (props) {
     const [hasSearched, setHasSearched] = useState(false);
 
     const maxResult = 10;
-
-    useEffect(() => {
-        setIsLoading(true);
-
-        jikanAPI.get('season')
-            .then((response) => {
-                setAiringAnime(response.data.anime);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    }, []);
 
     const search = (query) => {
         setHasSearched(true);
@@ -81,7 +65,7 @@ function Browse (props) {
     let content = (
         <>
             <h3>Airing</h3>
-            <BrowseList list={airingAnime} type='anime' />
+            <BrowseList list={props.airingAnime} type='anime' />
         </>
     );
 
@@ -105,7 +89,7 @@ function Browse (props) {
             <BrowseHeader />
             <BrowseContent>
                 <BrowseSearchBar search={search} />
-                {isLoading ? <BrowseItemPlaceholder /> : content }
+                {isLoading || props.isFetchingAiringAnime ? <BrowseItemPlaceholder /> : content }
             </BrowseContent>
         </div>
     );

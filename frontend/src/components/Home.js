@@ -1,10 +1,12 @@
 import { useState, useContext, useEffect } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 
+import axios from 'axios';
+
 import UserContext from '../context/UserContext';
 import WatchlistContext from '../context/WatchlistContext';
 
-import axios from 'axios';
+import { jikanAPI } from '../api';
 
 import Navbar from './layout/navbar/Navbar';
 import MainContent from './layout/MainContent';
@@ -17,6 +19,8 @@ import './Home.css';
 
 function Home(props) {
     const [isFetchingWatchlist, setIsFetchingWatchlist] = useState(false);
+    const [isFetchingAiringAnime, setIsFetchingAiringAnime] = useState(false);
+    const [airingAnime, setAiringAnime] = useState([]);
     const {isAuthenticated} = useContext(UserContext);
     const {
         setAnimeList,
@@ -85,6 +89,24 @@ function Home(props) {
             });
     }, [setAnimeList, setMangaList, history]);
 
+    // Fetch season anime for browse page.
+    // It will be efficient to fetch it here in the parent component once, instead of fetching it
+    // everytime we visit the browse page.
+    useEffect(() => {
+        setIsFetchingAiringAnime(true);
+
+        jikanAPI.get('season')
+        .then((response) => {
+            setAiringAnime(response.data.anime);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .finally(() => {
+            setIsFetchingAiringAnime(false);
+        });
+    }, [])
+
     // Home route is just a container for the watchlist and browse routes so
     // watchlist route will be our index route.
     useEffect(() => {
@@ -106,7 +128,10 @@ function Home(props) {
                         <Watchlist isFetchingWatchlist={isFetchingWatchlist} />
                     </Route>
                     <Route path='/browse'>
-                        <Browse />
+                        <Browse
+                            airingAnime={airingAnime}
+                            isFetchingAiringAnime={isFetchingAiringAnime}
+                        />
                     </Route>
                 </Switch>
             </MainContent>
