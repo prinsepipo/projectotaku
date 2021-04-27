@@ -11,6 +11,7 @@ import Home from './components/Home';
 import Auth from './components/auth/Auth';
 import ServerError from './components/server-error/ServerError';
 import Logout from './components/Logout';
+import PageNotFound from './components/PageNotFound';
 
 
 function App() {
@@ -28,12 +29,11 @@ function App() {
                     <Route path='/server-error'>
                         <ServerError />
                     </Route>
+                    <Route path='/404'>
+                        <PageNotFound />
+                    </Route>
                     <Route path='/'>
                         <Home />
-                    </Route>
-                    <Route path='*'>
-                        {/* TODO: 404 page not found. */}
-                        <h1>Page not found.</h1>
                     </Route>
                 </Switch>
             </Router>

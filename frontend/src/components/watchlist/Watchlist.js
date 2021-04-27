@@ -1,5 +1,5 @@
-import { useEffect, useContext } from 'react';
-import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
+import { useContext } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import WatchlistContext from '../../context/WatchlistContext';
 
@@ -16,18 +16,6 @@ function Watchlist(props) {
         mangaList,
         setMangaList,
     } = useContext(WatchlistContext);
-
-    const history = useHistory();
-    const location = useLocation();
-
-    // Watchlist is only a wrapper/container component. It has no content so we push/redirect
-    // to /anime subroute since that contains our watchlist content. Why /anime subroute? No
-    // particular reason.
-    useEffect(() => {
-        if (location.pathname === '/watchlist') {
-            history.push('/watchlist/anime');
-        }
-    }, [location.pathname, history]);
 
     return (
         <div className='Watchlist'>
@@ -46,6 +34,12 @@ function Watchlist(props) {
                         setList={setMangaList}
                         isFetchingWatchlist={props.isFetchingWatchlist}
                     />
+                </Route>
+                <Route path='/watchlist'>
+                    <Redirect to='/watchlist/anime' />
+                </Route>
+                <Route path='/watchlist/*'>
+                    <Redirect to='/404' />
                 </Route>
             </Switch>
         </div>

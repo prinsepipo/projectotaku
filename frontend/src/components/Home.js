@@ -11,7 +11,6 @@ import { jikanAPI } from '../api';
 import Navbar from './layout/navbar/Navbar';
 import MainContent from './layout/MainContent';
 import Watchlist from './watchlist/Watchlist';
-
 import Browse from './browse/Browse';
 
 import './Home.css';
@@ -30,12 +29,17 @@ function Home(props) {
 
     // Fetch watchlist.
     useEffect(() => {
-        setIsFetchingWatchlist(true);
+        let mounted = true;
+        const source = axios.CancelToken.source();
+
+        if (mounted) {
+            setIsFetchingWatchlist(true);
+        }
 
         const headers = {
             Authorization: `Token ${localStorage.getItem('TOKEN')}`,
         };
-        axios.get('/api/watchlist/', {headers})
+        axios.get('/api/watchlist/', {headers, cancelToken: source.token})
             .then((response) => {
                 // Order watchlist items based on its status/section and link/position.
                 const list = response.data;
@@ -71,49 +75,70 @@ function Home(props) {
                 const filteredListAnime = list.filter((element) => element.type === 'anime');
                 const filteredListManga = list.filter((element) => element.type === 'manga');
 
-                setAnimeList(orderForWatchlist(filteredListAnime));
-                setMangaList(orderForWatchlist(filteredListManga));
+                if (mounted) {
+                    setAnimeList(orderForWatchlist(filteredListAnime));
+                    setMangaList(orderForWatchlist(filteredListManga));
+                }
             })
             .catch((error) => {
-                if (error.response) {
+                if (axios.isCancel(error)) {
+                    console.log('fetch watchlist canceled.');
+                } else if (error.response) {
                     // Token used for authentication is no longer valid.
                     if (error.response.status === 401) {
                         history.push('/logout');
                     }
                 } else {
-                    history.push('/server-error');
+                    console.log(error);
                 }
             })
             .finally(() => {
-                setIsFetchingWatchlist(false);
+                if (mounted) {
+                    setIsFetchingWatchlist(false);
+                }
             });
+
+        return () => {
+            mounted = false;
+            source.cancel();
+        }
     }, [setAnimeList, setMangaList, history]);
 
     // Fetch season anime for browse page.
     // It will be efficient to fetch it here in the parent component once, instead of fetching it
     // everytime we visit the browse page.
     useEffect(() => {
-        setIsFetchingAiringAnime(true);
+        let mounted = true;
+        const source = axios.CancelToken.source();
 
-        jikanAPI.get('season')
-        .then((response) => {
-            setAiringAnime(response.data.anime);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .finally(() => {
-            setIsFetchingAiringAnime(false);
-        });
-    }, [])
-
-    // Home route is just a container for the watchlist and browse routes so
-    // watchlist route will be our index route.
-    useEffect(() => {
-        if (history.location.pathname === '/') {
-            history.push('/watchlist');
+        if (mounted) {
+            setIsFetchingAiringAnime(true);
         }
-    }, [history]);
+
+        jikanAPI.get('season', {cancelToken: source.token})
+            .then((response) => {
+                if (mounted) {
+                    setAiringAnime(response.data.anime);
+                }
+            })
+            .catch((error) => {
+                if (axios.isCancel(error)) {
+                    console.log('fetch airing anime canceled.');
+                } else {
+                    console.log(error);
+                }
+            })
+            .finally(() => {
+                if (mounted) {
+                    setIsFetchingAiringAnime(false);
+                }
+            });
+
+        return () => {
+            mounted = false;
+            source.cancel();
+        }
+    }, []);
 
     if (!isAuthenticated) {
         return <Redirect to='/logout' />
@@ -132,6 +157,12 @@ function Home(props) {
                             airingAnime={airingAnime}
                             isFetchingAiringAnime={isFetchingAiringAnime}
                         />
+                    </Route>
+                    <Route exact path='/'>
+                        <Redirect to='/watchlist' />
+                    </Route>
+                    <Route path='*'>
+                        <Redirect to='/404' />
                     </Route>
                 </Switch>
             </MainContent>
