@@ -1,0 +1,12 @@
+.BrowseItemPlaceholder {
+    width: calc(360px / 2 - 2rem);
+    height: 240px;
+
+    position: relative;
+
+    background: #f4f4f4;
+
+    margin: 0.5rem;
+
+    overflow: hidden;
+}

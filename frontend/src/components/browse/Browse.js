@@ -6,7 +6,7 @@ import BrowseHeader from './BrowseHeader';
 import BrowseContent from './BrowseContent';
 import BrowseSearchBar from './BrowseSearchBar';
 import BrowseList from './BrowseList';
-import Loading from '../loadings/Loading';
+import BrowseItemPlaceholder from './BrowseItemPlaceholder';
 
 import './Browse.css';
 
@@ -105,7 +105,7 @@ function Browse (props) {
             <BrowseHeader />
             <BrowseContent>
                 <BrowseSearchBar search={search} />
-                {isLoading ? <Loading /> : content }
+                {isLoading ? <BrowseItemPlaceholder /> : content }
             </BrowseContent>
         </div>
     );

@@ -1,5 +1,6 @@
 .BrowseItem {
     width: calc(360px / 2 - 2rem);
+    height: 240px;
 
     position: relative;
 
