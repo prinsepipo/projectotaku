@@ -1,5 +1,7 @@
 # Project Otaku
 
+![Demo Image](./docs/demo.png)
+
 Project Otaku is a web app for creating and managing your anime and manga list.
 It uses drag'n'drop system to manage your list.
 
