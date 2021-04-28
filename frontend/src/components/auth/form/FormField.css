@@ -14,7 +14,3 @@
 
     box-sizing: border-box;
 }
-
-.Form-field:focus {
-    border-color: #19a7e9;
-}

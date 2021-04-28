@@ -1,7 +1,5 @@
 .Auth {
     height: 100vh;
-
-    background: red;
 }
 
 .AuthHeader {
@@ -18,11 +16,13 @@
 }
 
 .AuthHeader-title {
-    color: #790ce6;
+    color: #1b1b1b;
 }
 
 .AuthHeader-details {
     margin-top: 1rem;
+
+    color: #434343;
 }
 
 .UserForm {

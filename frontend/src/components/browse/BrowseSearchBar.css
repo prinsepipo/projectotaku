@@ -20,11 +20,11 @@
 }
 
 .BrowseSearchBar-button {
-    background: #790ce6;
+    background: #1b1b1b;
 
     padding: 0.5rem 1rem;
 
-    border: solid 1px #790ce6;
+    border: solid 1px #1b1b1b;
     border-left: none;
     border-top-right-radius: 24px;
     border-bottom-right-radius: 24px;
@@ -33,11 +33,11 @@
 }
 
 .BrowseSearchBar-button:hover {
-    background: #8822ee;
+    background: #414141;
 }
 
 .BrowseSearchBar-button:active {
-    background: #6f0fce;
+    background: #2b2b2b;
 }
 
 .BrowseSearchBar-button svg path {
