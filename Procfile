@@ -1,0 +1,1 @@
+web: gunicorn projectotaku.wsgi
