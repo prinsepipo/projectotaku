@@ -1,5 +1,5 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useState, useContext} from 'react';
+import { useHistory } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
 
@@ -12,108 +12,62 @@ import FormField from './form/FormField';
 import FormButton from './form/FormButton';
 
 
-class RegisterForm extends React.Component {
-    static contextType = UserContext;
+function RegisterForm(props) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errors, setErrors] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            confirmPassword: '',
-            errors: [],
-        };
+    const {setIsAuthenticated} = useContext(UserContext);
+
+    const history = useHistory();
+
+
+    const handleUsername = (event) => {
+        setUsername(event.target.value);
     }
 
-    render() {
-        return (
-            <FormBase onSubmit={this.register}>
-                <FormHeader title='Sign Up' />
-                {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
-                <FormField
-                    type='text'
-                    fieldname='username'
-                    onChange={this.handleUsername}
-                />
-                <FormField
-                    type='password'
-                    fieldname='password'
-                    onChange={this.handlePassword}
-                />
-                <FormField
-                    type='password'
-                    fieldname='confirm password'
-                    onChange={this.handleConfirmPassword}
-                />
-                <FormButton
-                    classType='primary'
-                    buttonType='submit'
-                    text='Sign Up'
-                />
-                <p>or</p>
-                <FormButton
-                  classType='secondary'
-                  buttonType='button'
-                  text='Sign In'
-                  onClick={this.props.swapForm}
-                />
-            </FormBase>
-        );
+    const handlePassword = (event) => {
+        setPassword(event.target.value);
     }
 
-    handleUsername = (event) => {
-        this.setState({
-            username: event.target.value,
-        });
+    const handleConfirmPassword = (event) => {
+        setConfirmPassword(event.target.value);
     }
 
-    handlePassword = (event) => {
-        this.setState({
-            password: event.target.value,
-        });
-    }
-
-    handleConfirmPassword = (event) => {
-        this.setState({
-            confirmPassword: event.target.value,
-        });
-    }
-
-    validate = () => {
+    const validate = () => {
         let errors = [];
 
-        if (this.state.username === '') {
+        if (username === '') {
             errors.push('Username is required.');
         }
 
-        if (this.state.password === '') {
+        if (password === '') {
             errors.push('Password is required.');
         }
 
-        if (this.state.confirmPassword === '') {
+        if (confirmPassword === '') {
             errors.push('Confirm Password is required.');
         }
 
-        if (this.state.password !== this.state.confirmPassword) {
+        if (password && confirmPassword && password !== confirmPassword) {
             errors.push('Passwords didn\'t match.');
         }
 
-        this.setState({
-            errors: errors,
-        });
+        setErrors(errors);
 
         return errors.length === 0;
     }
 
-    register = (event) => {
+    const register = (event) => {
         event.preventDefault();
 
-        let isValid = this.validate();
+        let isValid = validate();
 
         if (isValid) {
             const data = {
-                username: this.state.username,
-                password: this.state.password,
+                username: username,
+                password: password,
             }
 
             // Register then login user if successful.
@@ -123,9 +77,9 @@ class RegisterForm extends React.Component {
                         .then(response => {
                             localStorage.setItem('TOKEN', response.data.token);
 
-                            this.context.setIsAuthenticated(() => true);
+                            setIsAuthenticated(true);
 
-                            this.props.history.push('/watchlist');
+                            history.push('/watchlist');
                         })
                         .catch(error => {
                             if (error.response) {
@@ -135,12 +89,10 @@ class RegisterForm extends React.Component {
                                     errors.push(error.response.data.non_field_errors);
                                 }
 
-                                this.setState({
-                                    errors: errors,
-                                });
+                                setErrors(errors);
                             } else {
                                 // Handle error when request was sent but no response from the server.
-                                this.props.history.push('/server-error');
+                                history.push('/server-error');
                             }
                         }
                     );
@@ -153,18 +105,50 @@ class RegisterForm extends React.Component {
                             errors.push(error.response.data.username);
                         }
 
-                        this.setState({
-                            errors: errors,
-                        });
+                        setErrors(errors);
                     } else {
                         // Handle error when request was sent but no response from the server.
-                        this.props.history.push('/server-error');
+                        history.push('/server-error');
                     }
                 }
             );
         }
     }
+
+    return (
+        <FormBase onSubmit={register}>
+            <FormHeader title='Sign Up' />
+            {errors.length !== 0 ? <FormError errors={errors} /> : null}
+            <FormField
+                type='text'
+                fieldname='username'
+                onChange={handleUsername}
+            />
+            <FormField
+                type='password'
+                fieldname='password'
+                onChange={handlePassword}
+            />
+            <FormField
+                type='password'
+                fieldname='confirm password'
+                onChange={handleConfirmPassword}
+            />
+            <FormButton
+                classType='primary'
+                buttonType='submit'
+                text='Sign Up'
+            />
+            <p>or</p>
+            <FormButton
+                classType='secondary'
+                buttonType='button'
+                text='Sign In'
+                onClick={props.swapFormComponent}
+            />
+        </FormBase>
+    );
 }
 
 
-export default withRouter(RegisterForm);
+export default RegisterForm;

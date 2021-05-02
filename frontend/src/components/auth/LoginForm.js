@@ -1,5 +1,5 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import UserContext from '../../context/UserContext';
 
@@ -12,95 +12,55 @@ import FormField from './form/FormField';
 import FormButton from './form/FormButton';
 
 
-class LoginForm extends React.Component {
-    static contextType = UserContext;
+function LoginForm(props) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            errors: [],
-        };
+    const {setIsAuthenticated} = useContext(UserContext);
+
+    const history = useHistory();
+
+    const handleUsername = (event) => {
+        setUsername(event.target.value);
     }
 
-    render() {
-        return (
-            <FormBase onSubmit={this.login}>
-                <FormHeader title='Sign In' />
-                {this.state.errors.length !== 0 ? <FormError errors={this.state.errors} /> : null}
-                <FormField
-                    type='text'
-                    fieldname='username'
-                    onChange={this.handleUsername}
-                />
-                <FormField
-                    type='password'
-                    fieldname='password'
-                    onChange={this.handlePassword}
-                />
-                <FormButton
-                    classType='primary'
-                    buttonType='submit'
-                    text='Sign In'
-                />
-                <p>or</p>
-                <FormButton
-                  classType='secondary'
-                  buttonType='button'
-                  text='Sign Up'
-                  onClick={this.props.swapForm}
-                />
-            </FormBase>
-        );
+    const handlePassword = (event) => {
+        setPassword(event.target.value);
     }
 
-    handleUsername = (event) => {
-        this.setState({
-            username: event.target.value,
-        });
-    }
-
-    handlePassword = (event) => {
-        this.setState({
-            password: event.target.value,
-        });
-    }
-
-    validate = () => {
+    const validate = () => {
         let errors = [];
 
-        if (this.state.username === '') {
+        if (username === '') {
             errors.push('Username is required.');
         }
 
-        if (this.state.password === '') {
+        if (password === '') {
             errors.push('Password is required.');
         }
 
-        this.setState({
-            errors: errors,
-        });
+        setErrors(errors);
 
         return errors.length === 0;
     }
 
-    login = (event) => {
+    const login = (event) => {
         event.preventDefault();
 
-        let isValid = this.validate();
+        let isValid = validate();
 
         if (isValid) {
             axios.post('/api/auth/login/', {
-                username: this.state.username,
-                password: this.state.password,
+                username: username,
+                password: password,
             })
                 .then(response => {
                     localStorage.setItem('TOKEN', response.data.token);
 
-                    this.context.setIsAuthenticated(() => true);
+                    setIsAuthenticated(true);
 
-                    this.props.history.push('/watchlist');
+                    history.push('/watchlist');
                 })
                 .catch(error => {
                     if (error.response) {
@@ -110,17 +70,44 @@ class LoginForm extends React.Component {
                             errors.push(error.response.data.non_field_errors);
                         }
 
-                        this.setState({
-                            errors: errors,
-                        });
+                        setErrors(errors);
                     } else {
                         // Handle error when request was sent but no response from the server.
-                        this.props.history.push('/server-error');
+                        history.push('/server-error');
                     }
                 }
             );
         }
     }
+
+    return (
+        <FormBase onSubmit={login}>
+            <FormHeader title='Sign In' />
+            {errors.length !== 0 ? <FormError errors={errors} /> : null}
+            <FormField
+                type='text'
+                fieldname='username'
+                onChange={handleUsername}
+            />
+            <FormField
+                type='password'
+                fieldname='password'
+                onChange={handlePassword}
+            />
+            <FormButton
+                classType='primary'
+                buttonType='submit'
+                text='Sign In'
+            />
+            <p>or</p>
+            <FormButton
+                classType='secondary'
+                buttonType='button'
+                text='Sign Up'
+                onClick={props.swapFormComponent}
+            />
+        </FormBase>
+    );
 }
 
-export default withRouter(LoginForm);
+export default LoginForm;
