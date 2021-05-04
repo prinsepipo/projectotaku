@@ -3,7 +3,7 @@
 ![Demo Image](./docs/demo.png)
 
 Project Otaku is a web app for creating and managing your anime and manga list.
-It uses drag'n'drop system to manage your list.
+It uses drag and drop system to manage your list.
 
 
 ## Goal
@@ -15,16 +15,10 @@ framework and ReactJS.
 
 ## Scope
 
-- Backend REST API
-    - Login/Register API
-    - Anime list API (Create, Read, Update, Delete)
-    - Manga list API (Create, Read, Update, Delete)
-
-- Frontend SPA
-    - Login/Register page
-    - Anime list page
-    - Manga list page
-    - Search anime/manga in the list
+- Users needs an account.
+- Users can search an anime/manga.
+- Users can add, move, and/or delete an anime/manga in their list.
+- Moving an item in the list will use the drag and drop system.
 
 
 ## Additional Note
