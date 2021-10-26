@@ -29,7 +29,6 @@
     padding-right: 2rem;
 
     font-size: 0.8rem;
-    font-weight: bold;
 
     text-align: center;
 }
@@ -47,8 +46,24 @@
     cursor: pointer;
 }
 
+.KanbanItem-delete svg path {
+  fill: #eb314a;
+}
+
 .KanbanItem:hover .KanbanItem-delete {
     display: block;
+}
+
+.KanbanItem-index {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+
+  font-size: 0.8rem;
+}
+
+.KanbanItem:hover .KanbanItem-index {
+  right: 1.5rem;
 }
 
 .KanbanItem--shrink {

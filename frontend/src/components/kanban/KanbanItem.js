@@ -29,9 +29,10 @@ function KanbanItem(props) {
                         alt={props.item.title}
                     />
                     <p className='KanbanItem-title'>{props.item.title}</p>
-                    <button className='KanbanItem-delete' onClick={deleteItem}>
+                    <button className='KanbanItem-delete' title="Remove Item" onClick={deleteItem}>
                         <FontAwesomeIcon icon='trash' />
                     </button>
+                    <p className="KanbanItem-index">{props.index}</p>
                 </div>
             )}
         </Draggable>
