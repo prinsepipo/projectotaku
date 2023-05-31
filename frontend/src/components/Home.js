@@ -6,7 +6,7 @@ import axios from 'axios';
 import UserContext from '../context/UserContext';
 import WatchlistContext from '../context/WatchlistContext';
 
-import { jikanAPI } from '../api';
+import jikan from '../api/jikan';
 
 import Navbar from './layout/navbar/Navbar';
 import MainContent from './layout/MainContent';
@@ -108,36 +108,15 @@ function Home(props) {
     // It will be efficient to fetch it here in the parent component once, instead of fetching it
     // everytime we visit the browse page.
     useEffect(() => {
-        let mounted = true;
-        const source = axios.CancelToken.source();
+        setIsFetchingAiringAnime(true);
 
-        if (mounted) {
-            setIsFetchingAiringAnime(true);
-        }
+        const getSeasonalAnime = async () => {
+            const result = await jikan.getSeasonalAnime();
+            setAiringAnime(result);
+            setIsFetchingAiringAnime(false);
+        };
 
-        jikanAPI.get('season', {cancelToken: source.token})
-            .then((response) => {
-                if (mounted) {
-                    setAiringAnime(response.data.anime);
-                }
-            })
-            .catch((error) => {
-                if (axios.isCancel(error)) {
-                    console.log('fetch airing anime canceled.');
-                } else {
-                    console.log(error);
-                }
-            })
-            .finally(() => {
-                if (mounted) {
-                    setIsFetchingAiringAnime(false);
-                }
-            });
-
-        return () => {
-            mounted = false;
-            source.cancel();
-        }
+        getSeasonalAnime();
     }, []);
 
     if (!isAuthenticated) {

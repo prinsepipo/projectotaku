@@ -14,6 +14,14 @@ function KanbanItem(props) {
         props.handleDelete(props.item);
     }
 
+    const formattedTitle = () => {
+        if (props.item.title.length > 40) {
+            return props.item.title.substring(0, 40) + '...';
+        }
+
+        return props.item.title;
+    };
+
     return (
         <Draggable draggableId={props.item.id.toString()} index={props.index}>
             {(provided) => (
@@ -28,11 +36,10 @@ function KanbanItem(props) {
                         src={props.item.image_url}
                         alt={props.item.title}
                     />
-                    <p className='KanbanItem-title'>{props.item.title}</p>
+                    <p className='KanbanItem-title' title={props.item.title}>{formattedTitle()}</p>
                     <button className='KanbanItem-delete' title="Remove Item" onClick={deleteItem}>
                         <FontAwesomeIcon icon='trash' />
                     </button>
-                    <p className="KanbanItem-index">{props.index}</p>
                 </div>
             )}
         </Draggable>

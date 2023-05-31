@@ -64,7 +64,7 @@ function AddItem(props) {
         const data = {
             mal_id: item.mal_id,
             title: item.title,
-            image_url: item.image_url,
+            image_url: item.images.webp.image_url,
             mal_url: item.url,
             type: props.type,
             status: status,

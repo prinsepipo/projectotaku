@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { jikanAPI } from '../../api';
+import jikan from '../../api/jikan';
 
 import BrowseHeader from './BrowseHeader';
 import BrowseContent from './BrowseContent';
@@ -18,48 +18,17 @@ function Browse (props) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
 
-    const maxResult = 10;
-
-    const search = (query) => {
+    const search = async (query) => {
         setHasSearched(true);
         setIsLoading(true);
 
-        let searchingAnime = true;
-        let searchingManga = true;
+        const anime = await jikan.searchAnime(query);
+        setAnimeResult(anime);
 
-        jikanAPI.get(`search/anime?q=${query}`)
-            .then((response) => {
-                setAnimeResult(response.data.results);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                searchingAnime = false;
+        const manga = await jikan.searchManga(query);
+        setMangaResult(manga);
 
-                if (!searchingAnime && !searchingManga) {
-                    setIsLoading(false);
-                }
-            });
-
-        jikanAPI.get(`search/manga?q=${query}`)
-            .then((response) => {
-                // By default, the manga search returns both manga and light novels.
-                // We only want the manga.
-                setMangaResult(response.data.results.filter((element) => (
-                    element.type === 'Manga' || element.type === 'Manhwa'
-                )));
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                searchingManga = false;
-
-                if (!searchingAnime && !searchingManga) {
-                    setIsLoading(false);
-                }
-            });
+        setIsLoading(false);
     };
 
     let content = (
@@ -74,11 +43,11 @@ function Browse (props) {
             <>
                 <div>
                     <h3>Anime</h3>
-                    <BrowseList list={animeResult.slice(0, maxResult)} type='anime' />
+                    <BrowseList list={animeResult} type='anime' />
                 </div>
                 <div>
                     <h3>Manga</h3>
-                    <BrowseList list={mangaResult.slice(0, maxResult)} type='manga' />
+                    <BrowseList list={mangaResult} type='manga' />
                 </div>
             </>
         )

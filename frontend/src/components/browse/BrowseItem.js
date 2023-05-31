@@ -22,7 +22,7 @@ function BrowseItem(props) {
             <div className='BrowseItemImage'>
                 <img
                     className='BrowseItem-img'
-                    src={props.item.image_url}
+                    src={props.item.images.webp.image_url}
                     alt={props.item.title}
                 />
             </div>
