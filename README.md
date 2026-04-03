@@ -1,27 +1,71 @@
 # Project Otaku
 
-![Demo Image](./docs/demo.png)
+A web app for anime enthusiasts to manage their watch lists using a Kanban-style drag-and-drop board.
 
-[Project Otaku](https://projectotaku.herokuapp.com/) is a web app for creating and managing your
-anime and manga list. It uses drag and drop system to manage your list.
+![Demo](docs/demo.png)
 
+## Features
 
-## Goal
+- **Kanban Board** — Organize anime into Watch, Watching, and Watched columns with drag-and-drop
+- **Anime Search** — Search titles via the [Jikan API](https://jikan.moe/) (MyAnimeList data)
+- **User Accounts** — JWT-based auth so your board persists across devices
+- **Detail Links** — Click any card to open its MyAnimeList page
+- **Mobile Responsive** — Collapses to a single-column accordion view on small screens
+- **Caching** — Redis-backed search cache to stay within Jikan's rate limits
 
-There are many applications out there like this project but I want something that I can
-personalize. I also want to learn how to create web applications using Django with Djano REST
-framework and ReactJS.
+## Tech Stack
 
+| Layer    | Technology              |
+|----------|-------------------------|
+| Frontend | React + Vite            |
+| Backend  | FastAPI (Python)        |
+| Database | PostgreSQL              |
+| Cache    | Redis                   |
 
-## Scope
+## Getting Started
 
-- Users needs an account.
-- Users can search an anime/manga.
-- Users can add, move, and/or delete an anime/manga in their list.
-- Moving an item in the list will use the drag and drop system.
+### Prerequisites
 
+- Docker & Docker Compose
 
-## Additional Note
+### Setup
 
-The project will use the unofficial [MyAnimeList](https://myanimelist.net/) API called
-[Jikan](https://jikan.moe/) API as the main source of anime and manga database.
+1. Clone the repo and copy the environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Start all services:
+
+   ```bash
+   docker compose up
+   ```
+
+3. Open the app at `http://localhost:5173`
+
+The backend API runs at `http://localhost:8000`.
+
+## Environment Variables
+
+| Variable                    | Description                          | Default      |
+|-----------------------------|--------------------------------------|--------------|
+| `POSTGRES_USER`             | Database user                        | `otaku`      |
+| `POSTGRES_PASSWORD`         | Database password                    | `otaku`      |
+| `POSTGRES_DB`               | Database name                        | `otaku`      |
+| `DATABASE_URL`              | Full async DB connection string      | —            |
+| `REDIS_URL`                 | Redis connection string              | —            |
+| `SECRET_KEY`                | JWT signing secret                   | —            |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Access token lifetime in minutes  | `15`         |
+| `REFRESH_TOKEN_EXPIRE_DAYS` | Refresh token lifetime in days       | `7`          |
+| `CORS_ORIGINS`              | Allowed frontend origins             | `http://localhost:5173` |
+
+## Project Structure
+
+```
+projectotaku/
+├── backend/          # FastAPI application
+├── docs/             # PRD and assets
+├── docker-compose.yml
+└── .env.example
+```

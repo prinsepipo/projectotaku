@@ -1,2 +1,4 @@
 # Environments
 .env
+__pycahche__/
+docs/superpowers/

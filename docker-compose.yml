@@ -1,18 +1,42 @@
-version: '3.9'
 services:
   db:
-    image: postgres
+    image: postgres:15
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-  backend:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    env_file: .env
+      POSTGRES_USER: ${POSTGRES_USER:-otaku}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-otaku}
+      POSTGRES_DB: ${POSTGRES_DB:-otaku}
     volumes:
-      - .:/code
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "8000:8000"
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+    env_file: .env
     depends_on:
       - db
+      - redis
+    ports:
+      - "8000:8000"
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
