@@ -1,4 +1,10 @@
 # Environments
 .env
-__pycahche__/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Docs
 docs/superpowers/
