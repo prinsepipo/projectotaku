@@ -60,6 +60,23 @@ The backend API runs at `http://localhost:8000`.
 | `REFRESH_TOKEN_EXPIRE_DAYS` | Refresh token lifetime in days       | `7`          |
 | `CORS_ORIGINS`              | Allowed frontend origins             | `http://localhost:5173` |
 
+## Database Migrations
+
+Migrations are managed with [Alembic](https://alembic.sqlalchemy.org/). Run all commands from the `backend/` directory with the virtual environment activated and `backend/.env` present.
+
+```bash
+# Apply all pending migrations
+alembic upgrade head
+
+# Generate a new migration from model changes
+alembic revision --autogenerate -m "describe the change"
+
+# Roll back the last migration
+alembic downgrade -1
+```
+
+Alembic reads `DATABASE_URL` from `backend/.env` via `app.core.config.settings`.
+
 ## Project Structure
 
 ```
