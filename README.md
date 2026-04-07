@@ -62,17 +62,23 @@ The backend API runs at `http://localhost:8000`.
 
 ## Database Migrations
 
-Migrations are managed with [Alembic](https://alembic.sqlalchemy.org/). Run all commands from the `backend/` directory with the virtual environment activated and `backend/.env` present.
+Migrations are managed with [Alembic](https://alembic.sqlalchemy.org/). Run migrations from the container.
 
 ```bash
 # Apply all pending migrations
-alembic upgrade head
+docker compose exec backend alembic upgrade head
 
 # Generate a new migration from model changes
-alembic revision --autogenerate -m "describe the change"
+docker compose exec backend alembic revision --autogenerate -m "describe the change"
 
 # Roll back the last migration
-alembic downgrade -1
+docker compose exec backend alembic downgrade -1
+```
+
+If the backend container is not running, use `run --rm` instead:
+
+```bash
+docker compose run --rm backend alembic upgrade head
 ```
 
 Alembic reads `DATABASE_URL` from `backend/.env` via `app.core.config.settings`.

@@ -57,3 +57,17 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
         yield client
 
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def authenticated_client(client):
+    creds = {
+        "username": "test_user",
+        "email": "testuser@example.com",
+        "password": "password123"
+    }
+    response = await client.post("/auth/register", json=creds)
+    token = response.json()["access_token"]
+    client.headers["Authorization"] = f"Bearer {token}"
+
+    yield client

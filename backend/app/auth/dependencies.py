@@ -10,7 +10,7 @@ from app.core.security import decode_access_token
 from app.core.database import get_db
 
 
-bearer = HTTPBearer()
+bearer = HTTPBearer(auto_error=True)
 
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer), db: AsyncSession = Depends(get_db)) -> User:

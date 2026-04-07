@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.auth.router import router as auth_router
+from app.watchlist.router import router as watchlist_router
 
 
 app = FastAPI(title=settings.APP_NAME, version="1.0.0")
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(watchlist_router)
 
 
 @app.get("/")
