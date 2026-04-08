@@ -3,14 +3,17 @@ from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy import text
 from collections.abc import AsyncGenerator
+import redis.asyncio as aioredis
 
 from app.core.database import Base, get_db
+from app.core.config import settings
 
 from app.main import app
 
 
 TEST_DATABASE_URL = "postgresql+asyncpg://otaku:otaku@localhost:5432/otaku_test"
 _POSTGRES_URL = "postgresql+asyncpg://otaku:otaku@localhost:5432/postgres"
+TEST_REDIS_URL = "redis://localhost:6379"
 
 test_engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 TestSessionLocal = async_sessionmaker(test_engine, expire_on_commit=False)
@@ -51,7 +54,7 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
-    transport = ASGITransport(app=app)
+    transport = ASGITransport(app=app, raise_app_exceptions=False)
 
     async with AsyncClient(transport=transport, base_url="https://test") as client:
         yield client
@@ -71,3 +74,21 @@ async def authenticated_client(client):
     client.headers["Authorization"] = f"Bearer {token}"
 
     yield client
+
+
+@pytest_asyncio.fixture
+async def redis_client():
+    client = aioredis.from_url(TEST_REDIS_URL, decode_responses=True)
+    yield client
+    await client.close()
+
+
+@pytest_asyncio.fixture
+async def jikan_client(authenticated_client, redis_client):
+    from app.jikan.dependencies import get_redis
+
+    async def override_get_redis():
+        yield redis_client
+
+    app.dependency_overrides[get_redis] = override_get_redis
+    yield authenticated_client, redis_client
