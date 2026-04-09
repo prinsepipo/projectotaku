@@ -1,21 +1,23 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 
-from app.core.security import hash_password, verify_password, create_access_token, decode_access_token, hash_token
 from app.auth.models import RefreshToken
-
+from app.core.security import (
+    create_access_token,
+    decode_access_token,
+    hash_password,
+    hash_token,
+    verify_password,
+)
 
 register_credentials = {
     "username": "john",
     "email": "john@example.com",
-    "password": "password123"
+    "password": "password123",
 }
 
-login_credentials = {
-    "username": "john",
-    "password": "password123"
-}
+login_credentials = {"username": "john", "password": "password123"}
 
 
 def test_password_round_trip():
@@ -32,7 +34,7 @@ def test_jwt_round_trip():
     token_hash = hash_token(token)
 
     assert token_hash != token
-    assert hash_token('different.token') != token_hash
+    assert hash_token("different.token") != token_hash
 
     payload = decode_access_token(token)
 
@@ -86,7 +88,9 @@ async def test_login_returns_token(client, db_session):
 
 async def test_login_invalid_credentials(client, db_session):
     await client.post("/auth/register", json=register_credentials)
-    response = await client.post("/auth/login", json={**login_credentials, "password": "wrongpassword"})
+    response = await client.post(
+        "/auth/login", json={**login_credentials, "password": "wrongpassword"}
+    )
 
     assert response.status_code == 401
 
@@ -182,7 +186,9 @@ async def test_me_returns_current_user(client):
     register_response = await client.post("/auth/register", json=register_credentials)
     access_token = register_response.json()["access_token"]
 
-    response = await client.get("/auth/me", headers={"Authorization": f"Bearer {access_token}"})
+    response = await client.get(
+        "/auth/me", headers={"Authorization": f"Bearer {access_token}"}
+    )
 
     assert response.status_code == 200
 
@@ -199,6 +205,8 @@ async def test_me_rejects_missing_token(client):
 
 
 async def test_me_rejects_invalid_token(client):
-    response = await client.get("/auth/me", headers={"Authorization": "Bearer not.a.valid.token"})
+    response = await client.get(
+        "/auth/me", headers={"Authorization": "Bearer not.a.valid.token"}
+    )
 
     assert response.status_code == 401

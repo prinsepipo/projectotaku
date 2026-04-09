@@ -1,4 +1,5 @@
 import uuid
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -23,7 +24,7 @@ class UserResponse(BaseModel):
     username: str
     email: EmailStr
 
-    model_config = { "from_attributes": True }
+    model_config = {"from_attributes": True}
 
 
 class RegisterResponse(UserResponse):

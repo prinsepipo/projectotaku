@@ -1,14 +1,13 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import create_async_engine
 
+import app.auth.models  # noqa: F401 — registers models with Base.metadata
 from alembic import context
-
 from app.core.config import settings
 from app.core.database import Base
-import app.auth.models  # noqa: F401 — registers models with Base.metadata
 
 config = context.config
 

@@ -1,7 +1,6 @@
 from sqlalchemy import select
 
-from app.watchlist.models import WatchStatus, WatchlistItem
-
+from app.watchlist.models import WatchlistItem, WatchStatus
 
 TEST_ANIME = [
     {
@@ -10,7 +9,7 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1015/138006.jpg",
         "mal_url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
         "status": WatchStatus.WATCH,
-        "position": 0
+        "position": 0,
     },
     {
         "mal_id": 61469,
@@ -18,7 +17,7 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1448/154111.jpg",
         "mal_url": "https://myanimelist.net/anime/61469/Steel_Ball_Run__JoJo_no_Kimyou_na_Bouken",
         "status": WatchStatus.WATCHING,
-        "position": 0
+        "position": 0,
     },
     {
         "mal_id": 5114,
@@ -26,8 +25,8 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1208/94745.jpg",
         "mal_url": "https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood",
         "status": WatchStatus.WATCHED,
-        "position": 0
-    }
+        "position": 0,
+    },
 ]
 
 
@@ -94,10 +93,10 @@ async def test_update_item_in_watchlist(authenticated_client, db_session):
     item_id = create_response.json()["id"]
     new_position = 1.5
 
-    update_response = await authenticated_client.patch(f"/watchlist/{item_id}", json={
-        "status": WatchStatus.WATCHING,
-        "position": new_position
-    })
+    update_response = await authenticated_client.patch(
+        f"/watchlist/{item_id}",
+        json={"status": WatchStatus.WATCHING, "position": new_position},
+    )
 
     assert update_response.status_code == 200
 

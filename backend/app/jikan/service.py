@@ -10,7 +10,9 @@ JIKAN_SEARCH_URL = "https://api.jikan.moe/v4/anime"
 CACHE_TTL = 60 * 60  # 1 hour
 
 
-async def search_anime(q: str, redis: aioredis.Redis, http: httpx.AsyncClient) -> list[AnimeResult]:
+async def search_anime(
+    q: str, redis: aioredis.Redis, http: httpx.AsyncClient
+) -> list[AnimeResult]:
     cache_key = f"jikan:anime:{q}"
 
     cached = await redis.get(cache_key)
@@ -20,10 +22,15 @@ async def search_anime(q: str, redis: aioredis.Redis, http: httpx.AsyncClient) -
     try:
         response = await http.get(JIKAN_SEARCH_URL, params={"q": q})
     except httpx.HTTPError:
-        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail="Failed to reach Jikan API.")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY, detail="Failed to reach Jikan API."
+        )
 
     if response.status_code != 200:
-        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail="Jikan API returned an error.")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Jikan API returned an error.",
+        )
 
     results = [
         AnimeResult(
@@ -35,6 +42,8 @@ async def search_anime(q: str, redis: aioredis.Redis, http: httpx.AsyncClient) -
         for item in response.json().get("data", [])
     ]
 
-    await redis.set(cache_key, json.dumps([r.model_dump() for r in results]), ex=CACHE_TTL)
+    await redis.set(
+        cache_key, json.dumps([r.model_dump() for r in results]), ex=CACHE_TTL
+    )
 
     return results
