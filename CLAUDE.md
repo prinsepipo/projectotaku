@@ -52,6 +52,10 @@ cd backend
 uv sync            # install all deps including dev group
 ```
 
+## PRD or Specifications
+
+This project specs is located in [PRD.md](./docs/PRD.md). Use it if you more info about the project.
+
 ## Architecture
 
 ### Backend (`backend/app/`)
