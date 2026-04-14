@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board (Populated) — ProjectOtaku</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ── Board Layout ─── */
+    .board-root {
+      font-family: var(--font-body);
+      display: flex; flex-direction: column;
+      height: 100%; background: var(--color-bg);
+      overflow: hidden;
+    }
+
+    /* Navbar */
+    .board-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 24px;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .board-logo {
+      font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem;
+      color: var(--color-primary); display: flex; align-items: center; gap: 6px;
+    }
+    .board-nav-center { flex: 1; display: flex; justify-content: center; }
+    .board-search-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--color-bg); border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-full); padding: 0 16px; height: 34px;
+      font-size: 0.875rem; color: var(--color-text-muted);
+      cursor: pointer; transition: border-color 150ms;
+      width: 260px;
+    }
+    .board-search-pill:hover { border-color: var(--color-primary); }
+    .board-nav-right { display: flex; align-items: center; gap: 12px; }
+    .board-user {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; padding: 4px 8px; border-radius: var(--radius-md);
+      transition: background 150ms;
+    }
+    .board-user:hover { background: var(--color-surface-raised); }
+    .board-username { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
+
+    /* Kanban area */
+    .kanban {
+      flex: 1; display: flex; gap: 16px;
+      padding: 20px 24px; overflow-x: auto; overflow-y: hidden;
+      align-items: flex-start;
+    }
+
+    .kanban-col {
+      width: 360px; flex-shrink: 0;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column;
+      max-height: 100%; overflow: hidden;
+    }
+    .kanban-col-header {
+      padding: 12px 14px 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid;
+      flex-shrink: 0;
+    }
+    .kanban-col--watch .kanban-col-header    { border-color: #1D4ED8; }
+    .kanban-col--watching .kanban-col-header { border-color: #92400E; }
+    .kanban-col--watched .kanban-col-header  { border-color: #065F46; }
+
+    .kanban-col-left { display: flex; align-items: center; gap: 8px; }
+    .kanban-col-title {
+      font-family: var(--font-body); font-size: 0.8125rem; font-weight: 700;
+      color: var(--color-text); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .kanban-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 700;
+    }
+    .kanban-col--watch .kanban-count    { background: #DBEAFE; color: #1D4ED8; }
+    .kanban-col--watching .kanban-count { background: #FEF3C7; color: #92400E; }
+    .kanban-col--watched .kanban-count  { background: #D1FAE5; color: #065F46; }
+
+    .kanban-add-btn {
+      width: 26px; height: 26px; border-radius: var(--radius-md);
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 150ms, color 150ms;
+    }
+    .kanban-add-btn:hover { background: var(--color-secondary); color: var(--color-primary); }
+
+    .kanban-cards {
+      padding: 10px; display: flex; flex-direction: column; gap: 8px;
+      overflow-y: auto; flex: 1;
+    }
+
+    /* Anime card */
+    .anime-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden; cursor: grab;
+      transition: box-shadow 150ms, transform 150ms;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .anime-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .anime-card:hover .anime-card-drag { opacity: 1; }
+
+    .anime-thumb {
+      width: 100%; height: 80px; display: block;
+    }
+    .anime-card-body { padding: 9px 10px 10px; }
+    .anime-card-title {
+      font-weight: 600; font-size: 0.8125rem; color: var(--color-text);
+      margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .anime-card-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .anime-card-rating {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      color: var(--color-warning); margin-left: auto;
+    }
+    .anime-card-drag {
+      position: absolute; right: 8px; top: 88px;
+      color: var(--color-text-muted); opacity: 0; transition: opacity 150ms;
+    }
+
+    /* ── Mobile Board — Accordion ─── */
+    .board-m-root {
+      font-family: var(--font-body); display: flex; flex-direction: column;
+      height: 100%; background: var(--color-bg); overflow: hidden;
+    }
+    .board-m-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 48px; padding: 0 16px;
+      background: var(--color-surface); border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .board-m-logo { font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; color: var(--color-primary); }
+    .board-m-nav-right { display: flex; align-items: center; gap: 8px; }
+
+    .board-m-content { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+    .m-col {
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+    }
+    .m-col-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+    .m-col--watch .m-col-header    { border-color: #1D4ED8; }
+    .m-col--watching .m-col-header { border-color: #92400E; }
+    .m-col--watched .m-col-header  { border-color: #065F46; }
+    .m-col-header-left { display: flex; align-items: center; gap: 8px; }
+    .m-col-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text); }
+    .m-col-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: var(--radius-full); font-size: 10px; font-weight: 700;
+    }
+    .m-col--watch .m-col-count    { background: #DBEAFE; color: #1D4ED8; }
+    .m-col--watching .m-col-count { background: #FEF3C7; color: #92400E; }
+    .m-col--watched .m-col-count  { background: #D1FAE5; color: #065F46; }
+    .m-col-chevron { color: var(--color-text-muted); }
+    .m-col-cards { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+
+    /* Mobile anime card — horizontal layout */
+    .m-anime-card {
+      display: flex; align-items: center;
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); overflow: hidden;
+      box-shadow: var(--shadow-sm); gap: 0;
+    }
+    .m-anime-thumb { width: 52px; height: 52px; flex-shrink: 0; object-fit: cover; }
+    .m-anime-info { padding: 8px 10px; flex: 1; min-width: 0; }
+    .m-anime-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .m-anime-meta { display: flex; align-items: center; gap: 4px; }
+    .m-anime-rating { font-family: var(--font-mono); font-size: 10px; color: var(--color-warning); font-weight: 500; margin-left: auto; }
+    .m-col-collapsed { color: var(--color-text-muted); font-size: 0.8125rem; padding: 10px 14px; }
+  </style>
+</head>
+<body>
+
+<div class="ds-screen">
+  <header class="ds-screen-header">
+    <div class="ds-screen-header__top">
+      <a href="../index.html" class="ds-back-link">← Back to Design System</a>
+    </div>
+    <h1>Board — Populated</h1>
+  </header>
+
+  <div class="ds-frames">
+
+    <!-- ── DESKTOP ─────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — 1280×800</div>
+      <div class="ds-frame ds-frame--desktop">
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">My Board — ProjectOtaku</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn" disabled>&#8249;</button>
+              <button class="ds-safari-btn">&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://projectotaku.app/board</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="board-root">
+
+            <!-- Navbar -->
+            <nav class="board-nav">
+              <div class="board-logo">⛩ ProjectOtaku</div>
+              <div class="board-nav-center">
+                <div class="board-search-pill">
+                  <i data-lucide="search" style="width:14px;height:14px;color:#6E6A85;"></i>
+                  <span>Search anime to add…</span>
+                  <span style="margin-left:auto;font-size:11px;background:var(--color-border);padding:1px 6px;border-radius:4px;color:var(--color-text-muted);">⌘K</span>
+                </div>
+              </div>
+              <div class="board-nav-right">
+                <div class="board-user">
+                  <span class="avatar avatar--sm">JD</span>
+                  <span class="board-username">JohnDoe</span>
+                  <i data-lucide="chevron-down" style="width:14px;height:14px;color:#6E6A85;"></i>
+                </div>
+              </div>
+            </nav>
+
+            <!-- Kanban -->
+            <div class="kanban">
+
+              <!-- Watch column -->
+              <div class="kanban-col kanban-col--watch">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-left">
+                    <span class="kanban-col-title">Watch</span>
+                    <span class="kanban-count">3</span>
+                  </div>
+                  <button class="kanban-add-btn">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                  </button>
+                </div>
+                <div class="kanban-cards">
+                  <!-- Card 1 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Attack on Titan</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Drama</span>
+                        <span class="anime-card-rating">★ 9.0</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                  <!-- Card 2 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Fullmetal Alchemist: Brotherhood</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Adventure</span>
+                        <span class="anime-card-rating">★ 9.1</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                  <!-- Card 3 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#000000,#434343);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Death Note</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Mystery</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Thriller</span>
+                        <span class="anime-card-rating">★ 8.6</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Watching column -->
+              <div class="kanban-col kanban-col--watching">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-left">
+                    <span class="kanban-col-title">Watching</span>
+                    <span class="kanban-count">2</span>
+                  </div>
+                  <button class="kanban-add-btn">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                  </button>
+                </div>
+                <div class="kanban-cards">
+                  <!-- Card 1 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#780206,#061161);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Demon Slayer</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Fantasy</span>
+                        <span class="anime-card-rating">★ 8.7</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                  <!-- Card 2 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#0F0C29,#302B63,#24243e);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Jujutsu Kaisen</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Supernatural</span>
+                        <span class="anime-card-rating">★ 8.6</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Watched column -->
+              <div class="kanban-col kanban-col--watched">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-left">
+                    <span class="kanban-col-title">Watched</span>
+                    <span class="kanban-count">2</span>
+                  </div>
+                  <button class="kanban-add-btn">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                  </button>
+                </div>
+                <div class="kanban-cards">
+                  <!-- Card 1 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#4776E6,#8E54E9);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Spirited Away</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Animation</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Adventure</span>
+                        <span class="anime-card-rating">★ 8.7</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                  <!-- Card 2 -->
+                  <div class="anime-card">
+                    <div class="anime-thumb" style="background:linear-gradient(135deg,#f7797d,#FBD786,#c6ffdd);"></div>
+                    <div class="anime-card-body">
+                      <div class="anime-card-title">Your Name</div>
+                      <div class="anime-card-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Romance</span>
+                        <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Drama</span>
+                        <span class="anime-card-rating">★ 8.9</span>
+                      </div>
+                    </div>
+                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOBILE ───────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Mobile — 390×844 (Accordion View)</div>
+      <div class="ds-frame ds-frame--mobile">
+        <div class="ds-chrome-ios-top">
+          <div class="ds-ios-statusbar">
+            <span class="ds-ios-statusbar__time">9:41</span>
+            <div class="ds-ios-statusbar__notch"></div>
+            <div class="ds-ios-statusbar__icons"><span>▲</span><span>&#x1F4F6;</span><span>▮▮▮</span></div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="board-m-root">
+            <nav class="board-m-nav">
+              <span class="board-m-logo">⛩ ProjectOtaku</span>
+              <div class="board-m-nav-right">
+                <button style="background:none;border:none;cursor:pointer;display:flex;align-items:center;">
+                  <i data-lucide="search" style="width:18px;height:18px;color:#6E6A85;"></i>
+                </button>
+                <span class="avatar avatar--sm">JD</span>
+              </div>
+            </nav>
+
+            <div class="board-m-content">
+
+              <!-- Watch — EXPANDED -->
+              <div class="m-col m-col--watch">
+                <div class="m-col-header">
+                  <div class="m-col-header-left">
+                    <span class="m-col-title">Watch</span>
+                    <span class="m-col-count">3</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;"></i>
+                </div>
+                <div class="m-col-cards">
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Attack on Titan</div>
+                      <div class="m-anime-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Action</span>
+                        <span class="m-anime-rating">★ 9.0</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Fullmetal Alchemist: Brotherhood</div>
+                      <div class="m-anime-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Adventure</span>
+                        <span class="m-anime-rating">★ 9.1</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#000,#434343);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Death Note</div>
+                      <div class="m-anime-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Mystery</span>
+                        <span class="m-anime-rating">★ 8.6</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Watching — COLLAPSED -->
+              <div class="m-col m-col--watching">
+                <div class="m-col-header">
+                  <div class="m-col-header-left">
+                    <span class="m-col-title">Watching</span>
+                    <span class="m-col-count">2</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;transform:rotate(-90deg);"></i>
+                </div>
+                <div class="m-col-collapsed">2 titles in progress — tap to expand</div>
+              </div>
+
+              <!-- Watched — COLLAPSED -->
+              <div class="m-col m-col--watched">
+                <div class="m-col-header">
+                  <div class="m-col-header-left">
+                    <span class="m-col-title">Watched</span>
+                    <span class="m-col-count">2</span>
+                  </div>
+                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;transform:rotate(-90deg);"></i>
+                </div>
+                <div class="m-col-collapsed">2 titles completed — tap to expand</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-chrome-ios-bottom">
+          <div class="ds-ios-addressbar">projectotaku.app/board</div>
+          <div class="ds-ios-toolbar">
+            <button class="ds-ios-btn" disabled>&#8249;</button>
+            <button class="ds-ios-btn">&#8250;</button>
+            <button class="ds-ios-btn">⬆</button>
+            <button class="ds-ios-btn">&#9776;</button>
+            <button class="ds-ios-btn">⊞</button>
+          </div>
+          <div class="ds-ios-homeindicator"><span></span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+</script>
+</body>
+</html>

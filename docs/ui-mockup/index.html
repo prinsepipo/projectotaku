@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProjectOtaku — Design System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div class="ds-layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────────── -->
+  <nav class="ds-sidebar">
+    <div class="ds-sidebar__logo">⛩ ProjectOtaku</div>
+    <ul class="ds-sidebar__nav">
+      <li class="ds-sidebar__section">Foundations</li>
+      <li><a href="#colors">Colors</a></li>
+      <li><a href="#typography">Typography</a></li>
+      <li><a href="#spacing">Spacing</a></li>
+      <li><a href="#iconography">Iconography</a></li>
+
+      <li class="ds-sidebar__section">Components</li>
+      <li><a href="#button">Button</a></li>
+      <li><a href="#input">Input</a></li>
+      <li><a href="#badge">Badge</a></li>
+      <li><a href="#avatar">Avatar</a></li>
+      <li><a href="#spinner">Spinner</a></li>
+      <li><a href="#tooltip">Tooltip</a></li>
+
+      <li class="ds-sidebar__section">Screens</li>
+      <li><a href="screens/landing.html">Landing Page</a></li>
+      <li><a href="screens/auth.html">Auth (Login / Register)</a></li>
+      <li><a href="screens/board.html">Board — Populated</a></li>
+      <li><a href="screens/board-search.html">Board — Search Open</a></li>
+      <li><a href="screens/board-empty.html">Board — Empty State</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── MAIN CONTENT ──────────────────────────────────────────── -->
+  <main class="ds-main">
+
+    <!-- ════════════════════════════════════════════════════════════
+         FOUNDATIONS
+         ════════════════════════════════════════════════════════════ -->
+
+    <!-- COLORS -->
+    <section id="colors" class="ds-section">
+      <h2>Colors</h2>
+
+      <h3>Palette</h3>
+      <div class="ds-swatches">
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#F9F8FF;"></div>
+          <div class="ds-swatch__label">Background</div>
+          <div class="ds-swatch__hex">#F9F8FF</div>
+          <div class="ds-swatch__desc">App background, canvas</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#FFFFFF; border-color:#E2E2E5;"></div>
+          <div class="ds-swatch__label">Surface</div>
+          <div class="ds-swatch__hex">#FFFFFF</div>
+          <div class="ds-swatch__desc">Cards, modals, nav</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#F3F1FF;"></div>
+          <div class="ds-swatch__label">Surface Raised</div>
+          <div class="ds-swatch__hex">#F3F1FF</div>
+          <div class="ds-swatch__desc">Hover fills, subtle panels</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#1C1730;"></div>
+          <div class="ds-swatch__label">Text</div>
+          <div class="ds-swatch__hex">#1C1730</div>
+          <div class="ds-swatch__desc">Primary text</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#6E6A85;"></div>
+          <div class="ds-swatch__label">Text Muted</div>
+          <div class="ds-swatch__hex">#6E6A85</div>
+          <div class="ds-swatch__desc">Labels, captions, placeholders</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#7C3AED;"></div>
+          <div class="ds-swatch__label">Primary</div>
+          <div class="ds-swatch__hex">#7C3AED</div>
+          <div class="ds-swatch__desc">CTAs, interactive elements, brand</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#6D28D9;"></div>
+          <div class="ds-swatch__label">Primary Hover</div>
+          <div class="ds-swatch__hex">#6D28D9</div>
+          <div class="ds-swatch__desc">Hover state of primary</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#EDE9FE;"></div>
+          <div class="ds-swatch__label">Secondary</div>
+          <div class="ds-swatch__hex">#EDE9FE</div>
+          <div class="ds-swatch__desc">Subtle fills, secondary buttons</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#F97316;"></div>
+          <div class="ds-swatch__label">Accent</div>
+          <div class="ds-swatch__hex">#F97316</div>
+          <div class="ds-swatch__desc">Highlights, star ratings, energy</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#059669;"></div>
+          <div class="ds-swatch__label">Success</div>
+          <div class="ds-swatch__hex">#059669</div>
+          <div class="ds-swatch__desc">Positive feedback, watched state</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#D97706;"></div>
+          <div class="ds-swatch__label">Warning</div>
+          <div class="ds-swatch__hex">#D97706</div>
+          <div class="ds-swatch__desc">Caution states</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#DC2626;"></div>
+          <div class="ds-swatch__label">Error</div>
+          <div class="ds-swatch__hex">#DC2626</div>
+          <div class="ds-swatch__desc">Errors, destructive actions</div>
+        </div>
+      </div>
+
+      <h3>Kanban Status Colors</h3>
+      <div class="ds-swatches">
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#DBEAFE; border-color:#93C5FD;"></div>
+          <div class="ds-swatch__label">Watch BG</div>
+          <div class="ds-swatch__hex">#DBEAFE</div>
+          <div class="ds-swatch__desc">Watch column badge/chip bg</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#1D4ED8;"></div>
+          <div class="ds-swatch__label">Watch Text</div>
+          <div class="ds-swatch__hex">#1D4ED8</div>
+          <div class="ds-swatch__desc">Watch column label/accent</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#FEF3C7; border-color:#FCD34D;"></div>
+          <div class="ds-swatch__label">Watching BG</div>
+          <div class="ds-swatch__hex">#FEF3C7</div>
+          <div class="ds-swatch__desc">Watching badge bg</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#92400E;"></div>
+          <div class="ds-swatch__label">Watching Text</div>
+          <div class="ds-swatch__hex">#92400E</div>
+          <div class="ds-swatch__desc">Watching label/accent</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#D1FAE5; border-color:#6EE7B7;"></div>
+          <div class="ds-swatch__label">Watched BG</div>
+          <div class="ds-swatch__hex">#D1FAE5</div>
+          <div class="ds-swatch__desc">Watched badge bg</div>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#065F46;"></div>
+          <div class="ds-swatch__label">Watched Text</div>
+          <div class="ds-swatch__hex">#065F46</div>
+          <div class="ds-swatch__desc">Watched label/accent</div>
+        </div>
+      </div>
+
+      <h3>Developer Utilities</h3>
+      <div class="ds-swatches">
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:rgba(124,58,237,0.35);"></div>
+          <div class="ds-swatch__label">Focus Ring</div>
+          <div class="ds-swatch__hex">rgba(124,58,237,.35)</div>
+          <div class="ds-swatch__desc">Keyboard focus outline</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:#F3F4F6;"></div>
+          <div class="ds-swatch__label">Disabled</div>
+          <div class="ds-swatch__hex">#F3F4F6</div>
+          <div class="ds-swatch__desc">Disabled bg</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:#9CA3AF;"></div>
+          <div class="ds-swatch__label">Disabled Text</div>
+          <div class="ds-swatch__hex">#9CA3AF</div>
+          <div class="ds-swatch__desc">Disabled label color</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:rgba(28,23,48,0.5);"></div>
+          <div class="ds-swatch__label">Overlay</div>
+          <div class="ds-swatch__hex">rgba(28,23,48,.5)</div>
+          <div class="ds-swatch__desc">Modal/drawer backdrop</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:#E2DEFF;"></div>
+          <div class="ds-swatch__label">Border</div>
+          <div class="ds-swatch__hex">#E2DEFF</div>
+          <div class="ds-swatch__desc">Default border / divider</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:#C4B5FD;"></div>
+          <div class="ds-swatch__label">Scrollbar</div>
+          <div class="ds-swatch__hex">#C4B5FD</div>
+          <div class="ds-swatch__desc">Scrollbar thumb</div>
+        </div>
+        <div class="ds-swatch ds-swatch--dev">
+          <div class="ds-swatch__box" style="background:#EDE9FE;"></div>
+          <div class="ds-swatch__label">Selection</div>
+          <div class="ds-swatch__hex">#EDE9FE</div>
+          <div class="ds-swatch__desc">Text selection highlight</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section id="typography" class="ds-section">
+      <h2>Typography</h2>
+
+      <!-- Sora — Display -->
+      <div class="ds-type-block">
+        <h3>Sora <span class="ds-tag">display</span></h3>
+        <p class="ds-meta">Used for headings, the logo, and hero text. Carries personality — slightly rounded, modern, with a subtle Japanese design sensibility. Never use below h4 size.</p>
+        <table class="ds-type-table">
+          <thead>
+            <tr><th>Step</th><th>Size</th><th>Weight</th><th>Line-height</th><th>Tracking</th><th>Sample</th><th>Use for</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>h1</td><td>3rem</td><td>700</td><td>1.1</td><td>−0.02em</td>
+              <td style="font-family:'Sora',sans-serif;font-size:2rem;font-weight:700;line-height:1.1;letter-spacing:-0.02em;color:#1C1730">Track Anime</td>
+              <td>Hero headline only</td>
+            </tr>
+            <tr>
+              <td>h2</td><td>2.25rem</td><td>700</td><td>1.15</td><td>−0.015em</td>
+              <td style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;color:#1C1730">Your Watchlist</td>
+              <td>Section titles, landing page</td>
+            </tr>
+            <tr>
+              <td>h3</td><td>1.875rem</td><td>600</td><td>1.2</td><td>−0.01em</td>
+              <td style="font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:600;color:#1C1730">Search Results</td>
+              <td>Page sub-sections</td>
+            </tr>
+            <tr>
+              <td>h4</td><td>1.5rem</td><td>600</td><td>1.25</td><td>−0.005em</td>
+              <td style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:600;color:#1C1730">Kanban Column</td>
+              <td>Column headers, card titles (hero)</td>
+            </tr>
+            <tr>
+              <td>h5</td><td>1.25rem</td><td>600</td><td>1.3</td><td>0</td>
+              <td style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:600;color:#1C1730">Attack on Titan</td>
+              <td>Anime titles on cards</td>
+            </tr>
+            <tr>
+              <td>h6</td><td>1.125rem</td><td>600</td><td>1.4</td><td>0</td>
+              <td style="font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;color:#1C1730">Sign In</td>
+              <td>Auth headings, dialog titles</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Inter — Body -->
+      <div class="ds-type-block">
+        <h3>Inter <span class="ds-tag">body</span></h3>
+        <p class="ds-meta">The UI workhorse. Used for all body text, labels, inputs, buttons, captions, and anything inside cards. Extremely legible at small sizes.</p>
+        <table class="ds-type-table">
+          <thead>
+            <tr><th>Step</th><th>Size</th><th>Weight</th><th>Line-height</th><th>Tracking</th><th>Sample</th><th>Use for</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>body-lg</td><td>1.125rem</td><td>400</td><td>1.6</td><td>0</td>
+              <td style="font-family:'Inter',sans-serif;font-size:1.125rem;font-weight:400;color:#1C1730">Organize your anime beautifully.</td>
+              <td>Hero subtext, landing page intro</td>
+            </tr>
+            <tr>
+              <td>body</td><td>1rem</td><td>400</td><td>1.6</td><td>0</td>
+              <td style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:400;color:#1C1730">Search for any anime title</td>
+              <td>Default body text, form labels</td>
+            </tr>
+            <tr>
+              <td>body-sm</td><td>0.875rem</td><td>400</td><td>1.5</td><td>0</td>
+              <td style="font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:400;color:#1C1730">Added 3 days ago · Action, Adventure</td>
+              <td>Card meta, secondary info</td>
+            </tr>
+            <tr>
+              <td>caption</td><td>0.75rem</td><td>400</td><td>1.4</td><td>0.01em</td>
+              <td style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:400;color:#6E6A85">MyAnimeList · 24 eps</td>
+              <td>Timestamps, footnotes, tooltips</td>
+            </tr>
+            <tr>
+              <td>overline</td><td>0.75rem</td><td>600</td><td>1</td><td>0.08em</td>
+              <td style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6E6A85">WATCHING · 2 titles</td>
+              <td>Column labels, section overlines</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- JetBrains Mono — Mono -->
+      <div class="ds-type-block">
+        <h3>JetBrains Mono <span class="ds-tag">mono</span></h3>
+        <p class="ds-meta">Reserved for numeric data (ratings, counts, IDs) and any code or technical output in developer-facing surfaces.</p>
+        <table class="ds-type-table">
+          <thead>
+            <tr><th>Step</th><th>Size</th><th>Weight</th><th>Line-height</th><th>Tracking</th><th>Sample</th><th>Use for</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>code</td><td>0.875rem</td><td>400</td><td>1.6</td><td>0</td>
+              <td style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;color:#7C3AED">mal_id: 16498</td>
+              <td>MAL IDs, API values, code snippets</td>
+            </tr>
+            <tr>
+              <td>numeric</td><td>0.875rem</td><td>500</td><td>1</td><td>0</td>
+              <td style="font-family:'JetBrains Mono',monospace;font-size:0.875rem;font-weight:500;color:#D97706">★ 9.0</td>
+              <td>Star ratings, episode counts</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SPACING -->
+    <section id="spacing" class="ds-section">
+      <h2>Spacing</h2>
+      <div class="ds-spacing-scale">
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">xs</span>
+          <span class="ds-spacing-var">--spacing-xs</span>
+          <span class="ds-spacing-value">4px</span>
+          <div class="ds-spacing-bar" style="width:4px;height:14px;"></div>
+        </div>
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">sm</span>
+          <span class="ds-spacing-var">--spacing-sm</span>
+          <span class="ds-spacing-value">8px</span>
+          <div class="ds-spacing-bar" style="width:8px;height:14px;"></div>
+        </div>
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">md</span>
+          <span class="ds-spacing-var">--spacing-md</span>
+          <span class="ds-spacing-value">16px</span>
+          <div class="ds-spacing-bar" style="width:16px;height:14px;"></div>
+        </div>
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">lg</span>
+          <span class="ds-spacing-var">--spacing-lg</span>
+          <span class="ds-spacing-value">24px</span>
+          <div class="ds-spacing-bar" style="width:24px;height:14px;"></div>
+        </div>
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">xl</span>
+          <span class="ds-spacing-var">--spacing-xl</span>
+          <span class="ds-spacing-value">32px</span>
+          <div class="ds-spacing-bar" style="width:32px;height:14px;"></div>
+        </div>
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">2xl</span>
+          <span class="ds-spacing-var">--spacing-2xl</span>
+          <span class="ds-spacing-value">48px</span>
+          <div class="ds-spacing-bar" style="width:48px;height:14px;"></div>
+        </div>
+      </div>
+
+      <h3>Border Radius</h3>
+      <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;padding:16px;background:var(--shell-bg);border:1px solid var(--shell-border);border-radius:var(--shell-radius);margin-top:8px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:48px;height:48px;background:#7C3AED;border-radius:4px;"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">sm — 4px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:48px;height:48px;background:#7C3AED;border-radius:8px;"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">md — 8px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:48px;height:48px;background:#7C3AED;border-radius:12px;"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">lg — 12px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:48px;height:24px;background:#7C3AED;border-radius:9999px;"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">full — pill</span>
+        </div>
+      </div>
+
+      <h3>Shadows</h3>
+      <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;padding:16px;background:var(--shell-bg);border:1px solid var(--shell-border);border-radius:var(--shell-radius);margin-top:8px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:80px;height:48px;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(28,23,48,0.08),0 1px 2px rgba(28,23,48,0.04);"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">shadow-sm</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:80px;height:48px;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(28,23,48,0.10),0 2px 4px rgba(28,23,48,0.06);"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">shadow-md</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:80px;height:48px;background:#fff;border-radius:8px;box-shadow:0 16px 40px rgba(28,23,48,0.12),0 4px 12px rgba(28,23,48,0.08);"></div>
+          <span style="font-size:11px;color:var(--shell-text-muted)">shadow-lg</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ICONOGRAPHY -->
+    <section id="iconography" class="ds-section">
+      <h2>Iconography</h2>
+      <p class="ds-meta">Library: <strong>Lucide</strong> — <a href="https://lucide.dev" target="_blank">lucide.dev</a> · stroke-width: 2 · default size: 16×16 (UI) / 20×20 (emphasis) · color: currentColor</p>
+      <p class="ds-meta" style="margin-top:4px;">Use in React: <code style="font-family:var(--shell-mono);background:var(--shell-bg);padding:2px 6px;border-radius:4px;font-size:12px;">npm install lucide-react</code> then import named exports, e.g. <code style="font-family:var(--shell-mono);background:var(--shell-bg);padding:2px 6px;border-radius:4px;font-size:12px;">import &#123; Search &#125; from 'lucide-react'</code></p>
+
+      <h3>Icons Used in This App</h3>
+      <div class="ds-icon-grid">
+        <div class="ds-icon-item"><i data-lucide="search"></i><span>search</span></div>
+        <div class="ds-icon-item"><i data-lucide="plus"></i><span>plus</span></div>
+        <div class="ds-icon-item"><i data-lucide="x"></i><span>x</span></div>
+        <div class="ds-icon-item"><i data-lucide="grip-vertical"></i><span>grip-vertical</span></div>
+        <div class="ds-icon-item"><i data-lucide="eye"></i><span>eye</span></div>
+        <div class="ds-icon-item"><i data-lucide="play"></i><span>play</span></div>
+        <div class="ds-icon-item"><i data-lucide="check-circle-2"></i><span>check-circle-2</span></div>
+        <div class="ds-icon-item"><i data-lucide="star"></i><span>star</span></div>
+        <div class="ds-icon-item"><i data-lucide="external-link"></i><span>external-link</span></div>
+        <div class="ds-icon-item"><i data-lucide="log-out"></i><span>log-out</span></div>
+        <div class="ds-icon-item"><i data-lucide="user"></i><span>user</span></div>
+        <div class="ds-icon-item"><i data-lucide="loader-2"></i><span>loader-2</span></div>
+        <div class="ds-icon-item"><i data-lucide="chevron-down"></i><span>chevron-down</span></div>
+        <div class="ds-icon-item"><i data-lucide="menu"></i><span>menu</span></div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════════════
+         COMPONENTS
+         ════════════════════════════════════════════════════════════ -->
+
+    <!-- BUTTON -->
+    <section id="button" class="ds-section">
+      <h2>Button</h2>
+
+      <h3>Variants</h3>
+      <div class="ds-component-row">
+        <button class="btn btn--primary">Primary</button>
+        <button class="btn btn--secondary">Secondary</button>
+        <button class="btn btn--ghost">Ghost</button>
+        <button class="btn btn--danger">Danger</button>
+      </div>
+
+      <h3>Sizes</h3>
+      <div class="ds-component-row">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Medium (default)</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+      </div>
+
+      <h3>States</h3>
+      <div class="ds-component-row">
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+          <span class="ds-component-label">Default</span>
+          <button class="btn btn--primary">Get Started</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+          <span class="ds-component-label">Disabled</span>
+          <button class="btn btn--primary" disabled>Get Started</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+          <span class="ds-component-label">Loading</span>
+          <button class="btn btn--primary btn--loading" style="min-width:110px;">Get Started</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+          <span class="ds-component-label">With icon</span>
+          <button class="btn btn--primary" style="display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="search" style="width:14px;height:14px;"></i> Search Anime
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT -->
+    <section id="input" class="ds-section">
+      <h2>Input</h2>
+
+      <h3>Default Text Input</h3>
+      <div class="ds-component-row">
+        <div style="width:240px;display:flex;flex-direction:column;gap:4px;">
+          <span class="ds-component-label">Default</span>
+          <input class="input" type="text" placeholder="Enter your email">
+        </div>
+        <div style="width:240px;display:flex;flex-direction:column;gap:4px;">
+          <span class="ds-component-label">Focused (simulated)</span>
+          <input class="input" type="text" value="user@example.com" style="border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,0.35);">
+        </div>
+        <div style="width:240px;display:flex;flex-direction:column;gap:4px;">
+          <span class="ds-component-label">Error</span>
+          <input class="input input--error" type="text" value="wrong@">
+        </div>
+        <div style="width:240px;display:flex;flex-direction:column;gap:4px;">
+          <span class="ds-component-label">Disabled</span>
+          <input class="input" type="text" value="user@example.com" disabled>
+        </div>
+      </div>
+
+      <h3>Search Input</h3>
+      <div class="ds-component-row">
+        <div style="width:320px;">
+          <div class="input-wrap">
+            <span class="input-wrap__icon"><i data-lucide="search"></i></span>
+            <input class="input" type="search" placeholder="Search anime…">
+          </div>
+        </div>
+        <div style="width:320px;">
+          <div class="input-wrap">
+            <span class="input-wrap__icon"><i data-lucide="search"></i></span>
+            <input class="input" type="search" value="attack on titan" style="border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,0.35);">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGE -->
+    <section id="badge" class="ds-section">
+      <h2>Badge</h2>
+
+      <h3>Status Badges</h3>
+      <div class="ds-component-row">
+        <span class="badge badge--watch">Watch</span>
+        <span class="badge badge--watching">Watching</span>
+        <span class="badge badge--watched">Watched</span>
+      </div>
+
+      <h3>Genre Tags</h3>
+      <div class="ds-component-row">
+        <span class="badge badge--genre">Action</span>
+        <span class="badge badge--genre">Adventure</span>
+        <span class="badge badge--genre">Fantasy</span>
+        <span class="badge badge--genre">Drama</span>
+        <span class="badge badge--genre">Comedy</span>
+        <span class="badge badge--neutral">24 eps</span>
+      </div>
+    </section>
+
+    <!-- AVATAR -->
+    <section id="avatar" class="ds-section">
+      <h2>Avatar</h2>
+
+      <h3>Sizes</h3>
+      <div class="ds-component-row">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="avatar avatar--sm">JD</span>
+          <span class="ds-component-label">sm — 24px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="avatar avatar--md">JD</span>
+          <span class="ds-component-label">md — 36px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="avatar avatar--lg">JD</span>
+          <span class="ds-component-label">lg — 48px</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPINNER -->
+    <section id="spinner" class="ds-section">
+      <h2>Spinner / Loader</h2>
+
+      <h3>Sizes</h3>
+      <div class="ds-component-row">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="spinner spinner--sm"></span>
+          <span class="ds-component-label">sm — 16px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="spinner spinner--md"></span>
+          <span class="ds-component-label">md — 24px</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <span class="spinner spinner--lg"></span>
+          <span class="ds-component-label">lg — 36px</span>
+        </div>
+      </div>
+
+      <h3>In Context — Loading Search Results</h3>
+      <div class="ds-component-row" style="flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;color:#6E6A85;font-family:'Inter',sans-serif;font-size:14px;">
+          <span class="spinner spinner--sm"></span>
+          Searching for anime…
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOLTIP -->
+    <section id="tooltip" class="ds-section">
+      <h2>Tooltip</h2>
+
+      <h3>Hover to reveal</h3>
+      <div class="ds-component-row" style="gap:32px;">
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
+          <span class="ds-component-label">On a button</span>
+          <div class="tip-wrap" style="margin-top:16px;">
+            <button class="btn btn--ghost" style="display:inline-flex;align-items:center;gap:6px;">
+              <i data-lucide="external-link" style="width:14px;height:14px;"></i> MAL
+            </button>
+            <span class="tip">Open on MyAnimeList</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
+          <span class="ds-component-label">On an icon</span>
+          <div class="tip-wrap" style="margin-top:16px;">
+            <button class="btn btn--secondary btn--sm" style="display:inline-flex;align-items:center;">
+              <i data-lucide="grip-vertical" style="width:14px;height:14px;"></i>
+            </button>
+            <span class="tip">Drag to reorder</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+</script>
+
+</body>
+</html>

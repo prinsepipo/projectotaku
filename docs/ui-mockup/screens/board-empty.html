@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board — Empty State — ProjectOtaku</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ── Board Empty State ─── */
+    .board-root {
+      font-family: var(--font-body); display: flex; flex-direction: column;
+      height: 100%; background: var(--color-bg); overflow: hidden;
+    }
+
+    .board-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 24px;
+      background: var(--color-surface); border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0; box-shadow: var(--shadow-sm);
+    }
+    .board-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; color: var(--color-primary); }
+    .board-nav-center { flex: 1; display: flex; justify-content: center; }
+    .board-search-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--color-bg); border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-full); padding: 0 16px; height: 34px;
+      font-size: 0.875rem; color: var(--color-text-muted); cursor: pointer; width: 260px;
+    }
+    .board-nav-right { display: flex; align-items: center; gap: 12px; }
+    .board-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-md); }
+    .board-username { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
+
+    /* Kanban with empty columns */
+    .kanban {
+      flex: 1; display: flex; gap: 16px;
+      padding: 20px 24px; overflow-x: auto; overflow-y: hidden; align-items: flex-start;
+    }
+    .kanban-col {
+      width: 360px; flex-shrink: 0;
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .kanban-col-header {
+      padding: 12px 14px 10px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid; flex-shrink: 0;
+    }
+    .kanban-col--watch .kanban-col-header    { border-color: #1D4ED8; }
+    .kanban-col--watching .kanban-col-header { border-color: #92400E; }
+    .kanban-col--watched .kanban-col-header  { border-color: #065F46; }
+    .kanban-col-left { display: flex; align-items: center; gap: 8px; }
+    .kanban-col-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text); }
+    .kanban-count { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; }
+    .kanban-col--watch .kanban-count    { background: #DBEAFE; color: #1D4ED8; }
+    .kanban-col--watching .kanban-count { background: #FEF3C7; color: #92400E; }
+    .kanban-col--watched .kanban-count  { background: #D1FAE5; color: #065F46; }
+    .kanban-add-btn {
+      width: 26px; height: 26px; border-radius: var(--radius-md);
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Empty column state */
+    .kanban-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 32px 20px; text-align: center; min-height: 200px;
+    }
+    .kanban-empty-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px; border: 2px dashed;
+    }
+    .kanban-col--watch .kanban-empty-icon    { border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF; }
+    .kanban-col--watching .kanban-empty-icon { border-color: #FCD34D; color: #92400E; background: #FFFBEB; }
+    .kanban-col--watched .kanban-empty-icon  { border-color: #6EE7B7; color: #065F46; background: #ECFDF5; }
+    .kanban-empty-title { font-weight: 600; font-size: 0.875rem; color: var(--color-text); margin-bottom: 6px; }
+    .kanban-empty-desc { font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 16px; }
+
+    /* Hero empty state (center of board) */
+    .board-hero-empty {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; padding: 40px 24px;
+    }
+    .hero-empty-icon {
+      width: 80px; height: 80px; border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--color-secondary), #DDD6FE);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; color: var(--color-primary);
+    }
+    .hero-empty-title {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+      color: var(--color-text); margin-bottom: 10px;
+    }
+    .hero-empty-desc { font-size: 1rem; color: var(--color-text-muted); line-height: 1.6; max-width: 400px; margin-bottom: 24px; }
+    .hero-empty-steps {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
+      font-size: 0.875rem; color: var(--color-text-muted);
+    }
+    .hero-empty-step { display: flex; align-items: center; gap: 6px; }
+    .step-num {
+      width: 20px; height: 20px; border-radius: var(--radius-full);
+      background: var(--color-primary); color: #fff;
+      font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    .step-arrow { color: var(--color-border); }
+
+    /* ── Mobile empty state ─── */
+    .board-m-root {
+      font-family: var(--font-body); display: flex; flex-direction: column;
+      height: 100%; background: var(--color-bg); overflow: hidden;
+    }
+    .board-m-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 48px; padding: 0 16px;
+      background: var(--color-surface); border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .board-m-logo { font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; color: var(--color-primary); }
+
+    .board-m-content { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+
+    .m-hero-empty {
+      text-align: center; padding: 24px 0 28px;
+    }
+    .m-hero-icon {
+      width: 64px; height: 64px; border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--color-secondary), #DDD6FE);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; color: var(--color-primary);
+    }
+    .m-hero-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+    .m-hero-desc { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 20px; }
+    .m-hero-cta { width: 100%; justify-content: center; }
+
+    .m-empty-cols { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .m-empty-col {
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .m-empty-col-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border-bottom: 2px solid;
+    }
+    .m-col--watch .m-empty-col-header    { border-color: #1D4ED8; }
+    .m-col--watching .m-empty-col-header { border-color: #92400E; }
+    .m-col--watched .m-empty-col-header  { border-color: #065F46; }
+    .m-empty-col-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text); }
+    .m-empty-count { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: var(--radius-full); font-size: 10px; font-weight: 700; }
+    .m-col--watch .m-empty-count    { background: #DBEAFE; color: #1D4ED8; }
+    .m-col--watching .m-empty-count { background: #FEF3C7; color: #92400E; }
+    .m-col--watched .m-empty-count  { background: #D1FAE5; color: #065F46; }
+    .m-empty-body { padding: 16px; text-align: center; }
+    .m-empty-body p { font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 10px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<div class="ds-screen">
+  <header class="ds-screen-header">
+    <div class="ds-screen-header__top">
+      <a href="../index.html" class="ds-back-link">← Back to Design System</a>
+    </div>
+    <h1>Board — Empty State (New User)</h1>
+  </header>
+
+  <div class="ds-frames">
+
+    <!-- ── DESKTOP ─────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — 1280×800</div>
+      <div class="ds-frame ds-frame--desktop">
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">My Board — ProjectOtaku</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn" disabled>&#8249;</button>
+              <button class="ds-safari-btn">&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://projectotaku.app/board</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="board-root">
+
+            <!-- Navbar -->
+            <nav class="board-nav">
+              <div class="board-logo">⛩ ProjectOtaku</div>
+              <div class="board-nav-center">
+                <div class="board-search-pill">
+                  <i data-lucide="search" style="width:14px;height:14px;color:#6E6A85;"></i>
+                  <span>Search anime to add…</span>
+                  <span style="margin-left:auto;font-size:11px;background:var(--color-border);padding:1px 6px;border-radius:4px;color:var(--color-text-muted);">⌘K</span>
+                </div>
+              </div>
+              <div class="board-nav-right">
+                <div class="board-user">
+                  <span class="avatar avatar--sm">JD</span>
+                  <span class="board-username">JohnDoe</span>
+                  <i data-lucide="chevron-down" style="width:14px;height:14px;color:#6E6A85;"></i>
+                </div>
+              </div>
+            </nav>
+
+            <!-- Hero empty state CTA (center of board area) -->
+            <div class="board-hero-empty">
+              <div class="hero-empty-icon">
+                <i data-lucide="play" style="width:36px;height:36px;"></i>
+              </div>
+              <h2 class="hero-empty-title">Your board is ready — let's fill it up!</h2>
+              <p class="hero-empty-desc">Search for anime titles and add them to your Kanban board. Move cards between columns as you progress.</p>
+              <div class="hero-empty-steps">
+                <div class="hero-empty-step">
+                  <span class="step-num">1</span>
+                  <span>Search anime above</span>
+                </div>
+                <span class="step-arrow">→</span>
+                <div class="hero-empty-step">
+                  <span class="step-num">2</span>
+                  <span>Add to "Watch"</span>
+                </div>
+                <span class="step-arrow">→</span>
+                <div class="hero-empty-step">
+                  <span class="step-num">3</span>
+                  <span>Drag as you watch</span>
+                </div>
+              </div>
+              <button class="btn btn--primary btn--lg" style="gap:8px;">
+                <i data-lucide="search" style="width:16px;height:16px;"></i>
+                Search for Anime
+              </button>
+
+              <!-- Empty columns hint row -->
+              <div style="display:flex;gap:16px;margin-top:40px;width:100%;max-width:900px;">
+                <div class="kanban-col kanban-col--watch" style="width:auto;flex:1;">
+                  <div class="kanban-col-header">
+                    <div class="kanban-col-left">
+                      <span class="kanban-col-title">Watch</span>
+                      <span class="kanban-count">0</span>
+                    </div>
+                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
+                  </div>
+                  <div class="kanban-empty">
+                    <div class="kanban-empty-icon">
+                      <i data-lucide="eye" style="width:20px;height:20px;"></i>
+                    </div>
+                    <div class="kanban-empty-title">Nothing to watch yet</div>
+                    <div class="kanban-empty-desc">Search for an anime and add it here to start your list.</div>
+                    <button class="btn btn--secondary btn--sm" style="gap:5px;">
+                      <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Anime
+                    </button>
+                  </div>
+                </div>
+                <div class="kanban-col kanban-col--watching" style="width:auto;flex:1;">
+                  <div class="kanban-col-header">
+                    <div class="kanban-col-left">
+                      <span class="kanban-col-title">Watching</span>
+                      <span class="kanban-count">0</span>
+                    </div>
+                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
+                  </div>
+                  <div class="kanban-empty">
+                    <div class="kanban-empty-icon">
+                      <i data-lucide="play" style="width:20px;height:20px;"></i>
+                    </div>
+                    <div class="kanban-empty-title">Not watching anything</div>
+                    <div class="kanban-empty-desc">Move a card here when you start an anime.</div>
+                  </div>
+                </div>
+                <div class="kanban-col kanban-col--watched" style="width:auto;flex:1;">
+                  <div class="kanban-col-header">
+                    <div class="kanban-col-left">
+                      <span class="kanban-col-title">Watched</span>
+                      <span class="kanban-count">0</span>
+                    </div>
+                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
+                  </div>
+                  <div class="kanban-empty">
+                    <div class="kanban-empty-icon">
+                      <i data-lucide="check-circle-2" style="width:20px;height:20px;"></i>
+                    </div>
+                    <div class="kanban-empty-title">No completions yet</div>
+                    <div class="kanban-empty-desc">Finished an anime? Drag it here to mark as watched.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOBILE ───────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Mobile — 390×844 (Empty State)</div>
+      <div class="ds-frame ds-frame--mobile">
+        <div class="ds-chrome-ios-top">
+          <div class="ds-ios-statusbar">
+            <span class="ds-ios-statusbar__time">9:41</span>
+            <div class="ds-ios-statusbar__notch"></div>
+            <div class="ds-ios-statusbar__icons"><span>▲</span><span>&#x1F4F6;</span><span>▮▮▮</span></div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="board-m-root">
+            <nav class="board-m-nav">
+              <span class="board-m-logo">⛩ ProjectOtaku</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button style="background:none;border:none;cursor:pointer;display:flex;"><i data-lucide="search" style="width:18px;height:18px;color:#6E6A85;"></i></button>
+                <span class="avatar avatar--sm">JD</span>
+              </div>
+            </nav>
+
+            <div class="board-m-content">
+              <!-- Hero empty state -->
+              <div class="m-hero-empty">
+                <div class="m-hero-icon">
+                  <i data-lucide="play" style="width:28px;height:28px;"></i>
+                </div>
+                <h2 class="m-hero-title">Your board is empty</h2>
+                <p class="m-hero-desc">Search for anime titles and add them to start building your watchlist.</p>
+                <button class="btn btn--primary m-hero-cta" style="display:flex;gap:6px;justify-content:center;width:100%;">
+                  <i data-lucide="search" style="width:15px;height:15px;"></i>
+                  Search for Anime
+                </button>
+              </div>
+
+              <!-- Empty columns -->
+              <div class="m-empty-cols">
+                <div class="m-empty-col m-col--watch">
+                  <div class="m-empty-col-header">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                      <span class="m-empty-col-title">Watch</span>
+                      <span class="m-empty-count">0</span>
+                    </span>
+                    <i data-lucide="chevron-down" style="width:16px;height:16px;color:#6E6A85;transform:rotate(-90deg);"></i>
+                  </div>
+                  <div class="m-empty-body">
+                    <p>Search for an anime and add it here to start your list.</p>
+                    <button class="btn btn--secondary btn--sm" style="gap:5px;">
+                      <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Anime
+                    </button>
+                  </div>
+                </div>
+                <div class="m-empty-col m-col--watching">
+                  <div class="m-empty-col-header">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                      <span class="m-empty-col-title">Watching</span>
+                      <span class="m-empty-count">0</span>
+                    </span>
+                    <i data-lucide="chevron-down" style="width:16px;height:16px;color:#6E6A85;transform:rotate(-90deg);"></i>
+                  </div>
+                </div>
+                <div class="m-empty-col m-col--watched">
+                  <div class="m-empty-col-header">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                      <span class="m-empty-col-title">Watched</span>
+                      <span class="m-empty-count">0</span>
+                    </span>
+                    <i data-lucide="chevron-down" style="width:16px;height:16px;color:#6E6A85;transform:rotate(-90deg);"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-chrome-ios-bottom">
+          <div class="ds-ios-addressbar">projectotaku.app/board</div>
+          <div class="ds-ios-toolbar">
+            <button class="ds-ios-btn" disabled>&#8249;</button>
+            <button class="ds-ios-btn">&#8250;</button>
+            <button class="ds-ios-btn">⬆</button>
+            <button class="ds-ios-btn">&#9776;</button>
+            <button class="ds-ios-btn">⊞</button>
+          </div>
+          <div class="ds-ios-homeindicator"><span></span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+</script>
+</body>
+</html>

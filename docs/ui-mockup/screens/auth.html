@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth — ProjectOtaku</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ── Auth Page Styles ─── */
+    .auth-root {
+      font-family: var(--font-body);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100%;
+    }
+
+    /* Brand panel (left) */
+    .auth-brand {
+      background: linear-gradient(145deg, #6D28D9 0%, #7C3AED 40%, #6366F1 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px; position: relative; overflow: hidden;
+    }
+    .auth-brand::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    }
+    .auth-brand-content { position: relative; z-index: 1; text-align: center; }
+    .auth-brand-logo {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+      color: #fff; margin-bottom: 40px;
+    }
+
+    /* Mini board illustration on brand panel */
+    .auth-board-illo {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-lg);
+      padding: 12px; display: flex; gap: 8px;
+      margin-bottom: 32px; max-width: 320px;
+      backdrop-filter: blur(4px);
+    }
+    .auth-illo-col {
+      flex: 1; background: rgba(255,255,255,0.08); border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15); overflow: hidden;
+    }
+    .auth-illo-head {
+      padding: 5px 8px; font-size: 8px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .auth-illo-cards { padding: 5px; display: flex; flex-direction: column; gap: 4px; }
+    .auth-illo-card {
+      height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .auth-brand-headline {
+      font-family: var(--font-display); font-size: 1.375rem; font-weight: 700;
+      color: #fff; margin-bottom: 10px; line-height: 1.2;
+    }
+    .auth-brand-sub { font-size: 0.9375rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+    /* Form panel (right) */
+    .auth-form-panel {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px; background: var(--color-bg);
+    }
+    .auth-form-card {
+      width: 100%; max-width: 380px;
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: 32px;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex; gap: 0; margin-bottom: 28px;
+      border-bottom: 2px solid var(--color-border);
+    }
+    .auth-tab {
+      flex: 1; padding: 8px 0; text-align: center;
+      font-size: 0.9375rem; font-weight: 600; color: var(--color-text-muted);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      cursor: pointer; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: var(--font-body);
+    }
+    .auth-tab--active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
+    .auth-form-title {
+      font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;
+      color: var(--color-text); margin-bottom: 4px;
+    }
+    .auth-form-sub { font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 24px; }
+
+    .auth-field { margin-bottom: 16px; }
+    .auth-field label {
+      display: block; font-size: 0.8125rem; font-weight: 600;
+      color: var(--color-text); margin-bottom: 6px;
+    }
+
+    .auth-field-hint { font-size: 0.75rem; color: var(--color-error); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+    .auth-submit {
+      width: 100%; margin-top: 8px;
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      height: 42px; font-family: var(--font-body); font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer;
+    }
+    .auth-divider {
+      text-align: center; margin: 20px 0;
+      font-size: 0.75rem; color: var(--color-text-muted);
+      position: relative;
+    }
+    .auth-divider::before {
+      content: ''; position: absolute; left: 0; top: 50%; right: 0; height: 1px;
+      background: var(--color-border);
+    }
+    .auth-divider span { position: relative; background: var(--color-surface); padding: 0 10px; }
+
+    .auth-footer-link {
+      text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 20px;
+    }
+    .auth-footer-link a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+
+    /* Register form (different state) */
+    .auth-form-card--register .auth-tab--active { color: var(--color-primary); }
+
+    /* ── Mobile Auth ─── */
+    .auth-m-root {
+      font-family: var(--font-body); background: var(--color-bg);
+      color: var(--color-text); min-height: 100%;
+      display: flex; flex-direction: column;
+    }
+    .auth-m-header {
+      background: linear-gradient(135deg, #7C3AED, #6366F1);
+      padding: 24px 20px 32px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .auth-m-logo {
+      font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: #fff;
+      margin-bottom: 8px;
+    }
+    .auth-m-tagline { font-size: 0.8125rem; color: rgba(255,255,255,0.75); }
+    .auth-m-body { flex: 1; padding: 24px 20px; }
+    .auth-m-tabs {
+      display: flex; border-bottom: 2px solid var(--color-border); margin-bottom: 24px;
+    }
+    .auth-m-tab {
+      flex: 1; padding: 8px 0; text-align: center;
+      font-size: 0.9375rem; font-weight: 600; color: var(--color-text-muted);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      cursor: pointer; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: var(--font-body);
+    }
+    .auth-m-tab--active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+    .auth-m-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+    .auth-m-sub { font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 20px; }
+    .auth-m-field { margin-bottom: 14px; }
+    .auth-m-field label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--color-text); margin-bottom: 5px; }
+    .auth-m-submit {
+      width: 100%; margin-top: 8px; background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-md); height: 44px;
+      font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    .auth-m-footer-link {
+      text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 16px;
+    }
+    .auth-m-footer-link a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="ds-screen">
+  <header class="ds-screen-header">
+    <div class="ds-screen-header__top">
+      <a href="../index.html" class="ds-back-link">← Back to Design System</a>
+    </div>
+    <h1>Auth — Login / Register</h1>
+  </header>
+
+  <div class="ds-frames">
+
+    <!-- ── DESKTOP — Login ──────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — Login</div>
+      <div class="ds-frame ds-frame--desktop">
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">Sign In — ProjectOtaku</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn">&#8249;</button>
+              <button class="ds-safari-btn" disabled>&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://projectotaku.app/auth/login</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="auth-root">
+            <!-- Brand panel -->
+            <div class="auth-brand">
+              <div class="auth-brand-content">
+                <div class="auth-brand-logo">⛩ ProjectOtaku</div>
+                <div class="auth-board-illo">
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watch</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#2C3E50,#4CA1AF);"></div>
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#1a1a2e,#e94560);"></div>
+                    </div>
+                  </div>
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watching</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#780206,#061161);"></div>
+                    </div>
+                  </div>
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watched</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#4776E6,#8E54E9);"></div>
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#f7797d,#FBD786);"></div>
+                    </div>
+                  </div>
+                </div>
+                <h2 class="auth-brand-headline">Your Anime Board<br>Awaits You</h2>
+                <p class="auth-brand-sub">Sign in to access your watchlist<br>from any device.</p>
+              </div>
+            </div>
+
+            <!-- Form panel — Login -->
+            <div class="auth-form-panel">
+              <div class="auth-form-card">
+                <div class="auth-tabs">
+                  <button class="auth-tab auth-tab--active">Sign In</button>
+                  <button class="auth-tab">Register</button>
+                </div>
+
+                <h1 class="auth-form-title">Welcome back</h1>
+                <p class="auth-form-sub">Enter your credentials to continue.</p>
+
+                <div class="auth-field">
+                  <label for="email-d">Email address</label>
+                  <input id="email-d" class="input" type="email" placeholder="you@example.com">
+                </div>
+                <div class="auth-field">
+                  <label for="pass-d">Password</label>
+                  <input id="pass-d" class="input" type="password" placeholder="••••••••">
+                </div>
+
+                <button class="auth-submit">Sign In</button>
+
+                <div class="auth-footer-link">
+                  Don't have an account? <a href="#">Register</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DESKTOP — Register (validation error state) ───────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — Register (validation error)</div>
+      <div class="ds-frame ds-frame--desktop">
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">Create Account — ProjectOtaku</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn">&#8249;</button>
+              <button class="ds-safari-btn" disabled>&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://projectotaku.app/auth/register</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="auth-root">
+            <!-- Brand panel (same) -->
+            <div class="auth-brand">
+              <div class="auth-brand-content">
+                <div class="auth-brand-logo">⛩ ProjectOtaku</div>
+                <div class="auth-board-illo">
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watch</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#2C3E50,#4CA1AF);"></div>
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#1a1a2e,#e94560);"></div>
+                    </div>
+                  </div>
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watching</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#780206,#061161);"></div>
+                    </div>
+                  </div>
+                  <div class="auth-illo-col">
+                    <div class="auth-illo-head">Watched</div>
+                    <div class="auth-illo-cards">
+                      <div class="auth-illo-card" style="background:linear-gradient(135deg,#4776E6,#8E54E9);"></div>
+                    </div>
+                  </div>
+                </div>
+                <h2 class="auth-brand-headline">Start Your Anime<br>Journey Today</h2>
+                <p class="auth-brand-sub">Create a free account and build<br>your first watchlist in seconds.</p>
+              </div>
+            </div>
+
+            <!-- Form panel — Register with error -->
+            <div class="auth-form-panel">
+              <div class="auth-form-card">
+                <div class="auth-tabs">
+                  <button class="auth-tab">Sign In</button>
+                  <button class="auth-tab auth-tab--active">Register</button>
+                </div>
+
+                <h1 class="auth-form-title">Create an account</h1>
+                <p class="auth-form-sub">Start tracking anime for free.</p>
+
+                <div class="auth-field">
+                  <label>Username</label>
+                  <input class="input" type="text" value="animeking99">
+                </div>
+                <div class="auth-field">
+                  <label>Email address</label>
+                  <input class="input input--error" type="email" value="notanemail">
+                  <div class="auth-field-hint">
+                    <i data-lucide="alert-circle" style="width:12px;height:12px;"></i>
+                    Please enter a valid email address.
+                  </div>
+                </div>
+                <div class="auth-field">
+                  <label>Password</label>
+                  <input class="input" type="password" value="••••••••" placeholder="Min. 8 characters">
+                </div>
+
+                <button class="auth-submit">Create Account</button>
+
+                <div class="auth-footer-link">
+                  Already have an account? <a href="#">Sign In</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOBILE — Login ────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Mobile — Login</div>
+      <div class="ds-frame ds-frame--mobile">
+        <div class="ds-chrome-ios-top">
+          <div class="ds-ios-statusbar">
+            <span class="ds-ios-statusbar__time">9:41</span>
+            <div class="ds-ios-statusbar__notch"></div>
+            <div class="ds-ios-statusbar__icons"><span>▲</span><span>&#x1F4F6;</span><span>▮▮▮</span></div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="auth-m-root">
+            <div class="auth-m-header">
+              <div class="auth-m-logo">⛩ ProjectOtaku</div>
+              <div class="auth-m-tagline">Your anime watchlist, beautifully organized.</div>
+            </div>
+
+            <div class="auth-m-body">
+              <div class="auth-m-tabs">
+                <button class="auth-m-tab auth-m-tab--active">Sign In</button>
+                <button class="auth-m-tab">Register</button>
+              </div>
+
+              <h2 class="auth-m-title">Welcome back</h2>
+              <p class="auth-m-sub">Enter your credentials to continue.</p>
+
+              <div class="auth-m-field">
+                <label>Email</label>
+                <input class="input" type="email" placeholder="you@example.com">
+              </div>
+              <div class="auth-m-field">
+                <label>Password</label>
+                <input class="input" type="password" placeholder="••••••••">
+              </div>
+
+              <button class="auth-m-submit">Sign In</button>
+
+              <div class="auth-m-footer-link">
+                Don't have an account? <a href="#">Register</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-chrome-ios-bottom">
+          <div class="ds-ios-addressbar">projectotaku.app/auth/login</div>
+          <div class="ds-ios-toolbar">
+            <button class="ds-ios-btn">&#8249;</button>
+            <button class="ds-ios-btn" disabled>&#8250;</button>
+            <button class="ds-ios-btn">⬆</button>
+            <button class="ds-ios-btn">&#9776;</button>
+            <button class="ds-ios-btn">⊞</button>
+          </div>
+          <div class="ds-ios-homeindicator"><span></span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+</script>
+</body>
+</html>

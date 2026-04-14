@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page — ProjectOtaku</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ── Landing Page Styles ─── */
+    .lp-root {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Nav */
+    .lp-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .lp-logo {
+      font-family: var(--font-display); font-weight: 700; font-size: 1.125rem;
+      color: var(--color-primary); display: flex; align-items: center; gap: 8px;
+    }
+    .lp-nav-links { display: flex; align-items: center; gap: 28px; }
+    .lp-nav-links a {
+      font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted);
+      text-decoration: none; transition: color 150ms;
+    }
+    .lp-nav-links a:hover { color: var(--color-text); }
+    .lp-nav-actions { display: flex; align-items: center; gap: 10px; }
+
+    /* Hero */
+    .lp-hero {
+      padding: 64px 48px 48px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .lp-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(124,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .lp-hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--color-secondary); color: var(--color-primary);
+      font-size: 0.75rem; font-weight: 600; padding: 4px 12px;
+      border-radius: var(--radius-full); margin-bottom: 20px;
+      border: 1px solid rgba(124,58,237,0.2);
+    }
+    .lp-hero-title {
+      font-family: var(--font-display); font-size: 3rem; font-weight: 700;
+      line-height: 1.1; letter-spacing: -0.02em; color: var(--color-text);
+      margin-bottom: 20px; max-width: 680px;
+    }
+    .lp-hero-title span {
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #6366F1 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .lp-hero-sub {
+      font-size: 1.125rem; color: var(--color-text-muted); line-height: 1.6;
+      max-width: 520px; margin-bottom: 32px;
+    }
+    .lp-hero-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+
+    /* Preview Board (mini kanban illustration) */
+    .lp-preview {
+      width: 100%; max-width: 900px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .lp-preview-bar {
+      background: #ECECEC; height: 28px; display: flex; align-items: center; padding: 0 10px; gap: 6px;
+    }
+    .lp-preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .lp-preview-inner {
+      background: var(--color-bg); padding: 16px; display: flex; gap: 12px;
+    }
+    .lp-mini-col {
+      flex: 1; background: var(--color-surface); border-radius: 8px;
+      border: 1px solid var(--color-border); overflow: hidden;
+    }
+    .lp-mini-col-head {
+      padding: 8px 10px 6px; border-bottom: 2px solid;
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .lp-mini-col--watch .lp-mini-col-head   { border-color: #1D4ED8; color: #1D4ED8; }
+    .lp-mini-col--watching .lp-mini-col-head { border-color: #92400E; color: #92400E; }
+    .lp-mini-col--watched .lp-mini-col-head  { border-color: #065F46; color: #065F46; }
+    .lp-mini-cards { padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+    .lp-mini-card {
+      border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .lp-mini-thumb { height: 36px; width: 100%; }
+    .lp-mini-info { padding: 4px 6px 5px; }
+    .lp-mini-title { font-size: 9px; font-weight: 600; color: var(--color-text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lp-mini-tag { display: inline-block; font-size: 8px; background: var(--color-secondary); color: var(--color-primary); padding: 1px 5px; border-radius: 99px; font-weight: 600; }
+
+    /* Features */
+    .lp-features {
+      padding: 48px;
+    }
+    .lp-features-label {
+      text-align: center; font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary);
+      margin-bottom: 10px;
+    }
+    .lp-features-title {
+      text-align: center; font-family: var(--font-display); font-size: 1.75rem; font-weight: 700;
+      color: var(--color-text); margin-bottom: 32px;
+    }
+    .lp-feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .lp-feature-card {
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--shadow-sm); transition: box-shadow 200ms;
+    }
+    .lp-feature-icon {
+      width: 40px; height: 40px; border-radius: var(--radius-md);
+      background: var(--color-secondary); color: var(--color-primary);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .lp-feature-name {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+      color: var(--color-text); margin-bottom: 8px;
+    }
+    .lp-feature-desc { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.5; }
+
+    /* CTA Banner */
+    .lp-cta {
+      margin: 0 48px 48px;
+      background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
+      border-radius: var(--radius-lg);
+      padding: 40px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .lp-cta-text h2 {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+      color: #fff; margin-bottom: 8px;
+    }
+    .lp-cta-text p { font-size: 0.9375rem; color: rgba(255,255,255,0.75); }
+    .lp-cta-btn {
+      background: #fff; color: var(--color-primary); border: none;
+      font-family: var(--font-body); font-size: 0.9375rem; font-weight: 700;
+      padding: 12px 28px; border-radius: var(--radius-md);
+      cursor: pointer; white-space: nowrap; box-shadow: var(--shadow-md);
+    }
+
+    /* Footer */
+    .lp-footer {
+      padding: 20px 48px;
+      border-top: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto;
+    }
+    .lp-footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; color: var(--color-primary); }
+    .lp-footer-copy { font-size: 0.75rem; color: var(--color-text-muted); }
+
+    /* ── Mobile Landing ─── */
+    .lp-mobile-root {
+      font-family: var(--font-body); background: var(--color-bg); color: var(--color-text);
+      min-height: 100%; display: flex; flex-direction: column;
+    }
+    .lp-m-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; height: 52px;
+      background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .lp-m-logo { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--color-primary); }
+    .lp-m-menu { color: var(--color-text-muted); background: none; border: none; cursor: pointer; display: flex; }
+
+    .lp-m-hero {
+      padding: 36px 20px 28px; text-align: center;
+      background: radial-gradient(ellipse 100% 80% at 50% -10%, rgba(124,58,237,0.1) 0%, transparent 60%);
+    }
+    .lp-m-eyebrow {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--color-secondary); color: var(--color-primary);
+      font-size: 0.6875rem; font-weight: 600; padding: 3px 10px;
+      border-radius: var(--radius-full); margin-bottom: 14px;
+    }
+    .lp-m-title {
+      font-family: var(--font-display); font-size: 1.75rem; font-weight: 700;
+      line-height: 1.15; letter-spacing: -0.01em; color: var(--color-text); margin-bottom: 12px;
+    }
+    .lp-m-title span {
+      background: linear-gradient(135deg, #7C3AED, #6366F1);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .lp-m-sub { font-size: 0.9375rem; color: var(--color-text-muted); line-height: 1.55; margin-bottom: 24px; }
+    .lp-m-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .lp-m-actions .btn { justify-content: center; }
+
+    .lp-m-features { padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .lp-m-feature {
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .lp-m-feature-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-md);
+      background: var(--color-secondary); color: var(--color-primary);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .lp-m-feature-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; }
+    .lp-m-feature-desc { font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.4; }
+
+    .lp-m-cta {
+      margin: 8px 16px 24px;
+      background: linear-gradient(135deg, #7C3AED, #6366F1);
+      border-radius: var(--radius-lg); padding: 24px 20px; text-align: center;
+    }
+    .lp-m-cta h3 {
+      font-family: var(--font-display); font-size: 1.125rem; font-weight: 700;
+      color: #fff; margin-bottom: 6px;
+    }
+    .lp-m-cta p { font-size: 0.8125rem; color: rgba(255,255,255,0.75); margin-bottom: 16px; }
+    .lp-m-cta-btn {
+      display: block; width: 100%; background: #fff; color: var(--color-primary);
+      border: none; font-family: var(--font-body); font-size: 0.9375rem; font-weight: 700;
+      padding: 11px 0; border-radius: var(--radius-md); cursor: pointer;
+    }
+
+    .lp-m-footer {
+      padding: 16px; border-top: 1px solid var(--color-border);
+      text-align: center; margin-top: auto;
+    }
+    .lp-m-footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; color: var(--color-primary); }
+    .lp-m-footer-copy { font-size: 0.6875rem; color: var(--color-text-muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="ds-screen">
+  <header class="ds-screen-header">
+    <div class="ds-screen-header__top">
+      <a href="../index.html" class="ds-back-link">← Back to Design System</a>
+    </div>
+    <h1>Landing Page</h1>
+  </header>
+
+  <div class="ds-frames">
+
+    <!-- ── DESKTOP ─────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — 1280×800</div>
+      <div class="ds-frame ds-frame--desktop">
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">ProjectOtaku — Track Your Anime</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn" disabled>&#8249;</button>
+              <button class="ds-safari-btn">&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://projectotaku.app</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="lp-root">
+
+            <!-- Nav -->
+            <nav class="lp-nav">
+              <div class="lp-logo">⛩ ProjectOtaku</div>
+              <div class="lp-nav-links">
+                <a href="#">Features</a>
+                <a href="#">How it works</a>
+              </div>
+              <div class="lp-nav-actions">
+                <button class="btn btn--ghost btn--sm">Sign In</button>
+                <button class="btn btn--primary btn--sm">Get Started</button>
+              </div>
+            </nav>
+
+            <!-- Hero -->
+            <section class="lp-hero">
+              <div class="lp-hero-eyebrow">
+                <i data-lucide="star" style="width:12px;height:12px;fill:currentColor;"></i>
+                Powered by MyAnimeList
+              </div>
+              <h1 class="lp-hero-title">Track Your <span>Anime Journey</span>,<br>Beautifully Organized.</h1>
+              <p class="lp-hero-sub">Search millions of titles, build your watchlist, and move cards between columns as you progress. Your personal anime Kanban board.</p>
+              <div class="lp-hero-actions">
+                <button class="btn btn--primary btn--lg" style="gap:8px;">
+                  <i data-lucide="play" style="width:16px;height:16px;fill:currentColor;"></i>
+                  Start for Free
+                </button>
+                <button class="btn btn--ghost btn--lg">Sign In</button>
+              </div>
+
+              <!-- Mini board preview -->
+              <div class="lp-preview">
+                <div class="lp-preview-bar">
+                  <div class="lp-preview-dot" style="background:#FF5F57;"></div>
+                  <div class="lp-preview-dot" style="background:#FEBC2E;"></div>
+                  <div class="lp-preview-dot" style="background:#28C840;"></div>
+                </div>
+                <div class="lp-preview-inner">
+                  <!-- Watch column -->
+                  <div class="lp-mini-col lp-mini-col--watch">
+                    <div class="lp-mini-col-head">
+                      <span>Watch</span>
+                      <span style="background:#DBEAFE;padding:1px 5px;border-radius:99px;font-size:8px;">3</span>
+                    </div>
+                    <div class="lp-mini-cards">
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#2C3E50,#4CA1AF);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Attack on Titan</div>
+                          <span class="lp-mini-tag">Action</span>
+                        </div>
+                      </div>
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#8E44AD,#3498DB);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">FMA: Brotherhood</div>
+                          <span class="lp-mini-tag">Adventure</span>
+                        </div>
+                      </div>
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#1a1a2e,#e94560);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Death Note</div>
+                          <span class="lp-mini-tag">Mystery</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Watching column -->
+                  <div class="lp-mini-col lp-mini-col--watching">
+                    <div class="lp-mini-col-head">
+                      <span>Watching</span>
+                      <span style="background:#FEF3C7;padding:1px 5px;border-radius:99px;font-size:8px;">2</span>
+                    </div>
+                    <div class="lp-mini-cards">
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#780206,#061161);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Demon Slayer</div>
+                          <span class="lp-mini-tag">Fantasy</span>
+                        </div>
+                      </div>
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#0F0C29,#302B63);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Jujutsu Kaisen</div>
+                          <span class="lp-mini-tag">Supernatural</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Watched column -->
+                  <div class="lp-mini-col lp-mini-col--watched">
+                    <div class="lp-mini-col-head">
+                      <span>Watched</span>
+                      <span style="background:#D1FAE5;padding:1px 5px;border-radius:99px;font-size:8px;">2</span>
+                    </div>
+                    <div class="lp-mini-cards">
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#4776E6,#8E54E9);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Spirited Away</div>
+                          <span class="lp-mini-tag">Animation</span>
+                        </div>
+                      </div>
+                      <div class="lp-mini-card">
+                        <div class="lp-mini-thumb" style="background:linear-gradient(135deg,#f7797d,#FBD786);"></div>
+                        <div class="lp-mini-info">
+                          <div class="lp-mini-title">Your Name</div>
+                          <span class="lp-mini-tag">Romance</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Features -->
+            <section class="lp-features">
+              <p class="lp-features-label">Everything you need</p>
+              <h2 class="lp-features-title">A better way to track anime</h2>
+              <div class="lp-feature-grid">
+                <div class="lp-feature-card">
+                  <div class="lp-feature-icon"><i data-lucide="search" style="width:20px;height:20px;"></i></div>
+                  <div class="lp-feature-name">Search Any Anime</div>
+                  <p class="lp-feature-desc">Access millions of titles directly from MyAnimeList via the Jikan API. Find your next obsession instantly.</p>
+                </div>
+                <div class="lp-feature-card">
+                  <div class="lp-feature-icon"><i data-lucide="grip-vertical" style="width:20px;height:20px;"></i></div>
+                  <div class="lp-feature-name">Drag & Drop Board</div>
+                  <p class="lp-feature-desc">Move titles between Watch, Watching, and Watched with a satisfying drag. Your progress, visualized.</p>
+                </div>
+                <div class="lp-feature-card">
+                  <div class="lp-feature-icon"><i data-lucide="check-circle-2" style="width:20px;height:20px;"></i></div>
+                  <div class="lp-feature-name">Track Your Progress</div>
+                  <p class="lp-feature-desc">Your board is synced to your account. Pick up where you left off from any device, any time.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- CTA Banner -->
+            <div class="lp-cta">
+              <div class="lp-cta-text">
+                <h2>Ready to start watching smarter?</h2>
+                <p>Join anime fans who never lose track of what's next.</p>
+              </div>
+              <button class="lp-cta-btn">Get Started — It's Free</button>
+            </div>
+
+            <!-- Footer -->
+            <footer class="lp-footer">
+              <span class="lp-footer-logo">⛩ ProjectOtaku</span>
+              <span class="lp-footer-copy">© 2026 ProjectOtaku · Powered by Jikan API (MyAnimeList)</span>
+            </footer>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOBILE ───────────────────────────────────────────────── -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Mobile — 390×844</div>
+      <div class="ds-frame ds-frame--mobile">
+        <div class="ds-chrome-ios-top">
+          <div class="ds-ios-statusbar">
+            <span class="ds-ios-statusbar__time">9:41</span>
+            <div class="ds-ios-statusbar__notch"></div>
+            <div class="ds-ios-statusbar__icons">
+              <span>▲</span><span>&#x1F4F6;</span><span>▮▮▮</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          <div class="lp-mobile-root">
+            <nav class="lp-m-nav">
+              <span class="lp-m-logo">⛩ ProjectOtaku</span>
+              <button class="lp-m-menu"><i data-lucide="menu" style="width:20px;height:20px;color:#6E6A85;"></i></button>
+            </nav>
+
+            <section class="lp-m-hero">
+              <div class="lp-m-eyebrow">
+                <i data-lucide="star" style="width:10px;height:10px;fill:currentColor;"></i>
+                Powered by MyAnimeList
+              </div>
+              <h1 class="lp-m-title">Track Your <span>Anime Journey</span>, Beautifully.</h1>
+              <p class="lp-m-sub">Search, organize, and track your anime with a visual Kanban board.</p>
+              <div class="lp-m-actions">
+                <button class="btn btn--primary btn--lg" style="justify-content:center;">Start for Free</button>
+                <button class="btn btn--ghost">Sign In</button>
+              </div>
+            </section>
+
+            <div class="lp-m-features">
+              <div class="lp-m-feature">
+                <div class="lp-m-feature-icon"><i data-lucide="search" style="width:18px;height:18px;"></i></div>
+                <div>
+                  <div class="lp-m-feature-title">Search Any Anime</div>
+                  <div class="lp-m-feature-desc">Millions of titles from MyAnimeList. Find your next obsession instantly.</div>
+                </div>
+              </div>
+              <div class="lp-m-feature">
+                <div class="lp-m-feature-icon"><i data-lucide="grip-vertical" style="width:18px;height:18px;"></i></div>
+                <div>
+                  <div class="lp-m-feature-title">Drag & Drop Board</div>
+                  <div class="lp-m-feature-desc">Move titles between columns. Your progress, visualized on mobile too.</div>
+                </div>
+              </div>
+              <div class="lp-m-feature">
+                <div class="lp-m-feature-icon"><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i></div>
+                <div>
+                  <div class="lp-m-feature-title">Synced Everywhere</div>
+                  <div class="lp-m-feature-desc">Your board follows you. Pick up where you left off on any device.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="lp-m-cta">
+              <h3>Start watching smarter.</h3>
+              <p>Join anime fans who never lose track of what's next.</p>
+              <button class="lp-m-cta-btn">Get Started — It's Free</button>
+            </div>
+
+            <footer class="lp-m-footer">
+              <div class="lp-m-footer-logo">⛩ ProjectOtaku</div>
+              <div class="lp-m-footer-copy">© 2026 · Powered by Jikan API</div>
+            </footer>
+          </div>
+        </div>
+
+        <div class="ds-chrome-ios-bottom">
+          <div class="ds-ios-addressbar">projectotaku.app</div>
+          <div class="ds-ios-toolbar">
+            <button class="ds-ios-btn" disabled>&#8249;</button>
+            <button class="ds-ios-btn">&#8250;</button>
+            <button class="ds-ios-btn">⬆</button>
+            <button class="ds-ios-btn">&#9776;</button>
+            <button class="ds-ios-btn">⊞</button>
+          </div>
+          <div class="ds-ios-homeindicator"><span></span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+</script>
+</body>
+</html>
