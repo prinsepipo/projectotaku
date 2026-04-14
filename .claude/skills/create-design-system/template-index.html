@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT_NAME}} — Design System</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- FONTS: replace with chosen typefaces from Google Fonts or CDN -->
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=FONT_NAME&display=swap" rel="stylesheet"> -->
+</head>
+<body>
+
+<div class="ds-layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────── -->
+  <nav class="ds-sidebar">
+    <div class="ds-sidebar__logo">{{PROJECT_NAME}}</div>
+    <ul class="ds-sidebar__nav">
+      <li class="ds-sidebar__section">Foundations</li>
+      <li><a href="#colors">Colors</a></li>
+      <li><a href="#typography">Typography</a></li>
+      <li><a href="#spacing">Spacing</a></li>
+      <li><a href="#iconography">Iconography</a></li>
+
+      <li class="ds-sidebar__section">Components</li>
+      <!-- COMPONENTS: add one <li><a href="#component-name">Component Name</a></li> per component -->
+
+      <li class="ds-sidebar__section">Screens</li>
+      <!-- SCREENS: add one <li><a href="screens/screen-name.html">Screen Name</a></li> per mockup screen -->
+    </ul>
+  </nav>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────── -->
+  <main class="ds-main">
+
+    <!-- ── FOUNDATIONS ──────────────────────────────── -->
+    <section id="colors" class="ds-section">
+      <h2>Colors</h2>
+
+      <!-- SINGLE MODE: use this when only light OR dark mode was requested.
+           Remove the ds-theme-columns structure below and keep only ds-swatches. -->
+      <div class="ds-swatches">
+        <!-- SWATCH TEMPLATE (repeat per color):
+        <div class="ds-swatch">
+          <div class="ds-swatch__box" style="background:#HEX;"></div>
+          <div class="ds-swatch__label">Label</div>
+          <div class="ds-swatch__hex">#HEX</div>
+          <div class="ds-swatch__desc">Role description</div>
+        </div>
+        -->
+        <!-- DEV-ONLY SWATCH (append class ds-swatch--dev):
+        <div class="ds-swatch ds-swatch--dev">...</div>
+        -->
+      </div>
+
+      <!-- BOTH MODES: replace the ds-swatches block above with this when
+           the user requested both light and dark mode. Show palettes side by side.
+           Each column uses a tinted background so swatches read correctly in context.
+      <div class="ds-theme-columns">
+        <div class="ds-theme-col ds-theme-col--light">
+          <div class="ds-theme-col__label">Light</div>
+          <div class="ds-swatches">
+            LIGHT MODE SWATCHES HERE
+          </div>
+        </div>
+        <div class="ds-theme-col ds-theme-col--dark">
+          <div class="ds-theme-col__label">Dark</div>
+          <div class="ds-swatches">
+            DARK MODE SWATCHES HERE
+          </div>
+        </div>
+      </div>
+      -->
+
+    </section>
+
+    <section id="typography" class="ds-section">
+      <h2>Typography</h2>
+      <!-- FONT BLOCK TEMPLATE (repeat per typeface):
+      <div class="ds-type-block">
+        <h3>Font Name <span class="ds-tag">display / body / mono</span></h3>
+        <table class="ds-type-table">
+          <thead><tr><th>Step</th><th>Size</th><th>Weight</th><th>Line-height</th><th>Tracking</th><th>Sample</th><th>Use for</th></tr></thead>
+          <tbody>
+            <tr><td>h1</td><td>3rem</td><td>700</td><td>1.1</td><td>-0.02em</td><td style="font-size:3rem;font-weight:700">Heading</td><td>Page titles</td></tr>
+          </tbody>
+        </table>
+      </div>
+      -->
+    </section>
+
+    <section id="spacing" class="ds-section">
+      <h2>Spacing</h2>
+      <div class="ds-spacing-scale">
+        <!-- SPACING ROW TEMPLATE (repeat per step):
+        <div class="ds-spacing-row">
+          <span class="ds-spacing-name">md</span>
+          <span class="ds-spacing-var">--spacing-md</span>
+          <span class="ds-spacing-value">16px</span>
+          <div class="ds-spacing-bar" style="width:16px;height:16px;"></div>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <section id="iconography" class="ds-section">
+      <h2>Iconography</h2>
+      <p class="ds-meta">Library: <strong>{{ICON_LIBRARY}}</strong> — <a href="{{ICON_LIBRARY_URL}}" target="_blank">docs</a></p>
+      <div class="ds-icon-grid">
+        <!-- ICON TEMPLATE (repeat per icon sample):
+        <div class="ds-icon-item">
+          <img src="{{ICON_URL}}" alt="icon-name" width="24" height="24">
+          <span>icon-name</span>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- ── COMPONENTS ────────────────────────────────── -->
+    <!-- COMPONENT SECTION TEMPLATE (repeat per component):
+    <section id="component-name" class="ds-section">
+      <h2>Component Name</h2>
+
+      <h3>Variants</h3>
+      <div class="ds-component-row">
+        RENDER VARIANTS INLINE HERE
+      </div>
+
+      <h3>States</h3>
+      <div class="ds-component-row">
+        RENDER STATES INLINE HERE (default, hover, focus, active, disabled, loading)
+      </div>
+    </section>
+    -->
+
+  </main>
+</div>
+
+</body>
+</html>

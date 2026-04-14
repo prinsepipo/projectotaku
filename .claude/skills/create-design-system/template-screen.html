@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{SCREEN_NAME}} — {{PROJECT_NAME}}</title>
+  <link rel="stylesheet" href="../style.css">
+  <!-- FONTS: same <link> tags as index.html -->
+</head>
+<body>
+
+<div class="ds-screen">
+
+  <!-- ── HEADER ─────────────────────────────────────── -->
+  <header class="ds-screen-header">
+    <div class="ds-screen-header__top">
+      <a href="../index.html" class="ds-back-link">← Back to Design System</a>
+      <!-- THEME TOGGLE: include only if dark mode was requested in Step 1.
+           Remove this button entirely for light-mode-only projects. -->
+      <button class="ds-theme-toggle" id="themeToggle" data-active="light">
+        <span class="ds-theme-toggle__icon">☀</span>
+        <span class="ds-theme-toggle__label">Light</span>
+      </button>
+    </div>
+    <h1>{{SCREEN_NAME}}</h1>
+  </header>
+
+  <!-- ── FRAMES ─────────────────────────────────────── -->
+  <div class="ds-frames">
+
+    <!-- DESKTOP FRAME (1280×800) — always present -->
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Desktop — 1280×800</div>
+      <div class="ds-frame ds-frame--desktop">
+
+        <!-- macOS Safari chrome -->
+        <div class="ds-chrome-safari-desktop">
+          <div class="ds-safari-tabs">
+            <div class="ds-safari-traffic">
+              <span class="ds-safari-traffic__close"></span>
+              <span class="ds-safari-traffic__min"></span>
+              <span class="ds-safari-traffic__max"></span>
+            </div>
+            <div class="ds-safari-tab ds-safari-tab--active">{{SCREEN_NAME}}</div>
+            <button class="ds-safari-newtab">+</button>
+          </div>
+          <div class="ds-safari-toolbar">
+            <div class="ds-safari-nav">
+              <button class="ds-safari-btn" disabled>&#8249;</button>
+              <button class="ds-safari-btn">&#8250;</button>
+            </div>
+            <div class="ds-safari-addressbar">https://{{APP_URL}}/{{SCREEN_PATH}}</div>
+            <div class="ds-safari-actions">
+              <button class="ds-safari-btn">⬆</button>
+              <button class="ds-safari-btn">⊞</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen content -->
+        <div class="ds-frame-content">
+          <!-- DESKTOP MOCKUP CONTENT HERE -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MOBILE FRAME (390×844) — include only if mobile support required -->
+    <!--
+    <div class="ds-frame-wrapper">
+      <div class="ds-frame-label">Mobile — 390×844</div>
+      <div class="ds-frame ds-frame--mobile">
+
+        <div class="ds-chrome-ios-top">
+          <div class="ds-ios-statusbar">
+            <span class="ds-ios-statusbar__time">9:41</span>
+            <div class="ds-ios-statusbar__notch"></div>
+            <div class="ds-ios-statusbar__icons">
+              <span>▲</span><span>&#x1F4F6;</span><span>▮▮▮</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-frame-content">
+          MOBILE MOCKUP CONTENT HERE
+        </div>
+
+        <div class="ds-chrome-ios-bottom">
+          <div class="ds-ios-addressbar">{{APP_URL}}/{{SCREEN_PATH}}</div>
+          <div class="ds-ios-toolbar">
+            <button class="ds-ios-btn" disabled>&#8249;</button>
+            <button class="ds-ios-btn">&#8250;</button>
+            <button class="ds-ios-btn">⬆</button>
+            <button class="ds-ios-btn">&#9776;</button>
+            <button class="ds-ios-btn">⊞</button>
+          </div>
+          <div class="ds-ios-homeindicator"><span></span></div>
+        </div>
+
+      </div>
+    </div>
+    -->
+
+  </div>
+
+</div>
+
+<!-- THEME TOGGLE SCRIPT: include only if dark mode was requested in Step 1.
+     Targets .ds-frame-content elements only — the shell UI is never affected.
+     Remove this entire <script> block for light-mode-only projects. -->
+<script>
+  (function () {
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    var icon  = btn.querySelector('.ds-theme-toggle__icon');
+    var label = btn.querySelector('.ds-theme-toggle__label');
+    var frames = document.querySelectorAll('.ds-frame-content');
+    btn.addEventListener('click', function () {
+      var isDark = btn.dataset.active === 'dark';
+      var next = isDark ? 'light' : 'dark';
+      btn.dataset.active = next;
+      icon.textContent  = isDark ? '☀' : '☾';
+      label.textContent = isDark ? 'Light' : 'Dark';
+      frames.forEach(function (f) { f.dataset.theme = next === 'dark' ? 'dark' : ''; });
+    });
+  })();
+</script>
+</body>
+</html>
