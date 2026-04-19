@@ -1,0 +1,72 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 120px 32px;
+
+    background: radial-gradient(ellipse 70% 60% at 50% -10%, var(--color-secondary), var(--color-bg));
+}
+
+.hero-pill {
+    padding: 4px 8px;
+    padding-right: 16px;
+
+    background: var(--color-secondary);
+    color: var(--color-primary);
+
+    font-size: var(--text-body-xs);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    border: solid 1px #C4B5FD;
+    border-radius: 16px;
+}
+
+.hero-heading {
+    min-width: 400px;
+    max-width: 720px;
+
+    margin: 1.5rem;
+
+    text-align: center;
+}
+
+.hero-heading span {
+    background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #6366F1 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-details {
+    min-width: 400px;
+    max-width: 620px;
+
+    margin-bottom: 2rem;
+
+    color: var(--color-text-muted);
+
+    font-size: 1.15rem;
+    text-align: center;
+}
+
+.hero-button {
+    padding: 16px 32px;
+
+    box-shadow: var(--shadows-md);
+}
+
+
+.hero-preview {
+    width: 900px;
+    height: 420px;
+
+    margin-top: 64px;
+
+    background: var(--color-surface-raised);
+
+    border-radius: 8px;
+
+    box-shadow: var(--shadows-lg);
+}

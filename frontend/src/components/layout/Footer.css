@@ -1,0 +1,26 @@
+.footer {
+    background: var(--color-surface);
+
+    border-top: solid 1px var(--color-border);
+}
+
+.footer .fluid-container {
+    display: flex;
+    justify-content: space-between;
+
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.footer-logo {
+    color: var(--color-primary);
+
+    font-size: 1.125rem;
+}
+
+.footer-label {
+    color: var(--color-text-muted);
+
+    font-size: var(--text-body-sm);
+    letter-spacing: -0.02em;
+}
