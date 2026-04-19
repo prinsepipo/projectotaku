@@ -1,12 +1,10 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route } from "react-router";
 
-import LandingPage from './pages/LandingPage';
+import LandingPage from "./pages/LandingPage";
 
-import './App.css'
-
+import "./App.css";
 
 function App() {
-
   return (
     <Routes>
       <Route index element={<LandingPage />} />
@@ -14,4 +12,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

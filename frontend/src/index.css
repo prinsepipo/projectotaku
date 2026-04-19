@@ -1,16 +1,16 @@
 :root {
-  --color-bg: #F9F8FF;
-  --color-surface: #FFFFFF;
-  --color-surface-raised: #F3F1FF;
-  --color-primary: #7C3AED;
-  --color-primary-hover: #6D28D9;
-  --color-secondary: #EDE9FE;
-  --color-disabled: #F3F4F6;
-  --color-text: #1C1730;
-  --color-text-muted: #6E6A85;
-  --color-text-disabled: #9CA3AF;
-  --color-border: #E2DEFF;
-  --color-overlay: rgba(28,23,48,.5);
+  --color-bg: #f9f8ff;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f3f1ff;
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-secondary: #ede9fe;
+  --color-disabled: #f3f4f6;
+  --color-text: #1c1730;
+  --color-text-muted: #6e6a85;
+  --color-text-disabled: #9ca3af;
+  --color-border: #e2deff;
+  --color-overlay: rgba(28, 23, 48, 0.5);
 
   --font-display: "Sora";
   --font-body: "Inter";
@@ -20,9 +20,12 @@
   --text-body-sm: 0.875rem;
   --text-body-xs: 0.75rem;
 
-  --shadows-sm: 0 1px 3px rgba(28,23,48,0.08),0 1px 2px rgba(28,23,48,0.04);
-  --shadows-md: 0 4px 12px rgba(28,23,48,0.10),0 2px 4px rgba(28,23,48,0.06);
-  --shadows-lg: 0 16px 40px rgba(28,23,48,0.12),0 4px 12px rgba(28,23,48,0.08);
+  --shadows-sm:
+    0 1px 3px rgba(28, 23, 48, 0.08), 0 1px 2px rgba(28, 23, 48, 0.04);
+  --shadows-md:
+    0 4px 12px rgba(28, 23, 48, 0.1), 0 2px 4px rgba(28, 23, 48, 0.06);
+  --shadows-lg:
+    0 16px 40px rgba(28, 23, 48, 0.12), 0 4px 12px rgba(28, 23, 48, 0.08);
 }
 
 * {
