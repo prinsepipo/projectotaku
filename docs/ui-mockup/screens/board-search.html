@@ -10,7 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
-    /* ── Board + Search Dropdown Layout ─── */
+    @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── Board Layout ─── */
     .board-root {
       font-family: var(--font-body);
       display: flex; flex-direction: column;
@@ -33,100 +35,142 @@
     .board-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-md); }
     .board-username { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
 
-    /* Active search input in navbar */
+    /* ── Unified Search Panel ──────────────────────────────── */
+    /*
+     * Design: The search bar and results are ONE card. The input row
+     * at the top IS the navbar trigger — panel floats just below it
+     * with no caret gap. The search bar shape (12px radius) echoes
+     * the panel below, making them visually continuous.
+     */
+
+    /* Wrap carries the shared focus ring so bar + panel read as one card */
     .board-search-wrap {
       position: relative;
-      width: 320px;
+      width: 380px;
+      border-radius: 12px;
+      box-shadow: 0 0 0 3px var(--color-focus-ring), 0 16px 48px rgba(28,23,48,0.14), 0 4px 16px rgba(28,23,48,0.08);
     }
-    .board-search-active {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--color-surface); border: 1.5px solid var(--color-primary);
-      box-shadow: 0 0 0 3px var(--color-focus-ring);
-      border-radius: var(--radius-full); padding: 0 14px; height: 34px;
+
+    /* Search bar — top half of the unified card */
+    .board-search-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-primary);
+      border-radius: 12px 12px 0 0;
+      border-bottom-color: var(--color-border);
+      padding: 0 14px; height: 38px;
       font-size: 0.875rem; color: var(--color-text);
       width: 100%;
+      position: relative; z-index: 42;
     }
-    .board-search-active span { flex: 1; }
+    .board-search-bar-query { flex: 1; font-weight: 500; }
+    .board-search-cursor {
+      display: inline-block; width: 2px; height: 14px;
+      background: var(--color-primary); margin-left: 1px;
+      vertical-align: middle; border-radius: 1px;
+      animation: cursor-blink 1.1s step-end infinite;
+    }
+    .search-kbd {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      border-radius: 4px; padding: 2px 5px; color: var(--color-text-muted);
+      flex-shrink: 0; letter-spacing: 0;
+    }
     .board-search-clear {
-      width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
       color: var(--color-text-muted); cursor: pointer; flex-shrink: 0;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full); background: var(--color-bg);
     }
 
-    /* Caret connecting pill to dropdown */
-    .search-dropdown-caret {
+    /* Search panel — bottom half, seamlessly extends the bar */
+    .search-panel {
       position: absolute;
-      top: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 14px; height: 8px;
-      z-index: 41;
-      pointer-events: none;
-    }
-    .search-dropdown-caret::before,
-    .search-dropdown-caret::after {
-      content: '';
-      position: absolute;
-      left: 50%; transform: translateX(-50%);
-      border: 7px solid transparent;
-      border-bottom-color: var(--color-border);
-      top: 0;
-    }
-    .search-dropdown-caret::after {
-      border-bottom-color: var(--color-surface);
-      top: 1.5px;
-    }
-
-    /* Search dropdown */
-    .search-dropdown {
-      position: absolute;
-      top: calc(100% + 14px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 480px;
+      top: 100%;
+      left: 0;
+      width: 100%;
       background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
+      border: 1.5px solid var(--color-primary);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
       z-index: 40;
       overflow: hidden;
     }
-    .search-dropdown-header {
-      padding: 10px 12px 8px;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .search-dropdown-label {
+
+    /* Results label */
+    .search-panel-label {
       font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.08em; color: var(--color-text-muted);
+      padding: 10px 14px 6px;
     }
-    .search-dropdown-results {
-      padding: 6px;
-      max-height: 320px;
+
+    /* Results list */
+    .search-panel-results {
+      padding: 4px 8px 6px;
+      max-height: 310px;
       overflow-y: auto;
     }
+
+    /* Result item */
     .search-result-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px; border-radius: var(--radius-md);
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 8px 8px 10px;
+      border-radius: 10px;
       border: 1px solid transparent;
-      cursor: pointer; margin-bottom: 2px;
+      cursor: pointer; margin-bottom: 3px;
+      transition: background 100ms, border-color 100ms;
     }
     .search-result-item:hover { background: var(--color-bg); border-color: var(--color-border); }
+    .search-result-item--added {
+      background: var(--color-bg); border-color: var(--color-border);
+    }
+
+    /* Left accent bar — signals interactive state */
+    .search-result-item::before {
+      content: ''; display: block;
+      width: 3px; height: 40px;
+      border-radius: 2px;
+      background: transparent;
+      flex-shrink: 0;
+      transition: background 100ms;
+      margin-left: -4px;
+    }
+    .search-result-item:hover::before { background: var(--color-primary); opacity: 0.5; }
+    .search-result-item--added::before { background: var(--color-success); opacity: 0.7; }
+
+    /* Thumbnail */
     .search-thumb {
-      width: 40px; height: 56px; border-radius: var(--radius-sm); flex-shrink: 0; object-fit: cover;
+      width: 42px; height: 58px;
+      border-radius: 6px; flex-shrink: 0; object-fit: cover;
     }
+
+    /* Info */
     .search-result-info { flex: 1; min-width: 0; }
-    .search-result-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .search-result-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 3px; }
-    .search-result-eps { font-size: 0.6875rem; color: var(--color-text-muted); }
-    .search-add-btn {
-      flex-shrink: 0; width: 28px; height: 28px;
-      background: var(--color-primary); color: #fff;
-      border: none; border-radius: var(--radius-md); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+    .search-result-title {
+      font-weight: 600; font-size: 0.8125rem; color: var(--color-text);
+      margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .search-add-btn:hover { background: var(--color-primary-hover); }
-    .search-dropdown-footer {
-      padding: 8px 12px;
+    .search-result-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 4px; }
+    .search-result-eps { font-size: 0.6875rem; color: var(--color-text-muted); }
+
+    /* Action button — pill, labelled */
+    .search-action-btn {
+      flex-shrink: 0; height: 28px; padding: 0 10px;
+      display: flex; align-items: center; gap: 5px;
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+      border-radius: var(--radius-full); border: none; cursor: pointer;
+      white-space: nowrap; transition: background 150ms;
+    }
+    .search-action-btn--add {
+      background: var(--color-primary); color: #fff;
+    }
+    .search-action-btn--add:hover { background: var(--color-primary-hover); }
+    .search-action-btn--added {
+      background: #D1FAE5; color: #065F46; cursor: default;
+    }
+
+    /* Footer */
+    .search-panel-footer {
+      padding: 8px 14px 10px;
       border-top: 1px solid var(--color-border);
       font-size: 0.6875rem; color: var(--color-text-muted);
       display: flex; align-items: center; gap: 4px;
@@ -208,15 +252,31 @@
     }
     .m-result-item {
       display: flex; align-items: center; gap: 10px;
-      padding: 8px; border-radius: var(--radius-md); border: 1px solid transparent;
-      margin-bottom: 4px; cursor: pointer;
+      padding: 8px 8px 8px 10px; border-radius: 10px; border: 1px solid transparent;
+      margin-bottom: 4px; cursor: pointer; transition: background 100ms, border-color 100ms;
     }
     .m-result-item:hover { background: var(--color-bg); border-color: var(--color-border); }
-    .m-result-thumb { width: 36px; height: 52px; border-radius: var(--radius-sm); flex-shrink: 0; }
+    .m-result-item--added { background: var(--color-bg); border-color: var(--color-border); }
+    .m-result-item::before {
+      content: ''; display: block; width: 3px; height: 38px;
+      border-radius: 2px; background: transparent; flex-shrink: 0;
+      margin-left: -4px; transition: background 100ms;
+    }
+    .m-result-item:hover::before { background: var(--color-primary); opacity: 0.5; }
+    .m-result-item--added::before { background: var(--color-success); opacity: 0.7; }
+    .m-result-thumb { width: 38px; height: 54px; border-radius: 6px; flex-shrink: 0; }
     .m-result-info { flex: 1; min-width: 0; }
     .m-result-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-result-meta { display: flex; align-items: center; gap: 4px; }
-    .m-result-add { flex-shrink: 0; width: 30px; height: 30px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .m-result-add {
+      flex-shrink: 0; height: 28px; padding: 0 10px;
+      display: flex; align-items: center; gap: 4px;
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+      border-radius: var(--radius-full); border: none; cursor: pointer;
+      white-space: nowrap;
+    }
+    .m-result-add--add { background: var(--color-primary); color: #fff; }
+    .m-result-add--added { background: #D1FAE5; color: #065F46; cursor: default; }
   </style>
 </head>
 <body>
@@ -266,27 +326,24 @@
               <div class="board-logo">⛩ ProjectOtaku</div>
 
               <div class="board-nav-center">
-                <!-- Search input -->
+                <!-- Unified search: bar handle + results panel as one visual unit -->
                 <div class="board-search-wrap">
-                  <div class="board-search-active">
-                    <i data-lucide="search" style="width:14px;height:14px;color:#7C3AED;flex-shrink:0;"></i>
-                    <span>naruto</span>
-                    <span style="color:#9CA3AF;font-size:11px;flex-shrink:0;">Esc to close</span>
+
+                  <!-- Search bar — top of the unified card -->
+                  <div class="board-search-bar">
+                    <i data-lucide="search" style="width:15px;height:15px;color:#7C3AED;flex-shrink:0;"></i>
+                    <span class="board-search-bar-query">naruto<span class="board-search-cursor"></span></span>
+                    <span class="search-kbd">Esc</span>
                     <span class="board-search-clear">
-                      <i data-lucide="x" style="width:12px;height:12px;"></i>
+                      <i data-lucide="x" style="width:11px;height:11px;"></i>
                     </span>
                   </div>
 
-                  <!-- Caret connecting pill to dropdown -->
-                  <div class="search-dropdown-caret"></div>
+                  <!-- Results panel — floats just below, no caret needed -->
+                  <div class="search-panel">
+                    <div class="search-panel-label">3 results for "naruto"</div>
 
-                  <!-- Dropdown anchored below the search bar -->
-                  <div class="search-dropdown">
-                    <div class="search-dropdown-header">
-                      <div class="search-dropdown-label">3 results for "naruto"</div>
-                    </div>
-
-                    <div class="search-dropdown-results">
+                    <div class="search-panel-results">
 
                       <!-- Result 1 -->
                       <div class="search-result-item">
@@ -299,24 +356,25 @@
                           </div>
                           <div class="search-result-eps">220 episodes · 2002–2007</div>
                         </div>
-                        <button class="search-add-btn">
-                          <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                        <button class="search-action-btn search-action-btn--add">
+                          <i data-lucide="plus" style="width:12px;height:12px;"></i>
+                          Add
                         </button>
                       </div>
 
                       <!-- Result 2 — already added -->
-                      <div class="search-result-item" style="background:var(--color-bg);border-color:var(--color-border);">
+                      <div class="search-result-item search-result-item--added">
                         <div class="search-thumb" style="background:linear-gradient(135deg,#E96B2D,#cc4e11);"></div>
                         <div class="search-result-info">
                           <div class="search-result-title">Naruto: Shippuden</div>
                           <div class="search-result-meta">
                             <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
-                            <span class="badge badge--neutral" style="font-size:10px;padding:2px 6px;">Already added</span>
                           </div>
                           <div class="search-result-eps">500 episodes · 2007–2017</div>
                         </div>
-                        <button class="search-add-btn" style="background:var(--color-success);">
-                          <i data-lucide="check" style="width:14px;height:14px;"></i>
+                        <button class="search-action-btn search-action-btn--added">
+                          <i data-lucide="check" style="width:12px;height:12px;"></i>
+                          Added
                         </button>
                       </div>
 
@@ -330,14 +388,15 @@
                           </div>
                           <div class="search-result-eps">293 episodes · 2017–2023</div>
                         </div>
-                        <button class="search-add-btn">
-                          <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                        <button class="search-action-btn search-action-btn--add">
+                          <i data-lucide="plus" style="width:12px;height:12px;"></i>
+                          Add
                         </button>
                       </div>
 
                     </div>
 
-                    <div class="search-dropdown-footer">
+                    <div class="search-panel-footer">
                       <i data-lucide="database" style="width:11px;height:11px;"></i>
                       Powered by Jikan API (MyAnimeList)
                     </div>
@@ -483,18 +542,25 @@
                       <span style="font-size:10px;color:var(--color-text-muted);">220 eps</span>
                     </div>
                   </div>
-                  <button class="m-result-add"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
+                  <button class="m-result-add m-result-add--add">
+                    <i data-lucide="plus" style="width:12px;height:12px;"></i>
+                    Add
+                  </button>
                 </div>
 
-                <div class="m-result-item" style="background:var(--color-bg);">
+                <div class="m-result-item m-result-item--added">
                   <div class="m-result-thumb" style="background:linear-gradient(135deg,#E96B2D,#cc4e11);"></div>
                   <div class="m-result-info">
                     <div class="m-result-title">Naruto: Shippuden</div>
                     <div class="m-result-meta">
-                      <span class="badge badge--neutral" style="font-size:10px;padding:1px 5px;">Already added</span>
+                      <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Action</span>
+                      <span style="font-size:10px;color:var(--color-text-muted);">500 eps</span>
                     </div>
                   </div>
-                  <button class="m-result-add" style="background:var(--color-success);"><i data-lucide="check" style="width:14px;height:14px;"></i></button>
+                  <button class="m-result-add m-result-add--added">
+                    <i data-lucide="check" style="width:12px;height:12px;"></i>
+                    Added
+                  </button>
                 </div>
 
                 <div class="m-result-item">
@@ -506,7 +572,10 @@
                       <span style="font-size:10px;color:var(--color-text-muted);">293 eps</span>
                     </div>
                   </div>
-                  <button class="m-result-add"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
+                  <button class="m-result-add m-result-add--add">
+                    <i data-lucide="plus" style="width:12px;height:12px;"></i>
+                    Add
+                  </button>
                 </div>
 
                 <div style="padding:10px 8px;font-size:0.6875rem;color:var(--color-text-muted);display:flex;align-items:center;gap:4px;">

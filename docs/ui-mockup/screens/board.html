@@ -108,33 +108,70 @@
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
-      overflow: hidden; cursor: grab;
+      overflow: hidden; cursor: pointer;
       transition: box-shadow 150ms, transform 150ms;
       box-shadow: var(--shadow-sm);
+      display: flex; align-items: stretch;
       position: relative;
+      height: 108px;
     }
     .anime-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-    .anime-card:hover .anime-card-drag { opacity: 1; }
+    .anime-card:hover .anime-card-actions { opacity: 1; }
 
     .anime-thumb {
-      width: 100%; height: 80px; display: block;
+      width: 64px; flex-shrink: 0;
+      object-fit: cover; display: block;
     }
-    .anime-card-body { padding: 9px 10px 10px; }
+    .anime-card-body { padding: 9px 10px 9px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     .anime-card-title {
       font-weight: 600; font-size: 0.8125rem; color: var(--color-text);
-      margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .anime-card-sub {
+      font-size: 11px; color: var(--color-text-muted);
     }
     .anime-card-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
     .anime-card-rating {
       font-family: var(--font-mono); font-size: 11px; font-weight: 500;
       color: var(--color-warning); margin-left: auto;
     }
-    .anime-card-drag {
-      position: absolute; right: 8px; top: 88px;
-      color: var(--color-text-muted); opacity: 0; transition: opacity 150ms;
+    .anime-card-actions {
+      position: absolute; top: 6px; right: 6px;
+      opacity: 0; transition: opacity 150ms;
+    }
+    .anime-card-menu-btn {
+      width: 22px; height: 22px; border-radius: var(--radius-sm);
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 13px; line-height: 1;
     }
 
-    /* ── Mobile Board — Accordion ─── */
+    /* Episode progress bar (Watching column) */
+    .anime-card-progress { margin-top: 4px; }
+    .anime-card-progress-row {
+      display: flex; align-items: center; gap: 5px; margin-bottom: 3px;
+    }
+    .anime-card-progress-label {
+      font-size: 10px; color: var(--color-text-muted); flex: 1;
+    }
+    .anime-card-ep-btn {
+      width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); font-size: 11px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 120ms, color 120ms;
+    }
+    .anime-card-ep-btn:hover { background: var(--color-secondary); color: var(--color-primary); }
+    .anime-card-progress-bar {
+      height: 3px; background: var(--color-border); border-radius: 99px; overflow: hidden;
+    }
+    .anime-card-progress-fill {
+      height: 100%; border-radius: 99px; background: #92400E;
+    }
+    .anime-card-progress-fill--watched { background: #065F46; }
+    .anime-card-progress-fill--empty   { background: transparent; }
+
+    /* ── Mobile Board — Tabs ─── */
     .board-m-root {
       font-family: var(--font-body); display: flex; flex-direction: column;
       height: 100%; background: var(--color-bg); overflow: hidden;
@@ -148,45 +185,60 @@
     .board-m-logo { font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; color: var(--color-primary); }
     .board-m-nav-right { display: flex; align-items: center; gap: 8px; }
 
-    .board-m-content { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-
-    .m-col {
-      background: var(--color-surface); border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+    /* Tab bar */
+    .m-tabbar {
+      display: flex; flex-shrink: 0;
+      background: var(--color-surface); border-bottom: 1px solid var(--color-border);
     }
-    .m-col-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 14px; border-bottom: 2px solid transparent;
-      cursor: pointer;
+    .m-tab {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+      height: 40px; cursor: pointer;
+      font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--color-text-muted); border-bottom: 2px solid transparent;
+      transition: color 120ms, border-color 120ms;
     }
-    .m-col--watch .m-col-header    { border-color: #1D4ED8; }
-    .m-col--watching .m-col-header { border-color: #92400E; }
-    .m-col--watched .m-col-header  { border-color: #065F46; }
-    .m-col-header-left { display: flex; align-items: center; gap: 8px; }
-    .m-col-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text); }
-    .m-col-count {
+    .m-tab-count {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 18px; height: 18px; border-radius: var(--radius-full); font-size: 10px; font-weight: 700;
+      width: 16px; height: 16px; border-radius: var(--radius-full); font-size: 9px; font-weight: 700;
+      background: var(--color-border); color: var(--color-text-muted);
+      transition: background 120ms, color 120ms;
     }
-    .m-col--watch .m-col-count    { background: #DBEAFE; color: #1D4ED8; }
-    .m-col--watching .m-col-count { background: #FEF3C7; color: #92400E; }
-    .m-col--watched .m-col-count  { background: #D1FAE5; color: #065F46; }
-    .m-col-chevron { color: var(--color-text-muted); }
-    .m-col-cards { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .m-tab--watch.m-tab--active    { color: #1D4ED8; border-color: #1D4ED8; }
+    .m-tab--watching.m-tab--active { color: #92400E; border-color: #92400E; }
+    .m-tab--watched.m-tab--active  { color: #065F46; border-color: #065F46; }
+    .m-tab--watch.m-tab--active .m-tab-count    { background: #DBEAFE; color: #1D4ED8; }
+    .m-tab--watching.m-tab--active .m-tab-count { background: #FEF3C7; color: #92400E; }
+    .m-tab--watched.m-tab--active .m-tab-count  { background: #D1FAE5; color: #065F46; }
+
+    /* Tab panels */
+    .m-tab-panels { flex: 1; overflow: hidden; position: relative; }
+    .m-tab-panel {
+      position: absolute; inset: 0; overflow-y: auto;
+      padding: 10px; display: none; flex-direction: column; gap: 8px;
+    }
+    .m-tab-panel--active { display: flex; }
+
+    .m-col-cards { display: flex; flex-direction: column; gap: 6px; }
 
     /* Mobile anime card — horizontal layout */
     .m-anime-card {
-      display: flex; align-items: center;
+      display: flex; align-items: stretch;
       background: var(--color-surface); border: 1px solid var(--color-border);
       border-radius: var(--radius-md); overflow: hidden;
-      box-shadow: var(--shadow-sm); gap: 0;
+      box-shadow: var(--shadow-sm);
     }
-    .m-anime-thumb { width: 52px; height: 52px; flex-shrink: 0; object-fit: cover; }
-    .m-anime-info { padding: 8px 10px; flex: 1; min-width: 0; }
-    .m-anime-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
-    .m-anime-meta { display: flex; align-items: center; gap: 4px; }
+    .m-anime-thumb { width: 52px; flex-shrink: 0; object-fit: cover; display: block; }
+    .m-anime-info { padding: 8px 10px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .m-anime-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-anime-sub { font-size: 10px; color: var(--color-text-muted); }
+    .m-anime-meta { display: flex; align-items: center; gap: 4px; margin-top: auto; }
     .m-anime-rating { font-family: var(--font-mono); font-size: 10px; color: var(--color-warning); font-weight: 500; margin-left: auto; }
-    .m-col-collapsed { color: var(--color-text-muted); font-size: 0.8125rem; padding: 10px 14px; }
+    .m-anime-ep-btn {
+      width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text-muted); font-size: 12px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -267,41 +319,62 @@
                 <div class="kanban-cards">
                   <!-- Card 1 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#1a1a2e 0%,#0f3460 100%);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Attack on Titan</div>
+                      <div class="anime-card-sub">TV · 75 eps · 2013</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <span class="anime-card-progress-label">Not started</span>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill anime-card-progress-fill--empty" style="width:0%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Drama</span>
                         <span class="anime-card-rating">★ 9.0</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                   <!-- Card 2 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#833ab4,#fd1d1d);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Fullmetal Alchemist: Brotherhood</div>
+                      <div class="anime-card-sub">TV · 64 eps · 2009</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <span class="anime-card-progress-label">Not started</span>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill anime-card-progress-fill--empty" style="width:0%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Adventure</span>
                         <span class="anime-card-rating">★ 9.1</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                   <!-- Card 3 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#000000,#434343);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#1a1a1a,#434343);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Death Note</div>
+                      <div class="anime-card-sub">TV · 37 eps · 2006</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <span class="anime-card-progress-label">Not started</span>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill anime-card-progress-fill--empty" style="width:0%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Mystery</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Thriller</span>
                         <span class="anime-card-rating">★ 8.6</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                 </div>
               </div>
@@ -320,29 +393,47 @@
                 <div class="kanban-cards">
                   <!-- Card 1 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#780206,#061161);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#780206,#061161);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Demon Slayer</div>
+                      <div class="anime-card-sub">TV · 26 eps · 2019</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <div class="anime-card-ep-btn">−</div>
+                          <span class="anime-card-progress-label">Ep 18 / 26</span>
+                          <div class="anime-card-ep-btn">+</div>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill" style="width:69%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Fantasy</span>
                         <span class="anime-card-rating">★ 8.7</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                   <!-- Card 2 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#0F0C29,#302B63,#24243e);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#0F0C29,#302B63);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Jujutsu Kaisen</div>
+                      <div class="anime-card-sub">TV · 24 eps · 2020</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <div class="anime-card-ep-btn">−</div>
+                          <span class="anime-card-progress-label">Ep 8 / 24</span>
+                          <div class="anime-card-ep-btn">+</div>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill" style="width:33%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Action</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Supernatural</span>
                         <span class="anime-card-rating">★ 8.6</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                 </div>
               </div>
@@ -361,29 +452,43 @@
                 <div class="kanban-cards">
                   <!-- Card 1 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#4776E6,#8E54E9);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#4776E6,#8E54E9);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Spirited Away</div>
+                      <div class="anime-card-sub">Movie · 2001</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <span class="anime-card-progress-label">Completed</span>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill anime-card-progress-fill--watched" style="width:100%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Animation</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Adventure</span>
                         <span class="anime-card-rating">★ 8.7</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                   <!-- Card 2 -->
                   <div class="anime-card">
-                    <div class="anime-thumb" style="background:linear-gradient(135deg,#f7797d,#FBD786,#c6ffdd);"></div>
+                    <div class="anime-thumb" style="background:linear-gradient(160deg,#f7797d,#FBD786);"></div>
                     <div class="anime-card-body">
                       <div class="anime-card-title">Your Name</div>
+                      <div class="anime-card-sub">Movie · 2016</div>
+                      <div class="anime-card-progress">
+                        <div class="anime-card-progress-row">
+                          <span class="anime-card-progress-label">Completed</span>
+                        </div>
+                        <div class="anime-card-progress-bar"><div class="anime-card-progress-fill anime-card-progress-fill--watched" style="width:100%;"></div></div>
+                      </div>
                       <div class="anime-card-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Romance</span>
                         <span class="badge badge--genre" style="font-size:10px;padding:2px 6px;">Drama</span>
                         <span class="anime-card-rating">★ 8.9</span>
                       </div>
                     </div>
-                    <div class="anime-card-drag"><i data-lucide="grip-vertical" style="width:14px;height:14px;"></i></div>
+                    <div class="anime-card-actions"><div class="anime-card-menu-btn">···</div></div>
                   </div>
                 </div>
               </div>
@@ -396,7 +501,7 @@
 
     <!-- ── MOBILE ───────────────────────────────────────────────── -->
     <div class="ds-frame-wrapper">
-      <div class="ds-frame-label">Mobile — 390×844 (Accordion View)</div>
+      <div class="ds-frame-label">Mobile — 390×844 (Tab View)</div>
       <div class="ds-frame ds-frame--mobile">
         <div class="ds-chrome-ios-top">
           <div class="ds-ios-statusbar">
@@ -418,22 +523,24 @@
               </div>
             </nav>
 
-            <div class="board-m-content">
+            <!-- Tab bar -->
+            <div class="m-tabbar">
+              <div class="m-tab m-tab--watch m-tab--active">Watch <span class="m-tab-count">3</span></div>
+              <div class="m-tab m-tab--watching">Watching <span class="m-tab-count">2</span></div>
+              <div class="m-tab m-tab--watched">Watched <span class="m-tab-count">2</span></div>
+            </div>
 
-              <!-- Watch — EXPANDED -->
-              <div class="m-col m-col--watch">
-                <div class="m-col-header">
-                  <div class="m-col-header-left">
-                    <span class="m-col-title">Watch</span>
-                    <span class="m-col-count">3</span>
-                  </div>
-                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;"></i>
-                </div>
+            <!-- Tab panels -->
+            <div class="m-tab-panels">
+
+              <!-- Watch panel (active) -->
+              <div class="m-tab-panel m-tab-panel--active">
                 <div class="m-col-cards">
                   <div class="m-anime-card">
-                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);"></div>
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#1a1a2e,#0f3460);"></div>
                     <div class="m-anime-info">
                       <div class="m-anime-title">Attack on Titan</div>
+                      <div class="m-anime-sub">TV · 75 eps · 2013</div>
                       <div class="m-anime-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Action</span>
                         <span class="m-anime-rating">★ 9.0</span>
@@ -441,9 +548,10 @@
                     </div>
                   </div>
                   <div class="m-anime-card">
-                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);"></div>
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#833ab4,#fd1d1d);"></div>
                     <div class="m-anime-info">
                       <div class="m-anime-title">Fullmetal Alchemist: Brotherhood</div>
+                      <div class="m-anime-sub">TV · 64 eps · 2009</div>
                       <div class="m-anime-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Adventure</span>
                         <span class="m-anime-rating">★ 9.1</span>
@@ -451,9 +559,10 @@
                     </div>
                   </div>
                   <div class="m-anime-card">
-                    <div class="m-anime-thumb" style="background:linear-gradient(135deg,#000,#434343);"></div>
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#1a1a1a,#434343);"></div>
                     <div class="m-anime-info">
                       <div class="m-anime-title">Death Note</div>
+                      <div class="m-anime-sub">TV · 37 eps · 2006</div>
                       <div class="m-anime-meta">
                         <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Mystery</span>
                         <span class="m-anime-rating">★ 8.6</span>
@@ -463,28 +572,64 @@
                 </div>
               </div>
 
-              <!-- Watching — COLLAPSED -->
-              <div class="m-col m-col--watching">
-                <div class="m-col-header">
-                  <div class="m-col-header-left">
-                    <span class="m-col-title">Watching</span>
-                    <span class="m-col-count">2</span>
+              <!-- Watching panel -->
+              <div class="m-tab-panel">
+                <div class="m-col-cards">
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#780206,#061161);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Demon Slayer</div>
+                      <div class="m-anime-sub">TV · 26 eps · 2019</div>
+                      <div class="m-anime-meta" style="gap:4px;">
+                        <div class="m-anime-ep-btn">−</div>
+                        <span style="font-size:10px;color:var(--color-text-muted);flex:1;">Ep 18 / 26</span>
+                        <div class="m-anime-ep-btn">+</div>
+                        <span class="m-anime-rating">★ 8.7</span>
+                      </div>
+                    </div>
                   </div>
-                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;transform:rotate(-90deg);"></i>
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#0F0C29,#302B63);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Jujutsu Kaisen</div>
+                      <div class="m-anime-sub">TV · 24 eps · 2020</div>
+                      <div class="m-anime-meta" style="gap:4px;">
+                        <div class="m-anime-ep-btn">−</div>
+                        <span style="font-size:10px;color:var(--color-text-muted);flex:1;">Ep 8 / 24</span>
+                        <div class="m-anime-ep-btn">+</div>
+                        <span class="m-anime-rating">★ 8.6</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="m-col-collapsed">2 titles in progress — tap to expand</div>
               </div>
 
-              <!-- Watched — COLLAPSED -->
-              <div class="m-col m-col--watched">
-                <div class="m-col-header">
-                  <div class="m-col-header-left">
-                    <span class="m-col-title">Watched</span>
-                    <span class="m-col-count">2</span>
+              <!-- Watched panel -->
+              <div class="m-tab-panel">
+                <div class="m-col-cards">
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#4776E6,#8E54E9);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Spirited Away</div>
+                      <div class="m-anime-sub">Movie · 2001</div>
+                      <div class="m-anime-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Adventure</span>
+                        <span class="m-anime-rating">★ 8.7</span>
+                      </div>
+                    </div>
                   </div>
-                  <i data-lucide="chevron-down" class="m-col-chevron" style="width:16px;height:16px;transform:rotate(-90deg);"></i>
+                  <div class="m-anime-card">
+                    <div class="m-anime-thumb" style="background:linear-gradient(160deg,#f7797d,#FBD786);"></div>
+                    <div class="m-anime-info">
+                      <div class="m-anime-title">Your Name</div>
+                      <div class="m-anime-sub">Movie · 2016</div>
+                      <div class="m-anime-meta">
+                        <span class="badge badge--genre" style="font-size:10px;padding:1px 5px;">Romance</span>
+                        <span class="m-anime-rating">★ 8.9</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="m-col-collapsed">2 titles completed — tap to expand</div>
               </div>
 
             </div>
@@ -509,7 +654,20 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const tabs = document.querySelectorAll('.m-tab');
+    const panels = document.querySelectorAll('.m-tab-panel');
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('m-tab--active'));
+        panels.forEach(p => p.classList.remove('m-tab-panel--active'));
+        tab.classList.add('m-tab--active');
+        panels[i].classList.add('m-tab-panel--active');
+      });
+    });
+  });
 </script>
 </body>
 </html>
