@@ -87,3 +87,9 @@ This project specs is located in [PRD.md](./docs/PRD.md). Use it if you more inf
 ### Environment variables
 **IMPORTANT: DO NOT READ the `.env` files.**
 Stored in `backend/.env` (see README for full list). Key vars: `DATABASE_URL`, `REDIS_URL`, `SECRET_KEY`.
+
+## Frontend
+
+### Design System
+
+The core design and style system for the frontend is store in [Design System](./docs/design-system.md)
