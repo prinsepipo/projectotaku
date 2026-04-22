@@ -20,10 +20,10 @@ function Navbar() {
           </li>
         </ul>
         <div className="navbar-buttons">
-          <NavLinkButton to="/signin" style="ghost">
+          <NavLinkButton to="/signin" variant="ghost">
             Login
           </NavLinkButton>
-          <NavLinkButton to="/signup" style="primary">
+          <NavLinkButton to="/signup" variant="primary">
             Sign Up
           </NavLinkButton>
         </div>

@@ -47,7 +47,7 @@ function LandingFeatures() {
           <h2>Ready to start watching smarter?</h2>
           <p>Join anime fans who never lose track of what's next.</p>
         </div>
-        <Button text="Get Started — It's Free" />
+        <Button size="lg">Get Started — It's Free</Button>
       </div>
     </FluidContainer>
   );

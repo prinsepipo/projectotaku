@@ -2,18 +2,26 @@ import { NavLink } from "react-router";
 import type React from "react";
 import "./Button.css";
 
-const STYLES = {
+const VARIANT_CLASSES = {
   primary: "c-button--primary",
   secondary: "c-button--secondary",
   ghost: "c-button--ghost",
   danger: "c-button--danger",
 };
 
-type STYLES = keyof typeof STYLES;
+const SIZE_CLASSES = {
+  sm: "c-button--sm",
+  md: "c-button--md",
+  lg: "c-button--lg",
+};
 
-interface INavLinkButtonProps {
+type ButtonVariant = keyof typeof VARIANT_CLASSES;
+type ButtonSize = keyof typeof SIZE_CLASSES;
+
+interface IProps {
   to: string;
-  style?: STYLES;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   className?: string;
   children?: React.ReactNode;
   icon?: React.ReactNode;
@@ -22,13 +30,22 @@ interface INavLinkButtonProps {
 
 function NavLinkButton({
   to,
-  style = "primary",
+  variant = "primary",
+  size = "md",
   className,
   children,
   icon,
   iconPosition = "left",
-}: INavLinkButtonProps) {
-  const clsNames = `c-button ${STYLES[style]}${icon ? " c-button--has-icon" : ""}${className ? ` ${className}` : ""}`;
+}: IProps) {
+  const clsNames = [
+    "c-button",
+    VARIANT_CLASSES[variant],
+    SIZE_CLASSES[size],
+    icon ? "c-button--has-icon" : "",
+    className ?? "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <NavLink to={to} className={clsNames}>

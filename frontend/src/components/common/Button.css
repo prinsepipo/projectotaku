@@ -1,10 +1,8 @@
 .c-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 8px;
 
-  font-size: 0.895rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 
@@ -14,9 +12,22 @@
   cursor: pointer;
 }
 
+.c-button--sm {
+  padding: 4px 12px;
+  font-size: var(--text-body-xs);
+}
+
+.c-button--md {
+  padding: 8px 16px;
+  font-size: var(--text-body-sm);
+}
+
+.c-button--lg {
+  padding: 12px 24px;
+  font-size: var(--text-body-m);
+}
+
 .c-button__icon {
-  display: inline-flex;
-  align-items: center;
   flex-shrink: 0;
 }
 
@@ -42,6 +53,11 @@
   border-color: var(--color-border);
 }
 
-.c-button.c-button.c-button--ghost:hover {
+.c-button.c-button--ghost:hover {
   background: var(--color-secondary);
+}
+
+.c-button.c-button--wide {
+  width: 100%;
+  justify-content: center;
 }

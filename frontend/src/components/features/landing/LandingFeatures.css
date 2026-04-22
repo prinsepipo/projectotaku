@@ -73,6 +73,7 @@
   max-width: 1200px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   margin: 0 auto;
   margin-top: 64px;
@@ -102,8 +103,6 @@
 .landing-features-banner .c-button {
   background: var(--color-surface);
   color: var(--color-primary);
-
-  border-radius: 8px;
 
   box-shadow: var(--shadows-md);
 }

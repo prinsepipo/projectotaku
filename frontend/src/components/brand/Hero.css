@@ -56,9 +56,11 @@
 }
 
 .hero-button {
-  padding: 16px 32px;
+  padding: 12px 40px;
 
   box-shadow: var(--shadows-md);
+
+  font-size: var(--text-body-m);
 }
 
 .hero-preview {

@@ -1,0 +1,29 @@
+.c-input {
+  min-width: 240px;
+  width: 100%;
+
+  background: var(--color-surface);
+  font-family: var(--font-body);
+
+  border: solid 1px var(--color-border);
+  border-radius: 4px;
+}
+
+.c-input--sm {
+  padding: 4px 12px;
+  font-size: var(--text-body-xs);
+}
+
+.c-input--md {
+  padding: 8px 16px;
+  font-size: var(--text-body-sm);
+}
+
+.c-input--lg {
+  padding: 12px 24px;
+  font-size: var(--text-body-m);
+}
+
+.c-input--error {
+  border-color: var(--color-error);
+}
