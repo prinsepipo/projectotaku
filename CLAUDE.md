@@ -93,3 +93,11 @@ Stored in `backend/.env` (see README for full list). Key vars: `DATABASE_URL`, `
 ### Design System
 
 The core design and style system for the frontend is store in [Design System](./docs/design-system.md)
+
+### Mockups
+
+The UI mockup for the project are located in [ui-mockup](./docs/ui-mockup/).
+
+- The index file displays the visual representation of the design system. (Foundational, Components)
+
+- The `screens/` folder contains the visual mockups.

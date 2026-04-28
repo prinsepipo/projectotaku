@@ -34,53 +34,6 @@
     .board-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-md); }
     .board-username { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
 
-    /* Kanban with empty columns */
-    .kanban {
-      flex: 1; display: flex; gap: 16px;
-      padding: 20px 24px; overflow-x: auto; overflow-y: hidden; align-items: flex-start;
-    }
-    .kanban-col {
-      width: 360px; flex-shrink: 0;
-      background: var(--color-surface); border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
-      display: flex; flex-direction: column; overflow: hidden;
-    }
-    .kanban-col-header {
-      padding: 12px 14px 10px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 2px solid; flex-shrink: 0;
-    }
-    .kanban-col--watch .kanban-col-header    { border-color: #1D4ED8; }
-    .kanban-col--watching .kanban-col-header { border-color: #92400E; }
-    .kanban-col--watched .kanban-col-header  { border-color: #065F46; }
-    .kanban-col-left { display: flex; align-items: center; gap: 8px; }
-    .kanban-col-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text); }
-    .kanban-count { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; }
-    .kanban-col--watch .kanban-count    { background: #DBEAFE; color: #1D4ED8; }
-    .kanban-col--watching .kanban-count { background: #FEF3C7; color: #92400E; }
-    .kanban-col--watched .kanban-count  { background: #D1FAE5; color: #065F46; }
-    .kanban-add-btn {
-      width: 26px; height: 26px; border-radius: var(--radius-md);
-      background: var(--color-bg); border: 1px solid var(--color-border);
-      color: var(--color-text-muted); display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-    }
-
-    /* Empty column state */
-    .kanban-empty {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 32px 20px; text-align: center; min-height: 200px;
-    }
-    .kanban-empty-icon {
-      width: 48px; height: 48px; border-radius: var(--radius-lg);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 12px; border: 2px dashed;
-    }
-    .kanban-col--watch .kanban-empty-icon    { border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF; }
-    .kanban-col--watching .kanban-empty-icon { border-color: #FCD34D; color: #92400E; background: #FFFBEB; }
-    .kanban-col--watched .kanban-empty-icon  { border-color: #6EE7B7; color: #065F46; background: #ECFDF5; }
-    .kanban-empty-title { font-weight: 600; font-size: 0.875rem; color: var(--color-text); margin-bottom: 6px; }
-    .kanban-empty-desc { font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 16px; }
-
     /* Hero empty state (center of board) */
     .board-hero-empty {
       flex: 1; display: flex; align-items: center; justify-content: center;
@@ -246,61 +199,6 @@
                 <i data-lucide="search" style="width:16px;height:16px;"></i>
                 Search for Anime
               </button>
-
-              <!-- Empty columns hint row -->
-              <div style="display:flex;gap:16px;margin-top:40px;width:100%;max-width:900px;">
-                <div class="kanban-col kanban-col--watch" style="width:auto;flex:1;">
-                  <div class="kanban-col-header">
-                    <div class="kanban-col-left">
-                      <span class="kanban-col-title">Watch</span>
-                      <span class="kanban-count">0</span>
-                    </div>
-                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
-                  </div>
-                  <div class="kanban-empty">
-                    <div class="kanban-empty-icon">
-                      <i data-lucide="eye" style="width:20px;height:20px;"></i>
-                    </div>
-                    <div class="kanban-empty-title">Nothing to watch yet</div>
-                    <div class="kanban-empty-desc">Search for an anime and add it here to start your list.</div>
-                    <button class="btn btn--secondary btn--sm" style="gap:5px;">
-                      <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Anime
-                    </button>
-                  </div>
-                </div>
-                <div class="kanban-col kanban-col--watching" style="width:auto;flex:1;">
-                  <div class="kanban-col-header">
-                    <div class="kanban-col-left">
-                      <span class="kanban-col-title">Watching</span>
-                      <span class="kanban-count">0</span>
-                    </div>
-                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
-                  </div>
-                  <div class="kanban-empty">
-                    <div class="kanban-empty-icon">
-                      <i data-lucide="play" style="width:20px;height:20px;"></i>
-                    </div>
-                    <div class="kanban-empty-title">Not watching anything</div>
-                    <div class="kanban-empty-desc">Move a card here when you start an anime.</div>
-                  </div>
-                </div>
-                <div class="kanban-col kanban-col--watched" style="width:auto;flex:1;">
-                  <div class="kanban-col-header">
-                    <div class="kanban-col-left">
-                      <span class="kanban-col-title">Watched</span>
-                      <span class="kanban-count">0</span>
-                    </div>
-                    <button class="kanban-add-btn"><i data-lucide="plus" style="width:14px;height:14px;"></i></button>
-                  </div>
-                  <div class="kanban-empty">
-                    <div class="kanban-empty-icon">
-                      <i data-lucide="check-circle-2" style="width:20px;height:20px;"></i>
-                    </div>
-                    <div class="kanban-empty-title">No completions yet</div>
-                    <div class="kanban-empty-desc">Finished an anime? Drag it here to mark as watched.</div>
-                  </div>
-                </div>
-              </div>
             </div>
 
           </div>
