@@ -1,0 +1,171 @@
+.kanban-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+.board-navbar {
+  height: 80px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadows-sm);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+.board-navbar__inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.board-navbar__search-pill {
+  width: 260px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  font-family: var(--font-body), sans-serif;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.board-navbar__search-pill:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-secondary);
+}
+
+.board-navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.board-navbar__user:hover {
+  background: var(--color-surface-raised);
+}
+
+.board-navbar__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.board-navbar__user-wrapper {
+  position: relative;
+}
+
+.board-navbar__chevron {
+  transition: transform 0.15s;
+}
+
+.board-navbar__chevron--open {
+  transform: rotate(180deg);
+}
+
+.board-navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadows-md, 0 4px 16px rgba(28, 23, 48, 0.12));
+  padding: 4px;
+  z-index: 100;
+  animation: dropdown-in 0.12s ease;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.board-navbar__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  text-align: left;
+}
+
+.board-navbar__dropdown-item:hover {
+  background: var(--color-surface-raised);
+}
+
+.board-navbar__dropdown-item--danger {
+  color: var(--color-error);
+}
+
+.board-navbar__dropdown-item--danger:hover {
+  background: #fff1f1;
+}
+
+@media (max-width: 768px) {
+  .kanban-page {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .board-navbar {
+    height: 64px;
+  }
+
+  .board-navbar__search-pill {
+    width: 160px;
+    font-size: var(--text-body-xs);
+  }
+
+  .board-navbar__username {
+    display: none;
+  }
+}

@@ -46,6 +46,7 @@ function SignupForm() {
     setPassword("");
     setConfirmPassword("");
 
+    localStorage.setItem("isNewUser", "true");
     navigate("/kanban");
   };
 

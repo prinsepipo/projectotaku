@@ -12,6 +12,12 @@
   --color-error: #dc2626;
   --color-border: #e2deff;
   --color-overlay: rgba(28, 23, 48, 0.5);
+  --color-watch-bg: #dbeafe;
+  --color-watch-text: #1d4ed8;
+  --color-watching-bg: #fef3c7;
+  --color-watching-text: #92400e;
+  --color-watched-bg: #d1fae5;
+  --color-watched-text: #065f46;
 
   --font-display: "Sora";
   --font-body: "Inter";
@@ -27,6 +33,18 @@
     0 4px 12px rgba(28, 23, 48, 0.1), 0 2px 4px rgba(28, 23, 48, 0.06);
   --shadows-lg:
     0 16px 40px rgba(28, 23, 48, 0.12), 0 4px 12px rgba(28, 23, 48, 0.08);
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
 }
 
 * {

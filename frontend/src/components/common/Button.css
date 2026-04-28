@@ -57,6 +57,30 @@
   background: var(--color-secondary);
 }
 
+.c-button.c-button--secondary {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  border-color: var(--color-secondary);
+}
+
+.c-button.c-button--secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border-color: var(--color-primary);
+}
+
+.c-button.c-button--danger {
+  background: #fee2e2;
+  color: var(--color-error);
+  border-color: #fecaca;
+}
+
+.c-button.c-button--danger:hover {
+  background: var(--color-error);
+  color: var(--color-surface);
+  border-color: var(--color-error);
+}
+
 .c-button.c-button--wide {
   width: 100%;
   justify-content: center;
