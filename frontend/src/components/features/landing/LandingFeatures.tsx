@@ -1,11 +1,16 @@
 import { BadgeCheck, GripVertical, Search } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import FluidContainer from "../../layout/FLuidContainer";
 import Button from "../../common/Button";
+import { useAuth } from "../../../hooks/useAuth";
 
 import "./LandingFeatures.css";
 
 function LandingFeatures() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <FluidContainer id="features" className="landing-features">
       <p className="landing-features-label">EVERYTHING YOU NEED</p>
@@ -47,7 +52,12 @@ function LandingFeatures() {
           <h2>Ready to start watching smarter?</h2>
           <p>Join anime fans who never lose track of what's next.</p>
         </div>
-        <Button size="lg">Get Started — It's Free</Button>
+        <Button
+          size="lg"
+          onClick={() => navigate(user ? "/kanban" : "/signin")}
+        >
+          Get Started — It's Free
+        </Button>
       </div>
     </FluidContainer>
   );

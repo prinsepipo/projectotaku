@@ -3,6 +3,8 @@ import Button from "../../common/Button";
 import Input from "../../common/Input";
 import * as AuthForm from "./index";
 import React, { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { ApiError } from "../../../api/authApi";
 
 interface FormErrors {
   username?: string;
@@ -13,10 +15,13 @@ function SigninForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [serverError, setServerError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const login = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!username || !password) {
@@ -24,28 +29,37 @@ function SigninForm() {
         username: username ? undefined : "Username is required.",
         password: password ? undefined : "Password is required.",
       });
-
       return;
     }
 
     setErrors({});
-    setUsername("");
-    setPassword("");
+    setServerError("");
+    setIsSubmitting(true);
 
-    navigate("/kanban");
+    try {
+      await login(username, password);
+      navigate("/kanban");
+    } catch (err) {
+      setServerError(
+        err instanceof ApiError ? err.message : "Something went wrong.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <AuthForm.Card>
       <AuthForm.TabGroup>
-        <AuthForm.Tab active>Login</AuthForm.Tab>
-        <AuthForm.Tab>Sign Up</AuthForm.Tab>
+        <AuthForm.Tab>Login</AuthForm.Tab>
+        <AuthForm.Tab to="/signup">Sign Up</AuthForm.Tab>
       </AuthForm.TabGroup>
       <AuthForm.Title>Welcome</AuthForm.Title>
       <AuthForm.Description>
         Enter your credentials to continue.
       </AuthForm.Description>
-      <form onSubmit={login}>
+      <form onSubmit={handleSubmit}>
+        {serverError && <AuthForm.Alert>{serverError}</AuthForm.Alert>}
         <AuthForm.Field>
           <label htmlFor="username">Username</label>
           <Input
@@ -76,8 +90,8 @@ function SigninForm() {
             <AuthForm.Error>{errors.password}</AuthForm.Error>
           )}
         </AuthForm.Field>
-        <Button type="submit" size="lg" wide>
-          Sign In
+        <Button type="submit" size="lg" wide disabled={isSubmitting}>
+          {isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
       </form>
       <AuthForm.Footer>

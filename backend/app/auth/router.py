@@ -11,6 +11,7 @@ from app.auth.schemas import (
     TokenResponse,
     UserResponse,
 )
+from app.core.config import settings
 from app.core.database import get_db
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -27,9 +28,9 @@ async def register(
         key="refresh_token",
         value=opaque,
         httponly=True,
-        secure=True,
+        secure=settings.SECURE_COOKIES,
         samesite="lax",
-        path="/auth",
+        path="/auth/refresh",
     )
     return RegisterResponse(
         id=user.id, username=user.username, email=user.email, access_token=access_token
@@ -45,9 +46,9 @@ async def login(
         key="refresh_token",
         value=opaque,
         httponly=True,
-        secure=True,
+        secure=settings.SECURE_COOKIES,
         samesite="lax",
-        path="/auth",
+        path="/auth/refresh",
     )
     return TokenResponse(access_token=access_token)
 
@@ -69,7 +70,7 @@ async def refresh(
         key="refresh_token",
         value=new_opaque,
         httponly=True,
-        secure=True,
+        secure=settings.SECURE_COOKIES,
         samesite="lax",
         path="/auth/refresh",
     )
@@ -77,7 +78,7 @@ async def refresh(
     return TokenResponse(access_token=access_token)
 
 
-@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/refresh", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
     request: Request, response: Response, db: AsyncSession = Depends(get_db)
 ):
@@ -86,7 +87,12 @@ async def logout(
     if opaque:
         await service.logout(opaque, db)
 
-    response.delete_cookie(key="refresh_token", path="/auth")
+    response.delete_cookie(
+        key="refresh_token",
+        path="/auth/refresh",
+        secure=settings.SECURE_COOKIES,
+        samesite="lax",
+    )
 
 
 @router.get("/me", response_model=UserResponse)

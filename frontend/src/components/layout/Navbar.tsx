@@ -1,10 +1,13 @@
 import Logo from "../brand/Logo";
 import FluidContainer from "./FLuidContainer";
 import NavLinkButton from "../common/NavLinkButton";
+import { useAuth } from "../../hooks/useAuth";
 
 import "./Navbar.css";
 
 function Navbar() {
+  const { user } = useAuth();
+
   return (
     <nav className="navbar">
       <FluidContainer className="navbar-container">
@@ -20,12 +23,20 @@ function Navbar() {
           </li>
         </ul>
         <div className="navbar-buttons">
-          <NavLinkButton to="/signin" variant="ghost">
-            Login
-          </NavLinkButton>
-          <NavLinkButton to="/signup" variant="primary">
-            Sign Up
-          </NavLinkButton>
+          {user ? (
+            <NavLinkButton to="/kanban" variant="primary">
+              Go to Watchlist
+            </NavLinkButton>
+          ) : (
+            <>
+              <NavLinkButton to="/signin" variant="ghost">
+                Login
+              </NavLinkButton>
+              <NavLinkButton to="/signup" variant="primary">
+                Sign Up
+              </NavLinkButton>
+            </>
+          )}
         </div>
       </FluidContainer>
     </nav>

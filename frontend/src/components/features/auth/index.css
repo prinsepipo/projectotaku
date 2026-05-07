@@ -63,6 +63,26 @@
   font-size: var(--text-body-sm);
 }
 
+.auth-form-alert {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+
+  background-color: color-mix(
+    in srgb,
+    var(--color-error) 8%,
+    var(--color-surface)
+  );
+
+  border: 1px solid
+    color-mix(in srgb, var(--color-error) 30%, var(--color-surface));
+  border-radius: 8px;
+
+  color: var(--color-error);
+
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+}
+
 .auth-form-footer {
   margin-top: 8px;
 

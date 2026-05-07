@@ -3,64 +3,76 @@ import Button from "../../common/Button";
 import Input from "../../common/Input";
 import * as AuthForm from "./index";
 import React, { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { ApiError } from "../../../api/authApi";
 
 interface FormErrors {
   username?: string;
+  email?: string;
   password?: string;
   confirmPassword?: string;
 }
 
 function SignupForm() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [serverError, setServerError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { register } = useAuth();
   const navigate = useNavigate();
 
-  const register = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!username || !password || !confirmPassword) {
-      setErrors({
-        username: username ? undefined : "Username is required.",
-        password: password ? undefined : "Password is required.",
-        confirmPassword: confirmPassword
-          ? undefined
-          : "Confirm password is required.",
-      });
+    const newErrors: FormErrors = {};
+    if (!username) newErrors.username = "Username is required.";
+    if (!email) newErrors.email = "Email is required.";
+    if (!password) newErrors.password = "Password is required.";
+    if (!confirmPassword)
+      newErrors.confirmPassword = "Confirm password is required.";
 
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrors({
-        confirmPassword: "Confirm password does not match password.",
-      });
-
+      setErrors({ confirmPassword: "Passwords do not match." });
       return;
     }
 
     setErrors({});
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
+    setServerError("");
+    setIsSubmitting(true);
 
-    localStorage.setItem("isNewUser", "true");
-    navigate("/kanban");
+    try {
+      await register(username, email, password);
+      navigate("/kanban");
+    } catch (err) {
+      setServerError(
+        err instanceof ApiError ? err.message : "Something went wrong.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <AuthForm.Card>
       <AuthForm.TabGroup>
-        <AuthForm.Tab>Login</AuthForm.Tab>
-        <AuthForm.Tab active>Sign Up</AuthForm.Tab>
+        <AuthForm.Tab to="/signin">Login</AuthForm.Tab>
+        <AuthForm.Tab>Sign Up</AuthForm.Tab>
       </AuthForm.TabGroup>
       <AuthForm.Title>Create an account</AuthForm.Title>
       <AuthForm.Description>
         Start tracking anime for free.
       </AuthForm.Description>
-      <form onSubmit={register}>
+      <form onSubmit={handleSubmit}>
+        {serverError && <AuthForm.Alert>{serverError}</AuthForm.Alert>}
         <AuthForm.Field>
           <label htmlFor="username">Username</label>
           <Input
@@ -69,11 +81,25 @@ function SignupForm() {
             placeholder="Enter your username"
             inputSize="lg"
             value={username}
+            error={errors.username !== undefined}
             onChange={(e) => setUsername(e.target.value)}
           />
           {errors.username && (
             <AuthForm.Error>{errors.username}</AuthForm.Error>
           )}
+        </AuthForm.Field>
+        <AuthForm.Field>
+          <label htmlFor="email">Email</label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            inputSize="lg"
+            value={email}
+            error={errors.email !== undefined}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {errors.email && <AuthForm.Error>{errors.email}</AuthForm.Error>}
         </AuthForm.Field>
         <AuthForm.Field>
           <label htmlFor="password">Password</label>
@@ -83,6 +109,7 @@ function SignupForm() {
             placeholder="Enter your password"
             inputSize="lg"
             value={password}
+            error={errors.password !== undefined}
             onChange={(e) => setPassword(e.target.value)}
           />
           {errors.password && (
@@ -97,14 +124,15 @@ function SignupForm() {
             placeholder="Confirm your password"
             inputSize="lg"
             value={confirmPassword}
+            error={errors.confirmPassword !== undefined}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           {errors.confirmPassword && (
             <AuthForm.Error>{errors.confirmPassword}</AuthForm.Error>
           )}
         </AuthForm.Field>
-        <Button type="submit" size="lg" wide>
-          Create Account
+        <Button type="submit" size="lg" wide disabled={isSubmitting}>
+          {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>
       </form>
       <AuthForm.Footer>

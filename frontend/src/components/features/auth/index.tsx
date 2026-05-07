@@ -1,4 +1,5 @@
 import type React from "react";
+import { NavLink } from "react-router";
 
 import "./index.css";
 
@@ -11,16 +12,24 @@ function TabGroup({ children }: React.PropsWithChildren<object>) {
 }
 
 interface ITabProps {
-  active?: boolean;
+  to?: string;
   children: React.ReactNode;
 }
 
-function Tab({ active, children }: ITabProps) {
-  return (
-    <div className={`auth-form-tab${active ? " auth-form-tab--active" : ""}`}>
-      {children}
-    </div>
-  );
+function Tab({ to, children }: ITabProps) {
+  if (to) {
+    return (
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `auth-form-tab${isActive ? " auth-form-tab--active" : ""}`
+        }
+      >
+        {children}
+      </NavLink>
+    );
+  }
+  return <div className="auth-form-tab auth-form-tab--active">{children}</div>;
 }
 
 function Title({ children }: React.PropsWithChildren<object>) {
@@ -39,6 +48,10 @@ function FormError({ children }: React.PropsWithChildren<object>) {
   return <p className="auth-form-error">{children}</p>;
 }
 
+function Alert({ children }: React.PropsWithChildren<object>) {
+  return <div className="auth-form-alert">{children}</div>;
+}
+
 function Footer({ children }: React.PropsWithChildren<object>) {
   return <p className="auth-form-footer">{children}</p>;
 }
@@ -51,5 +64,6 @@ export {
   Description,
   Field,
   FormError as Error,
+  Alert,
   Footer,
 };

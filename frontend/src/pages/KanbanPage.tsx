@@ -4,12 +4,14 @@ import { useNavigate } from "react-router";
 import Logo from "../components/brand/Logo";
 import FluidContainer from "../components/layout/FLuidContainer";
 import KanbanBoard from "../components/features/kanban/KanbanBoard";
+import { useAuth } from "../hooks/useAuth";
 import "./KanbanPage.css";
 
 function KanbanPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,8 +27,9 @@ function KanbanPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function handleLogout() {
+  async function handleLogout() {
     setUserMenuOpen(false);
+    await logout();
     navigate("/signin");
   }
 
@@ -50,8 +53,10 @@ function KanbanPage() {
               aria-haspopup="true"
               aria-expanded={userMenuOpen}
             >
-              <div className="board-navbar__avatar">P</div>
-              <span className="board-navbar__username">pipo</span>
+              <div className="board-navbar__avatar">
+                {user?.username[0].toUpperCase()}
+              </div>
+              <span className="board-navbar__username">{user?.username}</span>
               <ChevronDown
                 size={14}
                 className={`board-navbar__chevron${userMenuOpen ? " board-navbar__chevron--open" : ""}`}
