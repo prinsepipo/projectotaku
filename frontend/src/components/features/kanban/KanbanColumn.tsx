@@ -1,12 +1,5 @@
 import { memo } from "react";
 import type React from "react";
-import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Plus } from "lucide-react";
 import type { AnimeEntry, AnimeStatus } from "../../../types/kanban";
 import AnimeCard from "./AnimeCard";
@@ -23,46 +16,6 @@ interface IProps {
   onRemove: (id: string) => void;
 }
 
-interface SortableCardProps {
-  entry: AnimeEntry;
-  onEpisodeChange: (id: string, delta: number) => void;
-  onRemove: (id: string) => void;
-}
-
-const SortableAnimeCard = memo(function SortableAnimeCard({
-  entry,
-  onEpisodeChange,
-  onRemove,
-}: SortableCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: entry.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {isDragging ? (
-        <div className="anime-card-placeholder" />
-      ) : (
-        <AnimeCard
-          entry={entry}
-          onEpisodeChange={(delta) => onEpisodeChange(entry.id, delta)}
-          onRemove={() => onRemove(entry.id)}
-        />
-      )}
-    </div>
-  );
-});
-
 function KanbanColumn({
   status,
   title,
@@ -73,7 +26,6 @@ function KanbanColumn({
   onEpisodeChange,
   onRemove,
 }: IProps) {
-  const { setNodeRef } = useDroppable({ id: status });
 
   const columnClass = [
     "kanban-column",
@@ -98,28 +50,23 @@ function KanbanColumn({
         </button>
       </div>
 
-      <SortableContext
-        items={cards.map((c) => c.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="kanban-column__cards" ref={setNodeRef}>
-          {cards.length === 0 ? (
-            <div className="kanban-column__empty">
-              <p>Nothing here yet</p>
-              <p>Add anime to get started</p>
-            </div>
-          ) : (
-            cards.map((card) => (
-              <SortableAnimeCard
-                key={card.id}
-                entry={card}
-                onEpisodeChange={onEpisodeChange}
-                onRemove={onRemove}
-              />
-            ))
-          )}
-        </div>
-      </SortableContext>
+      <div className="kanban-column__cards">
+        {cards.length === 0 ? (
+          <div className="kanban-column__empty">
+            <p>Nothing here yet</p>
+            <p>Add anime to get started</p>
+          </div>
+        ) : (
+          cards.map((card) => (
+            <AnimeCard
+              key={card.id}
+              entry={card}
+              onEpisodeChange={(delta) => onEpisodeChange(card.id, delta)}
+              onRemove={() => onRemove(card.id)}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 }
