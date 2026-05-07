@@ -82,13 +82,3 @@ docker compose run --rm backend alembic upgrade head
 ```
 
 Alembic reads `DATABASE_URL` from `backend/.env` via `app.core.config.settings`.
-
-## Project Structure
-
-```
-projectotaku/
-├── backend/          # FastAPI application
-├── docs/             # PRD and assets
-├── docker-compose.yml
-└── .env.example
-```
