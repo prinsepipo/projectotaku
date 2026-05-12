@@ -38,6 +38,10 @@ async def search_anime(
             title=item["title"],
             image_url=item["images"]["jpg"]["image_url"],
             mal_url=item["url"],
+            total_episodes=item.get("episodes"),
+            score=item.get("score"),
+            genres=[g["name"] for g in item.get("genres", [])],
+            media_type=item.get("type"),
         )
         for item in response.json().get("data", [])
     ]

@@ -27,7 +27,7 @@ function SortableAnimeCard({
   });
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="sortable-wrapper">
       {isDragging ? (
         <DropPlaceholder />
       ) : (

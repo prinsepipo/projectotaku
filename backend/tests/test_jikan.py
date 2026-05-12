@@ -14,6 +14,10 @@ JIKAN_RESPONSE = {
                 }
             },
             "url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
+            "episodes": 28,
+            "score": 9.34,
+            "genres": [{"name": "Fantasy"}, {"name": "Adventure"}],
+            "type": "TV",
         },
         {
             "mal_id": 5114,
@@ -24,6 +28,10 @@ JIKAN_RESPONSE = {
                 }
             },
             "url": "https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood",
+            "episodes": 64,
+            "score": 9.11,
+            "genres": [{"name": "Action"}, {"name": "Adventure"}],
+            "type": "TV",
         },
     ]
 }
@@ -34,12 +42,20 @@ EXPECTED_RESULTS = [
         "title": "Sousou no Frieren",
         "image_url": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
         "mal_url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
+        "total_episodes": 28,
+        "score": 9.34,
+        "genres": ["Fantasy", "Adventure"],
+        "media_type": "TV",
     },
     {
         "mal_id": 5114,
         "title": "Fullmetal Alchemist: Brotherhood",
         "image_url": "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
         "mal_url": "https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood",
+        "total_episodes": 64,
+        "score": 9.11,
+        "genres": ["Action", "Adventure"],
+        "media_type": "TV",
     },
 ]
 
@@ -167,4 +183,7 @@ async def test_search_response_shape(jikan_client):
 
     assert response.status_code == 200
     for item in response.json():
-        assert set(item.keys()) == {"mal_id", "title", "image_url", "mal_url"}
+        assert set(item.keys()) == {
+            "mal_id", "title", "image_url", "mal_url",
+            "total_episodes", "score", "genres", "media_type",
+        }

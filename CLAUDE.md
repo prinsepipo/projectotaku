@@ -10,24 +10,31 @@ ProjectOtaku is a full-stack anime watchlist app with a Kanban-style board. User
 
 ## Development Commands
 
-All backend commands run from the `backend/` directory using the `.venv` virtual environment.
-
 ### Run the full stack
 ```bash
 docker compose up
 ```
 Backend: `http://localhost:8000` · Frontend: `http://localhost:5173`
 
-### Backend (local, without Docker)
+### Frontend commands
+All frontend yarn/node commands must use `docker compose exec`:
 ```bash
-cd backend
-source .venv/bin/activate
-uvicorn app.main:app --reload
+docker compose exec frontend yarn add <package>
+docker compose exec frontend yarn <script>
+```
+
+### Backend commands (via Docker)
+```bash
+docker compose exec backend <command>
 ```
 
 ### Run tests
-Tests require a running PostgreSQL instance with database `otaku_test` (same host/creds as dev: `localhost:5432`, user `otaku`, password `otaku`).
+Tests require a running PostgreSQL instance with database `otaku_test` (same host/creds as dev: `localhost:5432`, user `otaku`, password `otaku`). Start the db service before running tests:
+```bash
+docker compose up db -d
+```
 
+Then run tests from `backend/` with the `.venv` activated:
 ```bash
 cd backend
 source .venv/bin/activate
@@ -46,7 +53,7 @@ alembic downgrade -1                        # roll back one
 
 Alembic reads `DATABASE_URL` from `app.core.config.settings` (loaded via `backend/.env`).
 
-### Install dependencies
+### Install backend dependencies
 ```bash
 cd backend
 uv sync            # install all deps including dev group

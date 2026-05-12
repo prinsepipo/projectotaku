@@ -95,3 +95,18 @@
     overflow-y: hidden;
   }
 }
+
+.kanban-board-loading,
+.kanban-board-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: var(--spacing-16);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+}
+
+.kanban-board-error {
+  color: var(--color-error, #e53e3e);
+}

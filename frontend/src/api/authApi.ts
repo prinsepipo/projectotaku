@@ -9,7 +9,10 @@ export class ApiError extends Error {
   }
 }
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  options?: RequestInit,
+): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -69,13 +72,19 @@ export async function apiLogout(): Promise<void> {
   return apiFetch("/auth/refresh", { method: "DELETE" });
 }
 
+export function bearerHeaders(accessToken: string) {
+  return { Authorization: `Bearer ${accessToken}` };
+}
+
+export function jsonBearerHeaders(accessToken: string) {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  };
+}
+
 export async function apiMe(accessToken: string): Promise<UserResponse> {
-  return apiFetch("/auth/me", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  return apiFetch("/auth/me", { headers: bearerHeaders(accessToken) });
 }
 
 export async function apiRefresh(): Promise<TokenResponse> {

@@ -16,6 +16,8 @@ function progressLabel(entry: AnimeEntry): string {
   if (entry.status === "watch") return "Not started";
   if (entry.currentEpisode !== undefined && entry.totalEpisodes !== undefined)
     return `Ep ${entry.currentEpisode} / ${entry.totalEpisodes}`;
+  if (entry.currentEpisode !== undefined)
+    return `Ep ${entry.currentEpisode} / ?`;
   return "In progress";
 }
 
@@ -29,11 +31,7 @@ function progressWidth(entry: AnimeEntry): number {
   return 0;
 }
 
-function AnimeCard({
-  entry,
-  onEpisodeChange,
-  onRemove,
-}: IProps) {
+function AnimeCard({ entry, onEpisodeChange, onRemove }: IProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const cardClass = "anime-card";
@@ -50,7 +48,7 @@ function AnimeCard({
     <div className={cardClass}>
       <img
         className="anime-card__thumb"
-        src={entry.thumbnailUrl}
+        src={entry.imageUrl}
         alt={entry.title}
         loading="lazy"
       />
@@ -126,7 +124,7 @@ function AnimeCard({
           )}
           <span className="anime-card__rating">
             <Star size={11} className="anime-card__rating-icon" />
-            {entry.rating}
+            {entry.score != null ? entry.score : "N/A"}
           </span>
         </div>
       </div>

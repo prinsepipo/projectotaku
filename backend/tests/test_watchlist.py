@@ -9,7 +9,11 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1015/138006.jpg",
         "mal_url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren",
         "status": WatchStatus.WATCH,
-        "position": 0,
+        "position": "a0",
+        "total_episodes": 28,
+        "score": 9.34,
+        "genres": "Fantasy,Adventure",
+        "media_type": "TV",
     },
     {
         "mal_id": 61469,
@@ -17,7 +21,12 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1448/154111.jpg",
         "mal_url": "https://myanimelist.net/anime/61469/Steel_Ball_Run__JoJo_no_Kimyou_na_Bouken",
         "status": WatchStatus.WATCHING,
-        "position": 0,
+        "position": "a1",
+        "current_episode": 3,
+        "total_episodes": 40,
+        "score": 9.1,
+        "genres": "Action,Adventure",
+        "media_type": "TV",
     },
     {
         "mal_id": 5114,
@@ -25,7 +34,11 @@ TEST_ANIME = [
         "image_url": "https://myanimelist.net/images/anime/1208/94745.jpg",
         "mal_url": "https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood",
         "status": WatchStatus.WATCHED,
-        "position": 0,
+        "position": "a2",
+        "total_episodes": 64,
+        "score": 9.11,
+        "genres": "Action,Adventure,Fantasy",
+        "media_type": "TV",
     },
 ]
 
@@ -81,21 +94,38 @@ async def test_add_item_to_watchlist(authenticated_client):
     assert anime["mal_url"] == data["mal_url"]
     assert anime["status"] == data["status"]
     assert anime["position"] == data["position"]
+    assert anime["total_episodes"] == data["total_episodes"]
+    assert anime["score"] == data["score"]
+    assert anime["media_type"] == data["media_type"]
+    # genres comes back as a list (split from "Fantasy,Adventure")
+    assert data["genres"] == ["Fantasy", "Adventure"]
     assert "added_at" in data
 
 
-async def test_update_item_in_watchlist(authenticated_client, db_session):
+async def test_duplicate_mal_id_rejected(authenticated_client):
     anime = TEST_ANIME[0]
+    first = await authenticated_client.post("/watchlist", json=anime)
+    assert first.status_code == 201
+
+    second = await authenticated_client.post("/watchlist", json=anime)
+    assert second.status_code == 400
+
+    data = second.json()
+    assert "errors" in data
+
+
+async def test_update_item_in_watchlist(authenticated_client, db_session):
+    anime = TEST_ANIME[1]
     create_response = await authenticated_client.post("/watchlist", json=anime)
 
     assert create_response.status_code == 201
 
     item_id = create_response.json()["id"]
-    new_position = 1.5
+    new_position = "b0"
 
     update_response = await authenticated_client.patch(
         f"/watchlist/{item_id}",
-        json={"status": WatchStatus.WATCHING, "position": new_position},
+        json={"status": WatchStatus.WATCHING, "position": new_position, "current_episode": 5},
     )
 
     assert update_response.status_code == 200
@@ -106,12 +136,14 @@ async def test_update_item_in_watchlist(authenticated_client, db_session):
         select(WatchlistItem).where(WatchlistItem.id == item_id)
     )
 
-    anime = result.scalar_one_or_none()
+    item = result.scalar_one_or_none()
 
     assert data["status"] == WatchStatus.WATCHING
     assert data["position"] == new_position
-    assert anime.status == data["status"]
-    assert anime.position == data["position"]
+    assert data["current_episode"] == 5
+    assert item.status == data["status"]
+    assert item.position == data["position"]
+    assert item.current_episode == 5
 
 
 async def test_remove_item_from_watchlist(authenticated_client):

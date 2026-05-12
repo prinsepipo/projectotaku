@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from .models import WatchStatus
 
@@ -12,10 +12,24 @@ class WatchlistItemResponse(BaseModel):
     image_url: str
     mal_url: str
     status: WatchStatus
-    position: float
+    position: str
+    total_episodes: int | None = None
+    current_episode: int | None = None
+    score: float | None = None
+    genres: list[str] = []
+    media_type: str | None = None
     added_at: datetime
 
     model_config = {"from_attributes": True}
+
+    @field_validator("genres", mode="before")
+    @classmethod
+    def split_genres(cls, v: str | list | None) -> list[str]:
+        if not v:
+            return []
+        if isinstance(v, list):
+            return v
+        return [g for g in v.split(",") if g]
 
 
 class WatchlistItemRequest(BaseModel):
@@ -24,13 +38,15 @@ class WatchlistItemRequest(BaseModel):
     image_url: str
     mal_url: str
     status: WatchStatus
-    position: float
+    position: str
+    total_episodes: int | None = None
+    current_episode: int | None = None
+    score: float | None = None
+    genres: str | None = None
+    media_type: str | None = None
 
 
 class WatchlistItemUpdateRequest(BaseModel):
-    mal_id: int | None = None
-    title: str | None = None
-    image_url: str | None = None
-    mal_url: str | None = None
     status: WatchStatus | None = None
-    position: float | None = None
+    position: str | None = None
+    current_episode: int | None = None

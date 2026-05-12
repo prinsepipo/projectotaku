@@ -1,10 +1,23 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Eye, Play, CheckCircle2 } from "lucide-react";
-import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
+import {
+  DragDropProvider,
+  DragOverlay,
+  type DragOverEvent,
+  type DragEndEvent,
+} from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { generateKeyBetween } from "fractional-indexing";
 import type { AnimeEntry, AnimeStatus } from "../../../types/kanban";
-import { MOCK_ANIME_DATA } from "../../../data/kanbanMockData";
+import type { AnimeSearchResult } from "../../../api/jikanApi";
+import {
+  getWatchlist,
+  addItem,
+  updateItem,
+  deleteItem,
+} from "../../../api/watchlistApi";
+import type { WatchlistItemPayload } from "../../../api/watchlistApi";
+import { useAuth } from "../../../hooks/useAuth";
 import KanbanColumn from "./KanbanColumn";
 import AnimeCard from "./AnimeCard";
 import SearchPanel from "./SearchPanel";
@@ -29,33 +42,66 @@ const COLUMNS: { status: AnimeStatus; title: string; icon: React.ReactNode }[] =
   ];
 
 function toColumns(entries: AnimeEntry[]): Columns {
+  const sorted = [...entries].sort((a, b) =>
+    a.position < b.position ? -1 : 1,
+  );
   return {
-    watch: entries.filter((e) => e.status === "watch"),
-    watching: entries.filter((e) => e.status === "watching"),
-    watched: entries.filter((e) => e.status === "watched"),
+    watch: sorted.filter((e) => e.status === "watch"),
+    watching: sorted.filter((e) => e.status === "watching"),
+    watched: sorted.filter((e) => e.status === "watched"),
   };
 }
 
 function KanbanBoard({ searchOpen, onSearchOpen, onSearchClose }: IProps) {
-  const [columns, setColumns] = useState<Columns>(() => {
-    const isNew = localStorage.getItem("isNewUser") === "true";
-    return toColumns(isNew ? [] : MOCK_ANIME_DATA);
+  const { accessToken } = useAuth();
+  const [columns, setColumns] = useState<Columns>({
+    watch: [],
+    watching: [],
+    watched: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [boardError, setBoardError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<AnimeStatus>("watch");
+
+  const accessTokenRef = useRef<string | null>(null);
+  useEffect(() => {
+    accessTokenRef.current = accessToken;
+  }, [accessToken]);
 
   const savedColumnsRef = useRef<Columns | null>(null);
   const columnsRef = useRef(columns);
-  columnsRef.current = columns;
+  useEffect(() => {
+    columnsRef.current = columns;
+  });
   const isDraggingRef = useRef(false);
+  const episodeDebounceRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+    new Map(),
+  );
+
+  useEffect(() => {
+    if (!accessToken) return;
+    getWatchlist(accessToken)
+      .then((items) => {
+        setColumns(toColumns(items));
+        setBoardError(null);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setBoardError("Failed to load your watchlist. Please reload the page.");
+        setIsLoading(false);
+      });
+  }, [accessToken]);
 
   const totalEntries =
     columns.watch.length + columns.watching.length + columns.watched.length;
 
-  useEffect(() => {
-    if (totalEntries > 0) {
-      localStorage.removeItem("isNewUser");
+  const addedMap = useMemo(() => {
+    const map = new Map<number, AnimeStatus>();
+    for (const status of STATUSES) {
+      for (const e of columns[status]) map.set(e.malId, status);
     }
-  }, [totalEntries]);
+    return map;
+  }, [columns]);
 
   const handleEpisodeChange = useCallback((id: string, value: number) => {
     setColumns((prev) => {
@@ -76,48 +122,86 @@ function KanbanBoard({ searchOpen, onSearchOpen, onSearchClose }: IProps) {
       }
       return prev;
     });
-  }, []);
 
-  const handleRemove = useCallback((id: string) => {
-    setColumns((prev) => {
-      for (const status of STATUSES) {
-        const idx = prev[status].findIndex((e) => e.id === id);
-        if (idx !== -1) {
-          return { ...prev, [status]: prev[status].filter((e) => e.id !== id) };
+    const existing = episodeDebounceRef.current.get(id);
+    if (existing) clearTimeout(existing);
+    episodeDebounceRef.current.set(
+      id,
+      setTimeout(() => {
+        episodeDebounceRef.current.delete(id);
+        if (accessTokenRef.current) {
+          updateItem(
+            id,
+            { currentEpisode: value },
+            accessTokenRef.current,
+          ).catch(() => {});
         }
-      }
-      return prev;
-    });
+      }, 300),
+    );
   }, []);
 
-  const addedMap = useMemo(() => {
-    const map = new Map<string, AnimeStatus>();
-    for (const status of STATUSES) {
-      for (const e of columns[status]) map.set(e.id, status);
+  const handleRemove = useCallback(async (id: string) => {
+    if (!accessTokenRef.current) return;
+    try {
+      await deleteItem(id, accessTokenRef.current);
+      setColumns((prev) => {
+        for (const status of STATUSES) {
+          if (prev[status].some((e) => e.id === id)) {
+            return {
+              ...prev,
+              [status]: prev[status].filter((e) => e.id !== id),
+            };
+          }
+        }
+        return prev;
+      });
+    } catch {
+      // pessimistic: card stays if delete fails
     }
-    return map;
-  }, [columns]);
+  }, []);
 
-  function handleAddAnime(entry: AnimeEntry, status: AnimeStatus) {
-    if (addedMap.has(entry.id)) return;
-    setColumns((prev) => {
-      const col = prev[status];
-      const lastPos = col.length > 0 ? col[col.length - 1].position : null;
-      const position = generateKeyBetween(lastPos, null);
-      const newEntry: AnimeEntry = { ...entry, status, position };
-      if (status === "watching") {
-        newEntry.currentEpisode = newEntry.currentEpisode ?? 1;
-      }
-      return { ...prev, [status]: [...col, newEntry] };
-    });
+  async function handleAddAnime(
+    result: AnimeSearchResult,
+    status: AnimeStatus,
+  ) {
+    if (!accessTokenRef.current) return;
+    if (addedMap.has(result.malId)) return;
+
+    const col = columnsRef.current[status];
+    const lastPos = col.length > 0 ? col[col.length - 1].position : null;
+    const position = generateKeyBetween(lastPos, null);
+
+    const payload: WatchlistItemPayload = {
+      malId: result.malId,
+      title: result.title,
+      imageUrl: result.imageUrl,
+      malUrl: result.malUrl,
+      status,
+      position,
+      totalEpisodes: result.totalEpisodes ?? undefined,
+      score: result.score ?? undefined,
+      genres: result.genres.length > 0 ? result.genres.join(",") : undefined,
+      mediaType: result.mediaType ?? undefined,
+      ...(status === "watching" ? { currentEpisode: 1 } : {}),
+    };
+
+    try {
+      const newEntry = await addItem(payload, accessTokenRef.current);
+      setColumns((prev) => ({
+        ...prev,
+        [status]: [...prev[status], newEntry],
+      }));
+    } catch {
+      // pessimistic: do nothing if add fails
+    }
   }
 
-  const handleDragStart = useCallback((_event: any) => {
+  const handleDragStart = useCallback(() => {
     isDraggingRef.current = true;
     savedColumnsRef.current = columnsRef.current;
   }, []);
 
-  const handleDragOver = useCallback((event: any) => {
+  const handleDragOver = useCallback((event: DragOverEvent) => {
     const sourceId = event.operation?.source?.id as string | undefined;
     const targetId = event.operation?.target?.id as string | undefined;
 
@@ -165,7 +249,7 @@ function KanbanBoard({ searchOpen, onSearchOpen, onSearchClose }: IProps) {
     setColumns((prev) => move(prev, event) as Columns);
   }, []);
 
-  const handleDragEnd = useCallback((event: any) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     isDraggingRef.current = false;
 
     if (event.canceled) {
@@ -190,6 +274,14 @@ function KanbanBoard({ searchOpen, onSearchOpen, onSearchClose }: IProps) {
         const nextPos = prev[status][idx + 1]?.position ?? null;
         const newPosition = generateKeyBetween(prevPos, nextPos);
 
+        if (accessTokenRef.current) {
+          updateItem(
+            movedId,
+            { status, position: newPosition },
+            accessTokenRef.current,
+          ).catch(() => {});
+        }
+
         return {
           ...prev,
           [status]: prev[status].map((c, i) =>
@@ -201,83 +293,94 @@ function KanbanBoard({ searchOpen, onSearchOpen, onSearchClose }: IProps) {
     });
   }, []);
 
+  if (isLoading) {
+    return <div className="kanban-board-loading">Loading your watchlist…</div>;
+  }
+
+  if (boardError) {
+    return <div className="kanban-board-error">{boardError}</div>;
+  }
+
+  const searchPanel = (
+    <SearchPanel
+      isOpen={searchOpen}
+      onClose={onSearchClose}
+      addedMap={addedMap}
+      onAddAnime={handleAddAnime}
+    />
+  );
+
   if (totalEntries === 0) {
     return (
       <>
         <BoardEmptyState onSearchOpen={onSearchOpen} />
-        <SearchPanel
-          isOpen={searchOpen}
-          onClose={onSearchClose}
-          addedMap={addedMap}
-          onAddAnime={handleAddAnime}
-        />
+        {searchPanel}
       </>
     );
   }
 
   return (
-    <DragDropProvider
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="kanban-tab-bar">
-        {COLUMNS.map((col) => (
-          <button
-            key={col.status}
-            className={[
-              "kanban-tab-bar__tab",
-              selectedTab === col.status
-                ? `kanban-tab-bar__tab--active-${col.status}`
-                : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setSelectedTab(col.status)}
-          >
-            {col.title}
-            <span className="kanban-tab-bar__count">
-              {columns[col.status].length}
-            </span>
-          </button>
-        ))}
-      </div>
+    <>
+      <DragDropProvider
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="kanban-tab-bar">
+          {COLUMNS.map((col) => (
+            <button
+              key={col.status}
+              className={[
+                "kanban-tab-bar__tab",
+                selectedTab === col.status
+                  ? `kanban-tab-bar__tab--active-${col.status}`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setSelectedTab(col.status)}
+            >
+              {col.title}
+              <span className="kanban-tab-bar__count">
+                {columns[col.status].length}
+              </span>
+            </button>
+          ))}
+        </div>
 
-      <div className="kanban-board">
-        {COLUMNS.map((col) => (
-          <KanbanColumn
-            key={col.status}
-            status={col.status}
-            title={col.title}
-            icon={col.icon}
-            cards={columns[col.status]}
-            isActiveTab={selectedTab === col.status}
-            onAddClick={onSearchOpen}
-            onEpisodeChange={handleEpisodeChange}
-            onRemove={handleRemove}
-          />
-        ))}
-      </div>
+        <div className="kanban-board">
+          {COLUMNS.map((col) => (
+            <KanbanColumn
+              key={col.status}
+              status={col.status}
+              title={col.title}
+              icon={col.icon}
+              cards={columns[col.status]}
+              isActiveTab={selectedTab === col.status}
+              onAddClick={onSearchOpen}
+              onEpisodeChange={handleEpisodeChange}
+              onRemove={handleRemove}
+            />
+          ))}
+        </div>
 
-      <DragOverlay>
-        {(source) => {
-          if (!isDraggingRef.current) return null;
-          let entry: AnimeEntry | undefined;
-          for (const status of STATUSES) {
-            entry = columnsRef.current[status].find((c) => c.id === source.id);
-            if (entry) break;
-          }
-          return entry ? <AnimeCard entry={entry} /> : null;
-        }}
-      </DragOverlay>
+        <DragOverlay>
+          {(source) => {
+            if (!isDraggingRef.current) return null;
+            let entry: AnimeEntry | undefined;
+            for (const status of STATUSES) {
+              entry = columnsRef.current[status].find(
+                (c) => c.id === source.id,
+              );
+              if (entry) break;
+            }
+            return entry ? <AnimeCard entry={entry} /> : null;
+          }}
+        </DragOverlay>
+      </DragDropProvider>
 
-      <SearchPanel
-        isOpen={searchOpen}
-        onClose={onSearchClose}
-        addedMap={addedMap}
-        onAddAnime={handleAddAnime}
-      />
-    </DragDropProvider>
+      {searchPanel}
+    </>
   );
 }
 

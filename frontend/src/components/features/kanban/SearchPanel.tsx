@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Search, X } from "lucide-react";
-import type { AnimeEntry, AnimeStatus } from "../../../types/kanban";
-import { SEARCH_POOL } from "../../../data/kanbanMockData";
+import { Search, X, Loader2 } from "lucide-react";
+import type { AnimeStatus } from "../../../types/kanban";
+import type { AnimeSearchResult } from "../../../api/jikanApi";
+import { searchAnime } from "../../../api/jikanApi";
+import { useAuth } from "../../../hooks/useAuth";
 import "./SearchPanel.css";
 
 const STATUS_LABEL: Record<AnimeStatus, string> = {
@@ -13,18 +15,23 @@ const STATUS_LABEL: Record<AnimeStatus, string> = {
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
-  addedMap: Map<string, AnimeStatus>;
-  onAddAnime: (entry: AnimeEntry, status: AnimeStatus) => void;
+  addedMap: Map<number, AnimeStatus>;
+  onAddAnime: (result: AnimeSearchResult, status: AnimeStatus) => void;
 }
 
 function SearchPanel({ isOpen, onClose, addedMap, onAddAnime }: IProps) {
+  const { accessToken } = useAuth();
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<AnimeSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
         setQuery("");
+        setResults([]);
         inputRef.current?.focus();
       }, 50);
     }
@@ -40,13 +47,37 @@ function SearchPanel({ isOpen, onClose, addedMap, onAddAnime }: IProps) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed || !accessToken) {
+      return;
+    }
+
+    const timerId = setTimeout(async () => {
+      setIsSearching(true);
+      setSearchError(false);
+      try {
+        const data = await searchAnime(trimmed, accessToken);
+        setResults(data);
+      } catch {
+        setSearchError(true);
+        setResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timerId);
+      setIsSearching(false);
+    };
+  }, [query, accessToken]);
+
   if (!isOpen) return null;
 
-  const results = query.trim()
-    ? SEARCH_POOL.filter((e) =>
-        e.title.toLowerCase().includes(query.toLowerCase()),
-      )
-    : SEARCH_POOL;
+  const activeQuery = query.trim() && accessToken;
+  const displayResults = activeQuery ? results : [];
+  const displaySearchError = activeQuery ? searchError : false;
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
     if (e.target === e.currentTarget) onClose();
@@ -78,27 +109,48 @@ function SearchPanel({ isOpen, onClose, addedMap, onAddAnime }: IProps) {
         </div>
 
         <div className="search-panel__results">
-          {query.trim() && results.length === 0 ? (
+          {isSearching ? (
+            <div className="search-panel__loading">
+              <Loader2 size={16} className="search-panel__spinner" />
+              Searching…
+            </div>
+          ) : displaySearchError ? (
+            <div className="search-panel__empty">
+              <p>Search unavailable</p>
+              <p>Please try again later</p>
+            </div>
+          ) : !query.trim() ? (
+            <div className="search-panel__empty">
+              <p>Type to search anime</p>
+            </div>
+          ) : displayResults.length === 0 ? (
             <div className="search-panel__empty">
               <p>No results for &ldquo;{query}&rdquo;</p>
               <p>Try a different title</p>
             </div>
           ) : (
-            results.map((entry) => {
-              const addedStatus = addedMap.get(entry.id);
+            displayResults.map((result) => {
+              const addedStatus = addedMap.get(result.malId);
               const added = addedStatus !== undefined;
               return (
-                <div key={entry.id} className="search-panel__result-item">
+                <div key={result.malId} className="search-panel__result-item">
                   <img
                     className="search-panel__result-thumb"
-                    src={entry.thumbnailUrl}
-                    alt={entry.title}
+                    src={result.imageUrl}
+                    alt={result.title}
                     loading="lazy"
                   />
                   <div className="search-panel__result-info">
-                    <p className="search-panel__result-title">{entry.title}</p>
+                    <p className="search-panel__result-title">{result.title}</p>
                     <p className="search-panel__result-meta">
-                      {entry.subtitle}
+                      {[
+                        result.mediaType,
+                        result.totalEpisodes
+                          ? `${result.totalEpisodes} eps`
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </p>
                     {!added && (
                       <div className="search-panel__col-picker">
@@ -106,24 +158,14 @@ function SearchPanel({ isOpen, onClose, addedMap, onAddAnime }: IProps) {
                           Add to:
                         </span>
                         {(
-                          [
-                            { status: "watch" as AnimeStatus, label: "Watch" },
-                            {
-                              status: "watching" as AnimeStatus,
-                              label: "Watching",
-                            },
-                            {
-                              status: "watched" as AnimeStatus,
-                              label: "Watched",
-                            },
-                          ] as const
-                        ).map(({ status, label }) => (
+                          ["watch", "watching", "watched"] as AnimeStatus[]
+                        ).map((status) => (
                           <button
                             key={status}
                             className={`search-panel__col-btn search-panel__col-btn--${status}`}
-                            onClick={() => onAddAnime(entry, status)}
+                            onClick={() => onAddAnime(result, status)}
                           >
-                            {label}
+                            {STATUS_LABEL[status]}
                           </button>
                         ))}
                       </div>

@@ -6,6 +6,26 @@ import type { AnimeEntry, AnimeStatus } from "../../../types/kanban";
 import SortableAnimeCard from "./SortableAnimeCard";
 import "./KanbanColumn.css";
 
+type CollisionDetectorFn = NonNullable<
+  Parameters<typeof useDroppable>[0]["collisionDetector"]
+>;
+
+// CollisionPriority.Low (1) so sortable cards (High=3) always win when they
+// and the column droppable both contain the pointer.
+const columnCollisionDetector: CollisionDetectorFn = ({
+  dragOperation,
+  droppable,
+}) => {
+  const pointer = dragOperation.position.current;
+  if (!pointer || !droppable.shape?.containsPoint(pointer)) return null;
+  return {
+    id: droppable.id,
+    value: 1,
+    type: 2, // CollisionType.PointerIntersection
+    priority: 1, // CollisionPriority.Low
+  } as ReturnType<CollisionDetectorFn>;
+};
+
 interface IProps {
   status: AnimeStatus;
   title: string;
@@ -30,6 +50,7 @@ function KanbanColumn({
   const { ref: droppableRef } = useDroppable({
     id: status,
     data: { group: status },
+    collisionDetector: columnCollisionDetector,
   });
 
   const columnClass = [

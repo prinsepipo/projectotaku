@@ -6,3 +6,7 @@ class AnimeResult(BaseModel):
     title: str
     image_url: str
     mal_url: str
+    total_episodes: int | None = None
+    score: float | None = None
+    genres: list[str] = []
+    media_type: str | None = None

@@ -142,7 +142,7 @@ async def test_logout_invalidates_tokens(client, db_session):
     refresh_token = register_response.cookies.get("refresh_token")
     assert refresh_token is not None
 
-    logout_response = await client.post("/auth/logout")
+    logout_response = await client.delete("/auth/refresh")
     assert logout_response.status_code == 204
 
     assert client.cookies.get("refresh_token") is None
@@ -153,7 +153,7 @@ async def test_logout_invalidates_tokens(client, db_session):
 
 
 async def test_logout_without_cookie_returns_204(client):
-    response = await client.post("/auth/logout")
+    response = await client.delete("/auth/refresh")
 
     assert response.status_code == 204
 
