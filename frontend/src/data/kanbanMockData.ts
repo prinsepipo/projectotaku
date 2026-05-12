@@ -9,6 +9,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     rating: "8.65",
     thumbnailUrl: "https://picsum.photos/seed/csm/64/96",
     status: "watch",
+    position: "a0",
   },
   {
     id: "2",
@@ -18,6 +19,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     rating: "9.34",
     thumbnailUrl: "https://picsum.photos/seed/frieren/64/96",
     status: "watch",
+    position: "a1",
   },
   {
     id: "3",
@@ -29,6 +31,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     status: "watching",
     currentEpisode: 15,
     totalEpisodes: 24,
+    position: "a0",
   },
   {
     id: "4",
@@ -40,6 +43,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     status: "watching",
     currentEpisode: 6,
     totalEpisodes: 26,
+    position: "a1",
   },
   {
     id: "5",
@@ -51,6 +55,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     status: "watched",
     currentEpisode: 75,
     totalEpisodes: 75,
+    position: "a0",
   },
   {
     id: "6",
@@ -62,6 +67,7 @@ export const MOCK_ANIME_DATA: AnimeEntry[] = [
     status: "watched",
     currentEpisode: 64,
     totalEpisodes: 64,
+    position: "a1",
   },
 ];
 
@@ -76,6 +82,7 @@ export const SEARCH_POOL: AnimeEntry[] = [
     thumbnailUrl: "https://picsum.photos/seed/vinland/64/96",
     status: "watch",
     totalEpisodes: 24,
+    position: "a0",
   },
   {
     id: "8",
@@ -86,6 +93,7 @@ export const SEARCH_POOL: AnimeEntry[] = [
     thumbnailUrl: "https://picsum.photos/seed/sg/64/96",
     status: "watch",
     totalEpisodes: 24,
+    position: "a0",
   },
   {
     id: "9",
@@ -96,5 +104,6 @@ export const SEARCH_POOL: AnimeEntry[] = [
     thumbnailUrl: "https://picsum.photos/seed/sxf/64/96",
     status: "watch",
     totalEpisodes: 25,
+    position: "a0",
   },
 ];

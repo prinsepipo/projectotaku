@@ -1,8 +1,9 @@
 import { memo } from "react";
 import type React from "react";
 import { Plus } from "lucide-react";
+import { useDroppable } from "@dnd-kit/react";
 import type { AnimeEntry, AnimeStatus } from "../../../types/kanban";
-import AnimeCard from "./AnimeCard";
+import SortableAnimeCard from "./SortableAnimeCard";
 import "./KanbanColumn.css";
 
 interface IProps {
@@ -26,6 +27,10 @@ function KanbanColumn({
   onEpisodeChange,
   onRemove,
 }: IProps) {
+  const { ref: droppableRef } = useDroppable({
+    id: status,
+    data: { group: status },
+  });
 
   const columnClass = [
     "kanban-column",
@@ -50,18 +55,20 @@ function KanbanColumn({
         </button>
       </div>
 
-      <div className="kanban-column__cards">
+      <div className="kanban-column__cards" ref={droppableRef}>
         {cards.length === 0 ? (
           <div className="kanban-column__empty">
             <p>Nothing here yet</p>
             <p>Add anime to get started</p>
           </div>
         ) : (
-          cards.map((card) => (
-            <AnimeCard
+          cards.map((card, index) => (
+            <SortableAnimeCard
               key={card.id}
               entry={card}
-              onEpisodeChange={(delta) => onEpisodeChange(card.id, delta)}
+              index={index}
+              column={status}
+              onEpisodeChange={(value) => onEpisodeChange(card.id, value)}
               onRemove={() => onRemove(card.id)}
             />
           ))

@@ -1,0 +1,13 @@
+.drop-placeholder {
+  height: 124px;
+  border-radius: var(--radius-md);
+  background: var(--color-watch-bg);
+  border: 2px dashed var(--color-watch-text);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .drop-placeholder {
+    height: 76px;
+  }
+}

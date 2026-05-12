@@ -153,4 +153,8 @@
   .kanban-column__cards {
     gap: 6px;
   }
+
+  .kanban-column__cards > div {
+    pointer-events: none;
+  }
 }

@@ -18,10 +18,6 @@
   box-shadow: var(--shadows-md);
 }
 
-.anime-card--dragging {
-  opacity: 0.4;
-}
-
 .anime-card__thumb {
   width: 64px;
   height: 100%;
@@ -254,17 +250,7 @@
   border-color: #fecaca;
 }
 
-.anime-card-placeholder {
-  height: 124px;
-  border-radius: 8px;
-  background: var(--color-surface-raised);
-  border: 2px dashed var(--color-border);
-}
-
 @media (max-width: 768px) {
-  .anime-card-placeholder {
-    height: 76px;
-  }
 
   .anime-card {
     height: auto;

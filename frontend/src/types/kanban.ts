@@ -8,6 +8,7 @@ export interface AnimeEntry {
   rating: string;
   thumbnailUrl: string;
   status: AnimeStatus;
+  position: string;
   currentEpisode?: number;
   totalEpisodes?: number;
 }

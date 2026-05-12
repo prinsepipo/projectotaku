@@ -7,7 +7,6 @@ import "./AnimeCard.css";
 
 interface IProps {
   entry: AnimeEntry;
-  isDragging?: boolean;
   onEpisodeChange?: (value: number) => void;
   onRemove?: () => void;
 }
@@ -32,15 +31,12 @@ function progressWidth(entry: AnimeEntry): number {
 
 function AnimeCard({
   entry,
-  isDragging = false,
   onEpisodeChange,
   onRemove,
 }: IProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const cardClass = ["anime-card", isDragging ? "anime-card--dragging" : ""]
-    .filter(Boolean)
-    .join(" ");
+  const cardClass = "anime-card";
 
   const fillClass = [
     "anime-card__progress-fill",
